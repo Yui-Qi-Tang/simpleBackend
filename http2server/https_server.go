@@ -46,6 +46,23 @@ func CreateServer(config *ServerConfig) {
 
 }
 
+// CreateServerByYaml : Set server and start by yaml config file
+func CreateServerByYaml(config *ServerConfigYaml) {
+	log.Printf("start server at %s\n", config.Port)
+	// Set static file
+	// filter   "prefix" of the request and leave
+	//            request                          "prefix"                      file here
+	http.Handle("/chatroom/", http.StripPrefix("/chatroom/", http.FileServer(http.Dir(config.Static))))
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir(config.Static))))
+	// functions
+	StartService()
+	log.Fatal(
+		http.ListenAndServeTLS(config.Port, config.SslFilePath.Crt, config.SslFilePath.Key, nil),
+	)
+	//http.ListenAndServe(config.Port, nil)
+
+}
+
 // StartService : set router for the server
 func StartService() {
 	http.HandleFunc("/", index)

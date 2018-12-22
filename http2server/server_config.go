@@ -14,8 +14,6 @@ type ServerConfigYaml struct {
 	SslFilePath struct {
 		Crt string `yaml:"crt"`
 		Key string `yaml:"key"`
-	}
-	Crt    string `yaml:"crt"`
-	Key    string `yaml:"key"`
+	} `yaml:"sslFilePath"`
 	Static string `yaml:"staticFile"`
 }

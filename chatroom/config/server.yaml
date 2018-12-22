@@ -1,7 +1,5 @@
-port: "8081"
+port: ":8081"
 sslFilePath:
     crt: "https_keys/server.crt"
     key: "https_keys/server.key"
-crt: "https_keys/server.crt"
-key: "https_keys/server.key"
 staticFile: "static"
