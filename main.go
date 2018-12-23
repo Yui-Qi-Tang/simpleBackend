@@ -10,6 +10,13 @@ import (
 )
 
 func main() {
+	/*
+		TO-DO:
+			1. load config from file for mongodb
+			    Base data: host/port/connect protocol
+				Q: specify db and collection?
+			2. bind mongodb and go gin api together
+	*/
 	fmt.Println("Hello world, SimpleBackend!!")
 	if client, err := mongo.NewClient("mongodb://localhost:27017"); err != nil {
 		fmt.Println("MongoDB connect failed!")
