@@ -24,24 +24,28 @@ func init() {
 			    Base data: host/port/connect protocol
 				Q: specify db and collection?
 	*/
-	mongodb, err := mongo.NewClient("mongodb://localhost:27017") // mongodb from config file
+	var err error
+	// Let Mongodb as global variable, you need to use '=' for assign instance for variable,
+	// if use ':=' which is meat 'assign a new install for the variable' in this case, it's local variable in this function!!!
+	Mongodb, err = mongo.NewClient("mongodb://localhost:27017") // mongodb from config file
 	if err != nil {
 		log.Fatalf("New client error: %v", err)
 	} //fi
 
 	conTimeOutCtx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	if err = mongodb.Connect(conTimeOutCtx); err != nil {
+	if err = Mongodb.Connect(conTimeOutCtx); err != nil {
 		log.Fatalf("Client connection error: %v", err)
 	} //fi
 
 	pingTestCtx, _ := context.WithTimeout(context.Background(), 2*time.Second)
-	if err = mongodb.Ping(pingTestCtx, readpref.Primary()); err != nil {
+	if err = Mongodb.Ping(pingTestCtx, readpref.Primary()); err != nil {
 		log.Fatalf("Client ping mongodb server error: %v", err)
 	} //fi
-	Mongodb := mongodb
+	//Mongodb := mongodb
 	log.Println(Mongodb)
 } // end of initMongoDB
 
-func gaCollection(DB string, collection string) *mongo.Collection {
-	return Mongodb.Database(DB).Collection(collection)
+func gaCollection(DB string, collection string) {
+	log.Println(Mongodb)
+	// return Mongodb.Database(DB).Collection(collection)
 }

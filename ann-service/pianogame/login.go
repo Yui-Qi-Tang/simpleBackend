@@ -1,7 +1,6 @@
 package pianogame
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -9,7 +8,8 @@ import (
 
 // UserLogin test
 func UserLogin(c *gin.Context) {
-	log.Println(Mongodb)
+	gaCollection("a", "b")
+	// log.Println(gaCollection) // This Mongodb is not set because, this variable does init at the same package
 	c.JSON(http.StatusBadRequest, gin.H{"status": "Invalid username and password!"})
 
 	/*
