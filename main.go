@@ -6,13 +6,13 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"simpleBackend/ann-service/pianogame"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/mongodb/mongo-go-driver/bson"
 	"github.com/mongodb/mongo-go-driver/mongo" // https://docs.mongodb.com/ecosystem/drivers/go/
 	"github.com/mongodb/mongo-go-driver/mongo/readpref"
-	// "simpleBackend/mongodb"
 )
 
 // initMongoDB init. mongo db and return client
@@ -23,6 +23,7 @@ func initMongoDB() *mongo.Client {
 			    Base data: host/port/connect protocol
 				Q: specify db and collection?
 	*/
+	// pianogame.Test()
 	client, err := mongo.NewClient("mongodb://localhost:27017") // 27017
 	if err != nil {
 		log.Fatalf("New client error: %v", err)
@@ -91,29 +92,7 @@ func main() {
 		Password string `form:"password" json:"password" xml:"password" binding:"required"`
 	}
 
-	router.POST("user/login", func(c *gin.Context) {
-		var json Login
-		// json decode
-		if err := c.ShouldBindJSON(&json); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-		// get db collection
-		collection := gaCollection(DBClient, "testing", "user")
-		// prepare filter to query
-		filter := bson.M{
-			"name":     json.User,
-			"password": json.Password,
-		}
-		r := Login{}
-		// query
-		err := collection.FindOne(context.Background(), filter).Decode(&r)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"status": "Invalid username and password!"})
-		} else {
-			c.JSON(http.StatusOK, gin.H{"status": "you are logged in"})
-		}
-	})
+	router.POST("user/login", pianogame.UserLogin)
 	// register account
 	router.POST("user/register", func(c *gin.Context) {
 		var registerData Login
@@ -140,13 +119,15 @@ func main() {
 		}
 	})
 
-	router.LoadHTMLGlob("templates/*")
-	//router.LoadHTMLFiles("templates/template1.html", "templates/template2.html")
-	router.GET("/login", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "Login.html", gin.H{
-			"loginURL": "http://127.0.0.1:8080/user/login",
+	/*
+		router.LoadHTMLGlob("templates/*")
+		//router.LoadHTMLFiles("templates/template1.html", "templates/template2.html")
+		router.GET("/login", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "Login.html", gin.H{
+				"loginURL": "http://127.0.0.1:8080/user/login",
+			})
 		})
-	})
+	*/
 
 	router.Run() // listen and serve on 127.0.0.1:8080 in gin.TestMode
 }
