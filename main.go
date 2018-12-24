@@ -12,7 +12,7 @@ import (
 	"github.com/mongodb/mongo-go-driver/bson"
 	"github.com/mongodb/mongo-go-driver/mongo" // https://docs.mongodb.com/ecosystem/drivers/go/
 	"github.com/mongodb/mongo-go-driver/mongo/readpref"
-	"simpleBackend/mongodb"
+	// "simpleBackend/mongodb"
 )
 
 // initMongoDB init. mongo db and return client
@@ -54,8 +54,8 @@ func main() {
 			2. bind mongodb and go gin api together
 			3. refactor
 	*/
-	testDB := mongodb.InitMongoDB()
-	log.Println(testDB.Client)
+	// testDB := mongodb.InitMongoDB()
+	// log.Println(testDB.Client)
 	fmt.Println("Hello world, SimpleBackend!!")
 	// set DB client
 	DBClient := initMongoDB()
@@ -138,6 +138,14 @@ func main() {
 		} else {
 			c.JSON(http.StatusBadRequest, gin.H{"status": "This account has been registed!"})
 		}
+	})
+
+	router.LoadHTMLGlob("templates/*")
+	//router.LoadHTMLFiles("templates/template1.html", "templates/template2.html")
+	router.GET("/login", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "Login.html", gin.H{
+			"loginURL": "http://127.0.0.1:8080/user/login",
+		})
 	})
 
 	router.Run() // listen and serve on 127.0.0.1:8080 in gin.TestMode
