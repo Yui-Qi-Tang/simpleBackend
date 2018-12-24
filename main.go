@@ -12,6 +12,7 @@ import (
 	"github.com/mongodb/mongo-go-driver/bson"
 	"github.com/mongodb/mongo-go-driver/mongo" // https://docs.mongodb.com/ecosystem/drivers/go/
 	"github.com/mongodb/mongo-go-driver/mongo/readpref"
+	"simpleBackend/mongodb"
 )
 
 // initMongoDB init. mongo db and return client
@@ -53,7 +54,8 @@ func main() {
 			2. bind mongodb and go gin api together
 			3. refactor
 	*/
-
+	testDB := mongodb.InitMongoDB()
+	log.Println(testDB.Client)
 	fmt.Println("Hello world, SimpleBackend!!")
 	// set DB client
 	DBClient := initMongoDB()
