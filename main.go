@@ -89,19 +89,28 @@ func main() {
 		Password string `form:"password" json:"password" xml:"password" binding:"required"`
 	}
 
-	router.POST("/loginJSON", func(c *gin.Context) {
+	router.POST("user/login", func(c *gin.Context) {
 		var json Login
+		// json decode
 		if err := c.ShouldBindJSON(&json); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-
-		if json.User != "manu" || json.Password != "123" {
-			c.JSON(http.StatusUnauthorized, gin.H{"status": "unauthorized"})
-			return
+		// get db collection
+		collection := gaCollection(DBClient, "testing", "user")
+		// prepare filter to query
+		filter := bson.M{
+			"name":     json.User,
+			"password": json.Password,
 		}
-
-		c.JSON(http.StatusOK, gin.H{"status": "you are logged in"})
+		r := Login{}
+		// query
+		err := collection.FindOne(context.Background(), filter).Decode(&r)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"status": "Invalid username and password!"})
+		} else {
+			c.JSON(http.StatusOK, gin.H{"status": "you are logged in"})
+		}
 	})
 	// register account
 	router.POST("user/register", func(c *gin.Context) {
@@ -125,9 +134,9 @@ func main() {
 			}
 			c.JSON(http.StatusOK, gin.H{"status": "register ok!"})
 		} else {
-			c.JSON(http.StatusBadRequest, gin.H{"status": "This account has been user!"})
+			c.JSON(http.StatusBadRequest, gin.H{"status": "This account has been registed!"})
 		}
 	})
 
-	router.Run() // listen and serve on 0.0.0.0:8080
+	router.Run() // listen and serve on 127.0.0.1:8080 in gin.TestMode
 }
