@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+<body>
+    <div>
+        <p>Apply for an account</p>
+        <div class="user account">
+            <p>Account</p>
+            <input id="account0" type="text" placeholder="write your account...">
+        </div>
+        <div class="user password">
+            <p>Password</p>
+            <input id="password0" type="password" placeholder="write your password...">
+        </div>
+        <div class="user btn">
+            <butto id="btn">Enter</button>
+        </div>
+        <p id="show"></p>
+    </div>
+    <script>
+        var Button = document.getElementById("btn");
+        Button.addEventListener("click",ApplyAccount);
+
+        function ApplyAccount(){
+            var Account = document.getElementById("account0");
+            var Password = document.getElementById("password0");
+            var Information = {
+                "user":Account.value,
+                "password":Password.value
+            };
+            console.log(Information);
+            let JSONInformation = JSON.stringify(Information);
+            console.log(JSONInformation);
+            var sendData = new XMLHttpRequest();
+            sendData.onreadystatechange = function(){
+                if (this.readyState == 4){
+                    var resp = JSON.parse(this.responseText);
+                    switch(this.status) {
+                        case 200:
+                            alert(resp.status);
+                            break;
+                        case 400:
+                            alert(resp.status);
+                            break;
+                        default:
+                            alert("FATAL ERROR!!");                    
+                    } // switch
+                } // fi
+            };
+
+            let postUrl = "{{ .registerURL }}";
+            sendData.open("post", postUrl, false);
+            sendData.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+            sendData.send(JSONInformation);
+            
+            Account.value = "";
+            Password.value = "";
+        };
+    </script>
+</body>
+</html>
+

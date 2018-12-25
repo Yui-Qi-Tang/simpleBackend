@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.wrap{
+    position:fixed;
+    top:0;
+    left:0;
+    display: flex;
+    width: 100%;
+    height:12%;
+    background-color:white;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    z-index: 3;
+}
+.title1{
+    margin-left:1.2%;
+    color:black;
+    font-size:30px;
+    margin-top:1.2%;
+}
+/*Creat Search bar*/
+.title2{
+    margin-left:10%;
+    margin-top:1.5%;
+    padding: 3px;
+    border: none;
+    font-size: 18px;
+}
+.title3{
+    margin-top:2%;
+    margin-left:1%;
+    color: black;
+    cursor: pointer;
+    font-size: 20px;
+}
+/*Style this LogIn and Signup*/
+#Loginarea{
+    margin-top:2%;
+    margin-left:18%;
+}
+#Loginarea a{
+    color:black;
+    font-size:24px;
+}  
+#Loginarea a:hover{
+    color:grey;
+}
+#Signuparea{
+    margin-top:2%;
+    margin-left: 2%;
+}
+#Signuparea a{
+    color:black;
+    font-size:24px;
+    text-decoration: none;
+}
+#Signuparea a:hover{
+    color:grey;
+}
+/* Style the Dropdownlist*/
+    *{
+        margin: 0px;
+        padding: 0px;
+    }
+.Dropdownarea{
+    margin-top:1%;
+    display: flex;
+    margin-left: 14%;
+    height:2%;
+}
+.dropbtn {
+    width:40%;
+    color: black;
+    padding: 20px;
+    font-size: 24px;
+    border: none;
+    cursor: pointer;
+}
+.dropdown {
+    position: relative;
+    font-size: 20px;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    text-align: center;
+    background-color: #f9f9f9;
+    min-width:160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index:4;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    color:grey;
+}
+.bg-image {
+/* The image used */
+    background-image: url("http://127.0.0.1/web_front_end/Javascript/Image/Fairy.jpg");
+
+/* Add the blur effect */
+    filter: blur(8px);
+    -webkit-filter: blur(8px);
+
+/* Full height */
+    height: 100%; 
+
+/* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+/* Position text in the middle of the page/image */
+.bg-text {
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0, 0.4); /* Black w/opacity/see-through */
+    color: white;
+    font-weight: bold;
+    border: 3px solid #f1f1f1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    width: 80%;
+    padding: 20px;
+    text-align: center;
+    line-height: 70px;
+}
+
+/*Style the article*/
+article{
+    width:100%;
+    display:flex;
+    float: left;
+    background-color: #929ca7;
+    height: 100% /* only for demonstration, should be removed */
+}
+.title{
+    text-align: center;
+    position: relative;
+    top:15%;
+    font-size: 32px;
+    font-weight: bold;
+}
+.log{
+    text-align: center;
+    position: relative;
+    font-size: 24px;
+    padding:10px;
+    font-family:Arial, Helvetica, sans-serif;
+    width: 100px;
+    background-color: rgb(172, 179, 201);
+    color:white;
+    left:45%;
+    top:28%;
+    cursor:pointer;
+}
+.art{
+    width:50%;
+    height: 65%;
+    background-color: white;
+    margin-top: 10%;
+    margin-left: 25%;
+    text-align: center;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.artcenter{
+    text-align: center;
+    position: relative;
+    right:2%;
+    top:33%;
+}
+#account0, #password0{
+    padding:15px;
+    margin:20px;
+    font-size:20px;
+}
+input:focus {
+  background-color: rgb(173, 195, 221);
+}
+</style>
+</head>
+
+<body>
+<!--Header-->
+<div class="wrap">
+    <div class="title1">Ann's page</div>
+    <div class="title2"><input class="w3-input w3-border w3-round-large" id="input2" type="text" placeholder="Search.."></div>
+    <div class="title3"><i id="submit" class="material-icons" style="font-size:30px;">search</i></div>
+    
+    <!--Dropdownlist-->
+    <div class="Dropdownarea">
+        <div class="dropdown">
+            <div class="dropbtn">Design</div>
+            <div class="dropdown-content">
+            <a href="#">Link 1</a>
+            <a href="#">Link 2</a>
+            <a href="#">Link 3</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <div class="dropbtn">Conception</div>
+            <div class="dropdown-content">
+            <a href="#">Link 1</a>
+            <a href="#">Link 2</a>
+            <a href="#">Link 3</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <div class="dropbtn">Pecies</div>
+            <div class="dropdown-content">
+            <a href="#">Link 1</a>
+            <a href="#">Link 2</a>
+            <a href="#">Link 3</a>
+            </div>
+        </div>
+    </div>
+        
+    <div id="Loginarea">
+        <a  href="Login.html" target="_blank"><i class="material-icons" style="font-size:30px;">person</i></a>
+    </div>
+    <div id="Signuparea">
+        <a  href="Signup.html" target="_blank">Sing up</a>
+    </div>
+</div>
+<div class="bg-image"></div>
+<div class="bg-text">
+    <h2>LogIn Page</h2>
+    <h1 style="font-size:50px">Log In here</h1>
+    <p>To get your services</p>
+</div>
+
+<article>
+    <div class="art">
+        <p class="title">Log Into Ann's Page</p>
+        <div class="artcenter">
+            <i class="material-icons" style="margin-right:20px;font-size:35px;">account_circle</i>
+            <input type="text" id="account0" style="padding:10px; width:200px;" placeholder="Email or Name..."/>
+            <span style="color: red;" id="warn"></span><br/>
+        </div>
+
+        <div class="artcenter">
+            <i class="material-icons" style="margin-right:20px;font-size:35px;">settings_ethernet</i>
+            <input type="password" id="password0" style="padding:10px; width:200px;" placeholder='Password...'/>
+            <span style="color:red;" id="warn2"></span><br/>
+        </div>
+
+        <div class="artcenter "id="answer" style="color:red"></div>
+        
+        <p style="font-size:24px;position: relative; bottom:16%;">Don't have an account ?</p>
+        
+        <div style="font-size:24px;position: relative; bottom:15%;">
+            <a style="text-decoration: none;" href="http://127.0.0.1/web_front_end/Javascript/Mypage/Signup.html">Sign up</a>
+        </div>
+        <div class="log" id="btn">LogIn</div>
+    </div>
+<script>
+    //For Apply for an Account;
+    //var Button = document.getElementById("btn");
+    //Button.addEventListener("click",ApplyAccount);
+    /*function ApplyAccount(){
+            var Account = document.getElementById("account0");
+            var Password = document.getElementById("password0");
+            var Information = {
+                "Accountinobj":Account.value,
+                "Passwordinobj":Password.value
+            };
+            console.log(Information);
+            let JSONInformation = JSON.stringify(Information);
+            console.log(JSONInformation);
+            var sendData = new XMLHttpRequest();
+            sendData.onreadystatechange = function(){
+                if (this.readyState == 4 && this.status == 200){
+                    console.log("HI");
+                    var Response = JSON.parse(this.responseText);
+                    console.log(Response);
+                    if(Response.msg == "find user"){
+                    window.location.assign("http://127.0.0.1/web_front_end/Javascript/Mypage/Ann's_page.html");
+                    } else if (Response.msg == "Can not find user"){
+                    document.getElementById("warn2").innerHTML = "Wrong password or account!!"
+                    }
+                }
+            };
+            let postUrl = "http://192.168.100.103:8888/api/v2/board/create_geo_post/";
+            let getUrl = "http://192.168.100.103:8888/api/v2/board/hotimages/oversea/?page=1";
+            sendData.open("post", postUrl, false);
+            sendData.send(JSONInformation);
+            
+            Account.value = "";
+            Password.value = "";
+        };*/
+    // 從 web-back-end/accountpage.xml 中抓取資料，並且判斷是否能登入;
+    //XML 版本
+    /*let Account = document.getElementById(`account0`);
+    let Password = document.getElementById(`password0`);
+    let Btn = document.getElementById("btn");
+    Btn.addEventListener("click",loadDoc);
+    function loadDoc() {   
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("GET", "http://127.0.0.1:80/web_back_end/Mypage_backend/accountpage.xml", true);
+    xhttp.send();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+            var i; 
+            let xmlDoc = this.responseXML;
+            console.log(xmlDoc)
+            let xmlAccount = xmlDoc.getElementsByTagName(`Name`);
+            let Accountarry = new Array();
+                for (i = 0; i <xmlAccount.length; i++) { 
+                    Accountarry[i] = xmlAccount[i].textContent;
+                }
+            console.log(Accountarry);
+            //Find the value in Array
+            let Foundedaccount = Accountarry.find(Search);
+            console.log(Foundedaccount);
+            function Search(value){
+                return value == Account.value;
+            };
+            let Foundedindex = Accountarry.indexOf(Foundedaccount);
+            console.log(Foundedindex);
+            let xmlPassword = xmlDoc.getElementById(`${Foundedindex}`);
+            console.log(xmlPassword.textContent);
+                if (Password.value == xmlPassword.textContent) {
+                    window.location.assign("http://127.0.0.1/web_front_end/Javascript/Mypage/Ann's_page.html")
+                } else if (Password.value != xmlPassword.textContent) {
+                    document.getElementById(`answer`).innerHTML = "You type the wrong password";
+                }
+            }
+        };
+    }*/
+    //JSON 版本
+    let Account = document.getElementById(`account0`);
+    let Password = document.getElementById(`password0`);
+    let Btn = document.getElementById("btn");
+    Btn.addEventListener("click",loadDoc2);
+    function loadDoc2(){
+        const loginURL = "{{ .loginURL }}";
+        var xhttp = new XMLHttpRequest();
+        var data = {
+            "user": Account.value,
+            "password": Password.value
+        };
+        console.log(data);
+        xhttp.open("POST", loginURL, true);
+        xhttp.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        xhttp.send(JSON.stringify(data));
+
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4) {
+                var resp = JSON.parse(this.responseText);
+                switch(this.status) {
+                    case 200:
+                        alert(resp.status);
+                        break;
+                    case 400:
+                        alert(resp.status);
+                        break;
+                    default:
+                        alert("FATAL ERROR!!");                    
+                } // switch
+            }; // fi
+        }; // onreadystatechange
+    };
+    function VerifyAccount(myArray){
+        let founded = myArray.find(Search);
+        function Search(value, index){
+            return value.Name == Account.value && value.Password == Password.value;
+        };
+        if (founded == undefined){
+            document.getElementById("warn").innerHTML = "Don't have an account!"
+        } else {
+            window.location.assign("http://127.0.0.1/web_front_end/Javascript/Mypage/Ann's_page.html")
+        };
+    };
+    
+</script>
+</article>
+
+</body>
+
+</html>
