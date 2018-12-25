@@ -10,7 +10,7 @@ import (
 	"github.com/mongodb/mongo-go-driver/bson"
 )
 
-// UserLogin test
+// UserLogin api for user login request
 func UserLogin(c *gin.Context) {
 	var json Login
 	// json decode
@@ -35,7 +35,7 @@ func UserLogin(c *gin.Context) {
 	}
 }
 
-// UserRegister user register
+// UserRegister api for user register request
 func UserRegister(c *gin.Context) {
 	var registerData Login
 	if err := c.ShouldBindJSON(&registerData); err != nil {
