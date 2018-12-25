@@ -7,16 +7,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-
+// main ann-service entry point */
 func main() {
 	/*
 		TO-DO:
 			1. load config from file for mongodb
 			    Base data: host/port/connect protocol
 				Q: specify db and collection, in mongdb.go??
-			2. create a Mode 
+
+				mode: variable is denoted the status of gin(test/production)
+			2. add JWT for auth
 	*/
-	/* ann-service here */
 	/* Go-Gin setup */
 	gin.SetMode(gin.TestMode) // enable server on localhost:8080
 	router := gin.Default()
