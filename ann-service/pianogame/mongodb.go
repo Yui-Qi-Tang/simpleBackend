@@ -41,11 +41,10 @@ func init() {
 	if err = Mongodb.Ping(pingTestCtx, readpref.Primary()); err != nil {
 		log.Fatalf("Client ping mongodb server error: %v", err)
 	} //fi
-	//Mongodb := mongodb
-	log.Println(Mongodb)
+	log.Println("init in pianogame success")
 } // end of initMongoDB
 
-func gaCollection(DB string, collection string) {
-	log.Println(Mongodb)
-	// return Mongodb.Database(DB).Collection(collection)
+func gaCollection(DB string, collection string) *mongo.Collection {
+	// bad idea
+	return Mongodb.Database(DB).Collection(collection)
 }
