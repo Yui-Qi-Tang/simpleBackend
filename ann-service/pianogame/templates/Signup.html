@@ -27,24 +27,32 @@
             var Account = document.getElementById("account0");
             var Password = document.getElementById("password0");
             var Information = {
-                "Accountinobj":Account.value,
-                "Passwordinobj":Password.value
+                "user":Account.value,
+                "password":Password.value
             };
             console.log(Information);
             let JSONInformation = JSON.stringify(Information);
             console.log(JSONInformation);
             var sendData = new XMLHttpRequest();
             sendData.onreadystatechange = function(){
-                if (this.readyState == 4 && this.status == 200){
-                    console.log("HI");
-                    var Response = JSON.parse(this.responseText);
-                    console.log(Response)
-                }
+                if (this.readyState == 4){
+                    var resp = JSON.parse(this.responseText);
+                    switch(this.status) {
+                        case 200:
+                            alert(resp.status);
+                            break;
+                        case 400:
+                            alert(resp.status);
+                            break;
+                        default:
+                            alert("FATAL ERROR!!");                    
+                    } // switch
+                } // fi
             };
 
-            let postUrl = "http://192.168.100.103:8888/api/v2/board/create_geo_post/";
-            let getUrl = "http://192.168.100.103:8888/api/v2/board/hotimages/oversea/?page=1";
+            let postUrl = "{{ .registerURL }}";
             sendData.open("post", postUrl, false);
+            sendData.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
             sendData.send(JSONInformation);
             
             Account.value = "";

@@ -51,6 +51,7 @@ func main() {
 	router.POST("user/register", pianogame.UserRegister)
 
 	router.GET("/login", pianogame.LoginPage)
+	router.GET("/signup", pianogame.SignupPage)
 	
 
 	router.Run() // listen and serve on 127.0.0.1:8080 in gin.TestMode
