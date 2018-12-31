@@ -1,0 +1,4 @@
+user: "root"
+password: ""
+charset: "utf8"
+database_name: "test"
