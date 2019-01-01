@@ -59,7 +59,9 @@ func UserRegister(c *gin.Context) {
 		_, err := collection.InsertOne(context.Background(), newUserData)
 
 		if err != nil {
-			log.Fatalf("Insert one failed: %v", err)
+			log.Println("Insert one failed: %v", err)
+			c.JSON(http.StatusBadRequest, gin.H{"status": "create new user Failed!"})
+			return
 		}
 		c.JSON(http.StatusCreated, gin.H{"status": "register ok!"})
 	} else {
