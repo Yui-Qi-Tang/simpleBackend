@@ -53,19 +53,7 @@ func main() {
 
 	/* Run server */
 	log.Println("Start server")
-
-	/* set TLS with LetsEncrypt
-	m := autocert.Manager{
-		Prompt:     autocert.AcceptTOS,
-		HostPolicy: autocert.HostWhitelist("myserveryuki1.com", "myserveryuki2.com"),
-		Cache:      autocert.DirCache("/tmp/.cache"),
-	}
-	log.Println(m)
-	log.Fatal(autotls.RunWithManager(router, &m))
-	log.Fatal(autotls.Run(router, "myserveryuki.com"))
-	*/
-	router.Run() // listen and serve on 127.0.0.1:8080 in gin.TestMode
-
+	router.Run()
 	// Close Mysql DB client
 	defer pianogame.MysqlDB.Close()
 }
