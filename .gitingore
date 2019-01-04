@@ -1,4 +1,4 @@
 go.sum
 simpleBackend
 .go-version
-config/socket_client.yaml
+test/config/socket_client.yaml
