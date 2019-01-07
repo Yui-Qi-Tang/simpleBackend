@@ -12,5 +12,4 @@ pipeline:
     image: golang:1.11
     pull: true
     commands:
-      - go version
       - go test ./drone/testpkg/ -v
