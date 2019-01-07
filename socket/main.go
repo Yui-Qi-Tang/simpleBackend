@@ -25,7 +25,7 @@ func check(e error) {
 func main() {
 
 	// Read config file
-	yamlFile, ioErr := ioutil.ReadFile("config/socket_client.yaml") // open file and read
+	yamlFile, ioErr := ioutil.ReadFile("config/server.yaml") // open file and read
 	var scData socketClient
 	if ioErr != nil {
 		errorStr := fmt.Sprintf("Read config file error! %v", ioErr)
