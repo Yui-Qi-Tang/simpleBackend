@@ -13,3 +13,4 @@ pipeline:
     pull: true
     commands:
       - go test ./drone/testpkg/ -v
+      - go test ./drone/testpkg/ -bench=. -v
