@@ -1,0 +1,15 @@
+kind: pipeline
+name: simple_testing
+
+clone:
+  git:
+    image: plugins/git
+    depth: 50
+    tags: true
+
+pipeline:
+  golang-simple-test:
+    image: golang:1.11
+    pull: true
+    commands:
+      - go test ./drone/testpkg/ -v

@@ -1,0 +1,2 @@
+debug: true
+html_templates: ["pianogame/templates/Signup.html", "pianogame/templates/Login.html"]

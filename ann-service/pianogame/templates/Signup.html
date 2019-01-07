@@ -37,8 +37,9 @@
             sendData.onreadystatechange = function(){
                 if (this.readyState == 4){
                     var resp = JSON.parse(this.responseText);
+                    console.log(this.status);
                     switch(this.status) {
-                        case 200:
+                        case 201:
                             alert(resp.status);
                             break;
                         case 400:
@@ -51,7 +52,7 @@
             };
 
             let postUrl = "{{ .registerURL }}";
-            sendData.open("post", postUrl, false);
+            sendData.open("post", postUrl, true);
             sendData.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
             sendData.send(JSONInformation);
             
