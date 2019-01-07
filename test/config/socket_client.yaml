@@ -1,4 +1,0 @@
-server: "SERVER_IP"
-port: "PORT"
-cmds: ["PUT", "YOUR", "CMD", "TO", "SERVER", "HERE"]
-  
