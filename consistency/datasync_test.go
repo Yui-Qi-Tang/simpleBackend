@@ -1,7 +1,6 @@
 package consistency
 
 import (
-	"fmt"
 	"runtime"
 	"sync"
 	"testing"
@@ -33,9 +32,6 @@ func TestSharedDataConsistencyWithSyncMutex(t *testing.T) {
 		go func(gNum int) {
 			mutex.Lock()
 			sharedVariable++
-			if sharedVariable == expectedVar {
-				fmt.Println("GID: ", gNum, " Hit!")
-			}
 			mutex.Unlock()
 			c <- true
 		}(i)
@@ -46,12 +42,9 @@ func TestSharedDataConsistencyWithSyncMutex(t *testing.T) {
 		<-c
 	}
 
-	defer func() {
-		if sharedVariable == expectedVar {
-			t.Log("TestSharedDataConsistencyWithSyncMutex PASS")
-		} else {
-			t.Error("TestSharedDataConsistencyWithSyncMutex FAIL", sharedVariable, ", ", expectedVar)
-		}
-	}()
-
+	if sharedVariable == expectedVar {
+		t.Log("TestSharedDataConsistencyWithSyncMutex PASS")
+	} else {
+		t.Error("TestSharedDataConsistencyWithSyncMutex FAIL", sharedVariable, ", ", expectedVar)
+	}
 }
