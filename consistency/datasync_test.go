@@ -1,6 +1,7 @@
 package consistency
 
 import (
+	"fmt"
 	"runtime"
 	"sync"
 	"testing"
@@ -13,32 +14,44 @@ func TestSharedDataRunInGorontine(t *testing.T) {
 	var expectedVar = 100
 	// Hope sharedVariabe is equal to expectedVar after goroutine add + 1 on sharedVariable in expectedVar times, but...
 	for i := 0; i < expectedVar; i++ {
-		go func(x int) {
+		go func() {
 			sharedVariable++ // race condition here
-		}(i)
+		}()
 	}
 	runtime.Gosched() // yeild task complete in multiple cpu env.
 	// sometime sharedVariable and expectVar are equal somtime are not.
 	t.Logf("TestSharedDataRunInGorontine => sharedVariable :%d, expectedVar: %d", sharedVariable, expectedVar)
 }
 
-func TestSharedDataConsistencyWithSyncWG(t *testing.T) {
+func TestSharedDataConsistencyWithSyncMutex(t *testing.T) {
 	var sharedVariable int
-	var expectedVar = 100
-	var wg sync.WaitGroup // sync wait group
-
+	var expectedVar = 10000
+	var mutex sync.Mutex
+	c := make(chan bool)
 	// Hope sharedVariabe is equal to expectedVar after goroutine add + 1 on sharedVariable in expectedVar times
 	for i := 0; i < expectedVar; i++ {
-		wg.Add(1)
-		go func(x int) {
+		go func(gNum int) {
+			mutex.Lock()
 			sharedVariable++
-			wg.Done()
+			if sharedVariable == expectedVar {
+				fmt.Println("GID: ", gNum, " Hit!")
+			}
+			mutex.Unlock()
+			c <- true
 		}(i)
 	}
-	wg.Wait()
-	if sharedVariable == expectedVar {
-		t.Log("TestSharedDataConsistencyWithSyncWG PASS")
-	} else {
-		t.Error("TestSharedDataConsistencyWithSyncWG FAIL", sharedVariable, ", ", expectedVar)
+
+	// wait all of goroutine return
+	for i := 0; i < expectedVar; i++ {
+		<-c
 	}
+
+	defer func() {
+		if sharedVariable == expectedVar {
+			t.Log("TestSharedDataConsistencyWithSyncMutex PASS")
+		} else {
+			t.Error("TestSharedDataConsistencyWithSyncMutex FAIL", sharedVariable, ", ", expectedVar)
+		}
+	}()
+
 }
