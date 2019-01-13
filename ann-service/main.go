@@ -6,7 +6,7 @@ import (
 	"simpleBackend/ann-service/pianogame"
 
 	"github.com/gin-gonic/gin"
-	"gopkg.in/yaml.v2"
+	yaml "gopkg.in/yaml.v2"
 )
 
 // main ann-service entry point */
@@ -36,6 +36,10 @@ func main() {
 	gin.SetMode(gin.TestMode) // enable server on localhost:8080
 	router := gin.Default()
 	router.LoadHTMLFiles(config.HTMLTemplates...) // load tempates (Parameters is variadic), ref: https://golang.org/ref/spec#Passing_arguments_to_..._parameters
+
+	// set static files
+	//router.Static("/js", "./js")
+	//router.Static("/css", "./css")
 
 	/* APIs */
 	router.POST("user/login", pianogame.UserLogin)              // login
