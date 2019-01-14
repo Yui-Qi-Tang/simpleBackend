@@ -244,10 +244,10 @@ input:focus {
     </div>
         
     <div id="Loginarea">
-        <a  href="Login.html" target="_blank"><i class="material-icons" style="font-size:30px;">person</i></a>
+        <a  href="{{ .loginPage }}" target="_blank"><i class="material-icons" style="font-size:30px;">person</i></a>
     </div>
     <div id="Signuparea">
-        <a  href="Signup.html" target="_blank">Sing up</a>
+        <a  href="{{ .signupPage }}" target="_blank">Sign up</a>
     </div>
 </div>
 <div class="bg-image"></div>
@@ -277,84 +277,11 @@ input:focus {
         <p style="font-size:24px;position: relative; bottom:16%;">Don't have an account ?</p>
         
         <div style="font-size:24px;position: relative; bottom:15%;">
-            <a style="text-decoration: none;" href="http://127.0.0.1/web_front_end/Javascript/Mypage/Signup.html">Sign up</a>
+            <a style="text-decoration: none;" href="{{ .signupPage }}">Sign up</a>
         </div>
         <div class="log" id="btn">LogIn</div>
     </div>
 <script>
-    //For Apply for an Account;
-    //var Button = document.getElementById("btn");
-    //Button.addEventListener("click",ApplyAccount);
-    /*function ApplyAccount(){
-            var Account = document.getElementById("account0");
-            var Password = document.getElementById("password0");
-            var Information = {
-                "Accountinobj":Account.value,
-                "Passwordinobj":Password.value
-            };
-            console.log(Information);
-            let JSONInformation = JSON.stringify(Information);
-            console.log(JSONInformation);
-            var sendData = new XMLHttpRequest();
-            sendData.onreadystatechange = function(){
-                if (this.readyState == 4 && this.status == 200){
-                    console.log("HI");
-                    var Response = JSON.parse(this.responseText);
-                    console.log(Response);
-                    if(Response.msg == "find user"){
-                    window.location.assign("http://127.0.0.1/web_front_end/Javascript/Mypage/Ann's_page.html");
-                    } else if (Response.msg == "Can not find user"){
-                    document.getElementById("warn2").innerHTML = "Wrong password or account!!"
-                    }
-                }
-            };
-            let postUrl = "http://192.168.100.103:8888/api/v2/board/create_geo_post/";
-            let getUrl = "http://192.168.100.103:8888/api/v2/board/hotimages/oversea/?page=1";
-            sendData.open("post", postUrl, false);
-            sendData.send(JSONInformation);
-            
-            Account.value = "";
-            Password.value = "";
-        };*/
-    // 從 web-back-end/accountpage.xml 中抓取資料，並且判斷是否能登入;
-    //XML 版本
-    /*let Account = document.getElementById(`account0`);
-    let Password = document.getElementById(`password0`);
-    let Btn = document.getElementById("btn");
-    Btn.addEventListener("click",loadDoc);
-    function loadDoc() {   
-    var xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "http://127.0.0.1:80/web_back_end/Mypage_backend/accountpage.xml", true);
-    xhttp.send();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-            var i; 
-            let xmlDoc = this.responseXML;
-            console.log(xmlDoc)
-            let xmlAccount = xmlDoc.getElementsByTagName(`Name`);
-            let Accountarry = new Array();
-                for (i = 0; i <xmlAccount.length; i++) { 
-                    Accountarry[i] = xmlAccount[i].textContent;
-                }
-            console.log(Accountarry);
-            //Find the value in Array
-            let Foundedaccount = Accountarry.find(Search);
-            console.log(Foundedaccount);
-            function Search(value){
-                return value == Account.value;
-            };
-            let Foundedindex = Accountarry.indexOf(Foundedaccount);
-            console.log(Foundedindex);
-            let xmlPassword = xmlDoc.getElementById(`${Foundedindex}`);
-            console.log(xmlPassword.textContent);
-                if (Password.value == xmlPassword.textContent) {
-                    window.location.assign("http://127.0.0.1/web_front_end/Javascript/Mypage/Ann's_page.html")
-                } else if (Password.value != xmlPassword.textContent) {
-                    document.getElementById(`answer`).innerHTML = "You type the wrong password";
-                }
-            }
-        };
-    }*/
     //JSON 版本
     let Account = document.getElementById(`account0`);
     let Password = document.getElementById(`password0`);
@@ -380,6 +307,9 @@ input:focus {
                         alert(resp.status);
                         break;
                     case 400:
+                        alert(resp.error);
+                        break;
+                    case 404:
                         alert(resp.status);
                         break;
                     default:

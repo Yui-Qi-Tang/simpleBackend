@@ -40,16 +40,18 @@ func main() {
 	// set static files
 	//router.Static("/js", "./js")
 	//router.Static("/css", "./css")
+	userRoute := router.Group("user")
+	mysqlRoute := router.Group("mysql")
 
 	/* APIs */
-	router.POST("user/login", pianogame.UserLogin)              // login
-	router.POST("user/register", pianogame.UserRegister)        // signup
-	router.POST("mysql/test", pianogame.MysqlCheckTable)        // just test
-	router.POST("mysql/user/test", pianogame.InsertUserToMysql) // just test
+	userRoute.POST("/login", pianogame.UserLogin)              // login
+	userRoute.POST("/register", pianogame.UserRegister)        // signup
+	mysqlRoute.POST("/test", pianogame.MysqlCheckTable)        // just test
+	mysqlRoute.POST("/user/test", pianogame.InsertUserToMysql) // just test
 
-	router.GET("mysql/user/", pianogame.GetUsers) // just test
+	mysqlRoute.GET("/user", pianogame.GetUsers) // just test
 
-	router.DELETE("mysql/user/", pianogame.DeleteUser) // just test
+	mysqlRoute.DELETE("/user", pianogame.DeleteUser) // just test
 
 	/* Web page */
 	router.GET("/login", pianogame.LoginPage)   // login page

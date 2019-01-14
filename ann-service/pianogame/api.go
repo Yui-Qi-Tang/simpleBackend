@@ -30,7 +30,7 @@ func UserLogin(c *gin.Context) {
 	// query
 	err := collection.FindOne(context.Background(), filter).Decode(&r)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": "Invalid username and password!"})
+		c.JSON(http.StatusNotFound, gin.H{"status": "Invalid username and password!"})
 	} else {
 		c.JSON(http.StatusOK, gin.H{"status": "you are logged in"})
 	}
