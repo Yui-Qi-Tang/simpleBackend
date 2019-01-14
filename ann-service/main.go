@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"simpleBackend/ann-service/pianogame"
 
 	"github.com/gin-gonic/gin"
@@ -52,6 +54,23 @@ func main() {
 	mysqlRoute.GET("/user", pianogame.GetUsers) // just test
 
 	mysqlRoute.DELETE("/user", pianogame.DeleteUser) // just test
+
+	router.POST("/upload", func(c *gin.Context) {
+		// single file
+		savePlace := "/tmp"
+
+		file, err := c.FormFile("file")
+		if err != nil {
+			c.String(http.StatusOK, "File upload error!!")
+		}
+
+		// log.Println(file.Filename)
+
+		// Upload the file to specific dst.
+		c.SaveUploadedFile(file, fmt.Sprintf("%s/%s", savePlace, file.Filename))
+
+		c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
+	})
 
 	/* Web page */
 	router.GET("/login", pianogame.LoginPage)   // login page
