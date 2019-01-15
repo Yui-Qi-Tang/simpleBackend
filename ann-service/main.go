@@ -40,8 +40,10 @@ func main() {
 	router.LoadHTMLFiles(config.HTMLTemplates...) // load tempates (Parameters is variadic), ref: https://golang.org/ref/spec#Passing_arguments_to_..._parameters
 
 	// set static files
-	//router.Static("/js", "./js")
-	//router.Static("/css", "./css")
+	router.Static("/js", config.Static.Js)
+	router.Static("/css", config.Static.CSS)
+	router.Static("/images", config.Static.Images)
+
 	userRoute := router.Group("user")
 	mysqlRoute := router.Group("mysql")
 

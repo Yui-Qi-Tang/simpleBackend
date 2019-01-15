@@ -1,2 +1,6 @@
 debug: true
 html_templates: ["pianogame/templates/Signup.html", "pianogame/templates/Login.html"]
+static:
+  images: "pianogame/static/images"
+  css: "pianogame/static/css"
+  js: "pianogame/static/js"
