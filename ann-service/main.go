@@ -1,10 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
-	"net/http"
 	"simpleBackend/ann-service/pianogame"
 
 	"github.com/gin-gonic/gin"
@@ -49,31 +47,15 @@ func main() {
 	mysqlRoute := router.Group("mysql")
 
 	/* APIs */
-	userRoute.POST("/login", pianogame.UserLogin)              // login
-	userRoute.POST("/register", pianogame.UserRegister)        // signup
+	userRoute.POST("/login", pianogame.UserLogin)       // login
+	userRoute.POST("/register", pianogame.UserRegister) // signup
+
 	mysqlRoute.POST("/test", pianogame.MysqlCheckTable)        // just test
 	mysqlRoute.POST("/user/test", pianogame.InsertUserToMysql) // just test
+	mysqlRoute.GET("/user", pianogame.GetUsers)                // just test
+	mysqlRoute.DELETE("/user", pianogame.DeleteUser)           // just test
 
-	mysqlRoute.GET("/user", pianogame.GetUsers) // just test
-
-	mysqlRoute.DELETE("/user", pianogame.DeleteUser) // just test
-
-	router.POST("/upload", func(c *gin.Context) {
-		// single file
-		savePlace := "/tmp"
-
-		file, err := c.FormFile("file")
-		if err != nil {
-			c.String(http.StatusOK, "File upload error!!")
-		}
-
-		// log.Println(file.Filename)
-
-		// Upload the file to specific dst.
-		c.SaveUploadedFile(file, fmt.Sprintf("%s/%s", savePlace, file.Filename))
-
-		c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
-	})
+	router.POST("/upload", pianogame.UploadFileSample) // file upload demo
 
 	/* Web page */
 	router.GET("/login", pianogame.LoginPage)   // login page

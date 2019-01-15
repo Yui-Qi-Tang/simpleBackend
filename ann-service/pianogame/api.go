@@ -2,6 +2,7 @@ package pianogame
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -188,4 +189,22 @@ func DeleteUser(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 	})
+}
+
+// UploadFileSample just put this as demo
+func UploadFileSample(c *gin.Context) {
+	// single file
+	savePlace := "/tmp"
+
+	file, err := c.FormFile("file")
+	if err != nil {
+		c.String(http.StatusOK, "File upload error!!")
+	}
+
+	// log.Println(file.Filename)
+
+	// Upload the file to specific dst.
+	c.SaveUploadedFile(file, fmt.Sprintf("%s/%s", savePlace, file.Filename))
+
+	c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
 }
