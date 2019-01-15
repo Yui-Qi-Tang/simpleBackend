@@ -21,3 +21,13 @@ func SignupPage(c *gin.Context) {
 		"registerURL": "http://127.0.0.1:8080/user/register",
 	})
 }
+
+// GamePage game page
+func GamePage(c *gin.Context) {
+	c.HTML(http.StatusOK, "Gamepage.html", gin.H{})
+}
+
+// IndexPage index page
+func IndexPage(c *gin.Context) {
+	c.HTML(http.StatusOK, "AnnPage.html", gin.H{})
+}

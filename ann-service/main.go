@@ -43,6 +43,7 @@ func main() {
 	router.Static("/js", config.Static.Js)
 	router.Static("/css", config.Static.CSS)
 	router.Static("/images", config.Static.Images)
+	router.Static("/music", config.Static.Music)
 
 	userRoute := router.Group("user")
 	mysqlRoute := router.Group("mysql")
@@ -77,6 +78,8 @@ func main() {
 	/* Web page */
 	router.GET("/login", pianogame.LoginPage)   // login page
 	router.GET("/signup", pianogame.SignupPage) // signup page
+	router.GET("/game", pianogame.GamePage)     // game page
+	router.GET("/", pianogame.IndexPage)        // index page
 
 	/* Run server */
 	log.Println("Start server")

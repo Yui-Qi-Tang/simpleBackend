@@ -25,4 +25,5 @@ type staticPath struct {
 	CSS    string `yaml:"css"`
 	Js     string `yaml:"js"`
 	Images string `yaml:"images"`
+	Music  string `yaml:"music"`
 }
