@@ -30,10 +30,21 @@ func UserLogin(c *gin.Context) {
 	r := Login{}
 	// query
 	err := collection.FindOne(context.Background(), filter).Decode(&r)
+	// log.Println(r)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"status": "Invalid username and password!"})
+		c.JSON(http.StatusNotFound, gin.H{"status": "user not found"})
+		return
+	}
+	if token, jwtErr := GenerateToken(json.User, json.Password); err != nil {
+		log.Println("JWT error: ", jwtErr)
+		c.JSON(http.StatusBadRequest, gin.H{"status": "Error for auth, please retry"})
+		return
 	} else {
-		c.JSON(http.StatusOK, gin.H{"status": "you are logged in"})
+		c.JSON(http.StatusOK, gin.H{
+			"status": "you are logged in",
+			"token":  token,
+		})
+		return
 	}
 }
 
@@ -60,7 +71,7 @@ func UserRegister(c *gin.Context) {
 		_, err := collection.InsertOne(context.Background(), newUserData)
 
 		if err != nil {
-			log.Println("Insert one failed: %v", err)
+			log.Println("Insert one failed: ", err)
 			c.JSON(http.StatusBadRequest, gin.H{"status": "create new user Failed!"})
 			return
 		}

@@ -17,8 +17,10 @@ func LoginPage(c *gin.Context) {
 
 // SignupPage show sign-up UI from template page
 func SignupPage(c *gin.Context) {
+	host := getURLInfo(c)
+	registerURL := "/user/register"
 	c.HTML(http.StatusOK, "Signup.html", gin.H{
-		"registerURL": "http://127.0.0.1:8080/user/register",
+		"registerURL": strConcate(host.String(), registerURL),
 	})
 }
 

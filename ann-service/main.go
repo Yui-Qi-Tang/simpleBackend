@@ -5,7 +5,9 @@ import (
 	"log"
 	"simpleBackend/ann-service/pianogame"
 
+	"github.com/gin-contrib/location"
 	"github.com/gin-gonic/gin"
+
 	yaml "gopkg.in/yaml.v2"
 )
 
@@ -35,6 +37,7 @@ func main() {
 	/* Go-Gin setup */
 	gin.SetMode(gin.TestMode) // enable server on localhost:8080
 	router := gin.Default()
+	router.Use(location.New(location.DefaultConfig()))
 	router.LoadHTMLFiles(config.HTMLTemplates...) // load tempates (Parameters is variadic), ref: https://golang.org/ref/spec#Passing_arguments_to_..._parameters
 
 	// set static files

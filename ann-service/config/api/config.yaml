@@ -10,3 +10,4 @@ static:
   css: "pianogame/static/css"
   js: "pianogame/static/js"
   music: "pianogame/static/music"
+jwtSecret: "secret"
