@@ -1,4 +1,6 @@
+# Those data are for mysqldb/mariadb, just demo!
+# Please enter your setting that is satified your environment.
 user: "root"
-password: ""
+password: "12345678"
 charset: "utf8"
 database_name: "test"

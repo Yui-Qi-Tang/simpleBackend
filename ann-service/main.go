@@ -1,12 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"simpleBackend/ann-service/pianogame"
 
 	"github.com/gin-gonic/gin"
-	"gopkg.in/yaml.v2"
+	yaml "gopkg.in/yaml.v2"
 )
 
 // main ann-service entry point */
@@ -37,15 +39,38 @@ func main() {
 	router := gin.Default()
 	router.LoadHTMLFiles(config.HTMLTemplates...) // load tempates (Parameters is variadic), ref: https://golang.org/ref/spec#Passing_arguments_to_..._parameters
 
+	// set static files
+	//router.Static("/js", "./js")
+	//router.Static("/css", "./css")
+	userRoute := router.Group("user")
+	mysqlRoute := router.Group("mysql")
+
 	/* APIs */
-	router.POST("user/login", pianogame.UserLogin)              // login
-	router.POST("user/register", pianogame.UserRegister)        // signup
-	router.POST("mysql/test", pianogame.MysqlCheckTable)        // just test
-	router.POST("mysql/user/test", pianogame.InsertUserToMysql) // just test
+	userRoute.POST("/login", pianogame.UserLogin)              // login
+	userRoute.POST("/register", pianogame.UserRegister)        // signup
+	mysqlRoute.POST("/test", pianogame.MysqlCheckTable)        // just test
+	mysqlRoute.POST("/user/test", pianogame.InsertUserToMysql) // just test
 
-	router.GET("mysql/user/", pianogame.GetUsers) // just test
+	mysqlRoute.GET("/user", pianogame.GetUsers) // just test
 
-	router.DELETE("mysql/user/", pianogame.DeleteUser) // just test
+	mysqlRoute.DELETE("/user", pianogame.DeleteUser) // just test
+
+	router.POST("/upload", func(c *gin.Context) {
+		// single file
+		savePlace := "/tmp"
+
+		file, err := c.FormFile("file")
+		if err != nil {
+			c.String(http.StatusOK, "File upload error!!")
+		}
+
+		// log.Println(file.Filename)
+
+		// Upload the file to specific dst.
+		c.SaveUploadedFile(file, fmt.Sprintf("%s/%s", savePlace, file.Filename))
+
+		c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
+	})
 
 	/* Web page */
 	router.GET("/login", pianogame.LoginPage)   // login page
