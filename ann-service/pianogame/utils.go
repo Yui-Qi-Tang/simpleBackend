@@ -2,10 +2,9 @@ package pianogame
 
 import (
 	"fmt"
+	"log"
 	"net/url"
 	"time"
-
-	"errors"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gin-contrib/location"
@@ -52,14 +51,12 @@ func GenerateToken(username, password string) (string, error) {
 	return token, err
 }
 
-func webPusher(c *gin.Context, resource string) error {
+func webPusher(c *gin.Context, resource string) {
 	if pusher := c.Writer.Pusher(); pusher != nil {
 		// use pusher.Push() to do server push
 		if err := pusher.Push(resource, nil); err != nil {
-			return err
-			// log.Printf("Failed to push: %v", err)
+			// return err
+			log.Printf("Failed to push: %v", err)
 		}
-		return nil
 	}
-	return errors.New("Pusher FAILED")
 }
