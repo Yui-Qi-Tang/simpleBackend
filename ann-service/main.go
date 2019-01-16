@@ -69,7 +69,7 @@ func main() {
 	/* Run server */
 	log.Println("Start server")
 	//router.Run()
-	router.RunTLS(":8443", "ssl/localhost.pem", "ssl/localhost.key")
+	router.RunTLS(":8443", "ssl/localhost-mac.pem", "ssl/localhost-mac.key")
 	// Close Mysql DB client
 	defer pianogame.MysqlDB.Close()
 }

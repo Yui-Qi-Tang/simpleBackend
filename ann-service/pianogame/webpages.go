@@ -1,6 +1,7 @@
 package pianogame
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -31,5 +32,21 @@ func GamePage(c *gin.Context) {
 
 // IndexPage index page
 func IndexPage(c *gin.Context) {
+	if pusher := c.Writer.Pusher(); pusher != nil {
+		resources := [...]string{
+			"/js/annPage.js",
+			"/css/annPage.css",
+			"/images/piano_background.jpg",
+			"/music/music.mp3",
+			"/js/jquery-3.3.1.min.js",
+			"/images/piano_2.jpg",
+			"/images/Piano.jpg",
+		}
+		for _, v := range resources {
+			if err := webPusher(c, v); err != nil {
+				log.Printf("Failed to push: %v", err)
+			}
+		}
+	}
 	c.HTML(http.StatusOK, "AnnPage.html", gin.H{})
 }

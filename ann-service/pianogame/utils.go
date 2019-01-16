@@ -5,6 +5,8 @@ import (
 	"net/url"
 	"time"
 
+	"errors"
+
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gin-contrib/location"
 	"github.com/gin-gonic/gin"
@@ -48,4 +50,16 @@ func GenerateToken(username, password string) (string, error) {
 	token, err := tokenClaims.SignedString(jwtSecret)
 
 	return token, err
+}
+
+func webPusher(c *gin.Context, resource string) error {
+	if pusher := c.Writer.Pusher(); pusher != nil {
+		// use pusher.Push() to do server push
+		if err := pusher.Push(resource, nil); err != nil {
+			return err
+			// log.Printf("Failed to push: %v", err)
+		}
+		return nil
+	}
+	return errors.New("Pusher FAILED")
 }
