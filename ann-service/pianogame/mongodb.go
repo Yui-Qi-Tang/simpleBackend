@@ -32,12 +32,14 @@ func init() {
 		log.Fatalf("New client error: %v", err)
 	} //fi
 
-	conTimeOutCtx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	conTimeOutCtx, cancelTimeOut := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancelTimeOut()
 	if err = Mongodb.Connect(conTimeOutCtx); err != nil {
 		log.Fatalf("Client connection error: %v", err)
 	} //fi
 
-	pingTestCtx, _ := context.WithTimeout(context.Background(), 2*time.Second)
+	pingTestCtx, cancelDBPing := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancelDBPing()
 	if err = Mongodb.Ping(pingTestCtx, readpref.Primary()); err != nil {
 		log.Fatalf("Client ping mongodb server error: %v", err)
 	} //fi
