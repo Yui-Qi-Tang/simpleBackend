@@ -16,7 +16,7 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-func runserver(server *http.Server, cert string, key string) {
+func runserverTLS(server *http.Server, cert string, key string) {
 	// Start HTTPS server by net/http
 	if err := server.ListenAndServeTLS(cert, key); err != nil && err != http.ErrServerClosed {
 		log.Fatalf("listen: %s\n", err)
@@ -102,7 +102,7 @@ func main() {
 		Handler: router,
 	}
 
-	go runserver(srv, config.Ssl.Cert, config.Ssl.Key)
+	go runserverTLS(srv, config.Ssl.Cert, config.Ssl.Key)
 
 	/* Graceful shotdown */
 	waitQuitSignal() // block until receive quit signal
