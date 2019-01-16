@@ -36,7 +36,7 @@ func waitQuitSignal() {
 	quit := make(chan os.Signal)
 	signal.Notify(quit, os.Interrupt)
 	<-quit
-	log.Println("Receive Quit signal ...")
+	log.Println("Received Quit signal ...")
 }
 
 // main ann-service entry point */
