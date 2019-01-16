@@ -18,7 +18,6 @@ import (
 
 func runserver(server *http.Server, cert string, key string) {
 	// Start HTTPS server by net/http
-	log.Println("Receive Quit signal ...")
 	if err := server.ListenAndServeTLS(cert, key); err != nil && err != http.ErrServerClosed {
 		log.Fatalf("listen: %s\n", err)
 	}
@@ -37,6 +36,7 @@ func waitQuitSignal() {
 	quit := make(chan os.Signal)
 	signal.Notify(quit, os.Interrupt)
 	<-quit
+	log.Println("Receive Quit signal ...")
 }
 
 // main ann-service entry point */
