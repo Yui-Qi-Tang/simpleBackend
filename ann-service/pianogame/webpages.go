@@ -38,6 +38,7 @@ func IndexPage(c *gin.Context) {
 		"/js/jquery-3.3.1.min.js",
 		"/images/piano_2.jpg",
 		"/images/Piano.jpg",
+		"/music/music.mp3",
 	}
 	for _, v := range resources {
 		go webPusher(c, v)
