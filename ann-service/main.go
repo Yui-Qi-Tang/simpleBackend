@@ -63,7 +63,7 @@ func main() {
 	log.Println("Load config file finished")
 
 	/* Go-Gin setup */
-	gin.SetMode(gin.TestMode) // enable server on localhost:8080
+	gin.SetMode(gin.TestMode)
 	router := gin.Default()
 	router.Use(location.New(location.DefaultConfig()))
 	router.LoadHTMLFiles(config.HTMLTemplates...) // load tempates (Parameters is variadic), ref: https://golang.org/ref/spec#Passing_arguments_to_..._parameters
@@ -104,9 +104,9 @@ func main() {
 
 	go runserver(srv, config.Ssl.Cert, config.Ssl.Key)
 
-	waitQuitSignal()
+	/* Graceful shotdown */
+	waitQuitSignal() // block until receive quit signal
 	shutDownGraceful(srv)
 
-	// Close Mysql DB client
 	defer pianogame.MysqlDB.Close()
 }
