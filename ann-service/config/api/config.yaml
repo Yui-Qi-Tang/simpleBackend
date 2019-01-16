@@ -11,3 +11,7 @@ static:
   js: "pianogame/static/js"
   music: "pianogame/static/music"
 jwtSecret: "secret"
+ssl:
+  cert: "ssl/localhost-mac.pem"
+  key: "ssl/localhost-mac.key"
+port: ":8443"

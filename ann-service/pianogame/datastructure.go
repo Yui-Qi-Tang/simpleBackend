@@ -11,6 +11,9 @@ type Config struct {
 	Debug         bool       `yaml:"debug"`
 	HTMLTemplates []string   `yaml:"html_templates"`
 	Static        staticPath `yaml:"static"`
+	JwtSec        string     `yaml:"jwtSecret"`
+	Ssl           ssl        `yaml:"ssl"`
+	Port          string     `yaml:"port"`
 }
 
 // MysqlConfig structure for set mysql db
@@ -26,4 +29,9 @@ type staticPath struct {
 	Js     string `yaml:"js"`
 	Images string `yaml:"images"`
 	Music  string `yaml:"music"`
+}
+
+type ssl struct {
+	Cert string `yaml:"cert"`
+	Key  string `yaml:"key"`
 }
