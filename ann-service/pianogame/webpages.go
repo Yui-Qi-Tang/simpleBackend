@@ -8,10 +8,11 @@ import (
 
 // LoginPage show login UI from template page
 func LoginPage(c *gin.Context) {
+	host := getURLInfo(c)
 	c.HTML(http.StatusOK, "Login.html", gin.H{
-		"loginURL":   "http://127.0.0.1:8080/user/login",
-		"signupPage": "http://127.0.0.1:8080/signup",
-		"loginPage":  "http://127.0.0.1:8080/login",
+		"loginURL":   strConcate(host.String(), "/user/login"),
+		"signupPage": strConcate(host.String(), "/signup"),
+		"loginPage":  strConcate(host.String(), "/login"),
 	})
 }
 
