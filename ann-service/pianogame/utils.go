@@ -2,6 +2,7 @@ package pianogame
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/url"
 	"time"
@@ -28,59 +29,80 @@ func getURLInfo(c *gin.Context) *url.URL {
 
 // GenerateToken generate JWT token
 func GenerateToken(username, password string) (string, error) {
-	type claimData struct {
-		Username string `json:"username"`
-		Password string `json:"password"`
-		jwt.StandardClaims
-	}
-	var jwtSecret = []byte("secret")
-	nowTime := time.Now()
-	expireTime := nowTime.Add(3 * time.Hour)
+	tokenExpireTimestamp := time.Now().Add(3 * time.Hour).Unix()
 
-	claims := claimData{
+	claims := jwtClaim{
 		username,
 		password,
 		jwt.StandardClaims{
-			ExpiresAt: expireTime.Unix(),
+			ExpiresAt: tokenExpireTimestamp,
 		},
 	}
 
 	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	token, err := tokenClaims.SignedString(jwtSecret)
+	token, err := tokenClaims.SignedString([]byte(SysConfig.JwtSec))
 
 	return token, err
 }
 
-// IsJwtValid generate JWT token
+// IsJwtValid JWT Validation
 func IsJwtValid(tokenString string) bool {
 
-	type claimData struct {
-		Username string `json:"username"`
-		Password string `json:"password"`
-		jwt.StandardClaims
-	}
-	claims := claimData{}
+	claims := jwtClaim{}
 
-	t, err := jwt.ParseWithClaims(
+	token, err := jwt.ParseWithClaims(
 		tokenString,
 		&claims,
 		func(token *jwt.Token) (interface{}, error) {
-			return []byte("secret"), nil
+			return []byte(SysConfig.JwtSec), nil
 		},
 	)
 
-	_, err2 := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		return []byte("secret"), nil
-	})
-
-	if err != nil || err2 != nil {
+	if err != nil || !token.Valid {
 		return false
 	}
-	log.Println(claims.Username, claims.Password, t)
-	// do something with decoded claims
-	//for key, val := range claims {
-	//	fmt.Printf("Key: %v, value: %v\n", key, val)
-	//}
+
+	//log.Println(token.Valid, claims.Username, claims.Password, time.Now().Unix() > claims.ExpiresAt)
 	return true
 
+}
+
+// IsJwtExpired check if JWT expired
+func IsJwtExpired(tokenString string) bool {
+
+	claims := jwtClaim{}
+
+	token, err := jwt.ParseWithClaims(
+		tokenString,
+		&claims,
+		func(token *jwt.Token) (interface{}, error) {
+			return []byte(SysConfig.JwtSec), nil
+		},
+	)
+
+	if err != nil || !token.Valid {
+		panic("IsJwtExpires => parse or token is invalid")
+	}
+
+	if !(time.Now().Unix() > claims.ExpiresAt) {
+		return false
+	}
+	return true
+}
+
+func readFile(filePath string) []byte {
+	fileBytes, err := ioutil.ReadFile(filePath) // open file and read
+	errorCheck(err, "readFile Error")
+	return fileBytes
+}
+
+func errorCheck(e error, msg ...string) {
+	// TO-DO: better to logging error
+	if e != nil {
+		errorMsg := ""
+		for _, v := range msg {
+			errorMsg += v
+		}
+		log.Panicf("%s => %v", errorMsg, e)
+	} // fi
 }

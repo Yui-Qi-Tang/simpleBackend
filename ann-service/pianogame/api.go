@@ -232,13 +232,21 @@ func DecodeJwt(c *gin.Context) {
 	if !IsJwtValid(json.Token) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
-			"data":    "Shit",
+			"data":    "invalid",
+		})
+		return
+	}
+
+	if IsJwtExpired(json.Token) {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"data":    "expired",
 		})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
-		"data":    "Shit",
+		"data":    "ok!",
 	})
 }
 

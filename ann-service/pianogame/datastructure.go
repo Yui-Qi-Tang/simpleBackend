@@ -1,5 +1,9 @@
 package pianogame
 
+import (
+	jwt "github.com/dgrijalva/jwt-go"
+)
+
 // Login structure for user login
 type Login struct {
 	User     string `form:"user" json:"user" xml:"user"  binding:"required"`
@@ -39,4 +43,10 @@ type ssl struct {
 // AuthData authorization
 type authData struct {
 	Token string `json:"token"` // JWT
+}
+
+type jwtClaim struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+	jwt.StandardClaims
 }

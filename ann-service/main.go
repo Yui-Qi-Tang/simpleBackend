@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -12,8 +11,6 @@ import (
 
 	"github.com/gin-contrib/location"
 	"github.com/gin-gonic/gin"
-
-	yaml "gopkg.in/yaml.v2"
 )
 
 func runserverTLS(server *http.Server, cert string, key string) {
@@ -50,17 +47,6 @@ func main() {
 				mode: variable is denoted the status of gin(test/production)
 			2. add JWT for auth
 	*/
-	/* Load config by yaml format */
-	var config pianogame.Config
-	configFile, configErr := ioutil.ReadFile("config/api/config.yaml") // open file and read
-	if configErr != nil {
-		log.Panicf("read service config file error: %v", configErr)
-	} // fi
-	configUnmarshalError := yaml.Unmarshal([]byte(configFile), &config)
-	if configUnmarshalError != nil {
-		log.Panicf("error while unmarshal from db config: %v", configUnmarshalError)
-	} // fi
-	log.Println("Load config file finished")
 
 	/* Go-Gin setup */
 	gin.SetMode(gin.TestMode)
@@ -68,13 +54,13 @@ func main() {
 	/* Use middleware */
 	router.Use(gin.Recovery())
 	router.Use(location.New(location.DefaultConfig()))
-	router.LoadHTMLFiles(config.HTMLTemplates...) // load tempates (Parameters is variadic), ref: https://golang.org/ref/spec#Passing_arguments_to_..._parameters
+	router.LoadHTMLFiles(pianogame.SysConfig.HTMLTemplates...) // load tempates (Parameters is variadic), ref: https://golang.org/ref/spec#Passing_arguments_to_..._parameters
 
 	// set static files
-	router.Static("/js", config.Static.Js)
-	router.Static("/css", config.Static.CSS)
-	router.Static("/images", config.Static.Images)
-	router.Static("/music", config.Static.Music)
+	router.Static("/js", pianogame.SysConfig.Static.Js)
+	router.Static("/css", pianogame.SysConfig.Static.CSS)
+	router.Static("/images", pianogame.SysConfig.Static.Images)
+	router.Static("/music", pianogame.SysConfig.Static.Music)
 
 	userRoute := router.Group("user")
 	mysqlRoute := router.Group("mysql")
@@ -102,11 +88,11 @@ func main() {
 	log.Println("Start server")
 
 	srv := &http.Server{
-		Addr:    config.Port,
+		Addr:    pianogame.SysConfig.Port,
 		Handler: router,
 	}
 
-	go runserverTLS(srv, config.Ssl.Cert, config.Ssl.Key)
+	go runserverTLS(srv, pianogame.SysConfig.Ssl.Cert, pianogame.SysConfig.Ssl.Key)
 
 	/* Graceful shotdown */
 	waitQuitSignal("Receive Quit server Signal") // block until receive quit signal
