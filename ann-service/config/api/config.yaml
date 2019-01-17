@@ -16,3 +16,34 @@ ssl:
   key: "ssl/localhost-mac.key"
 ports: [8443, 9999, 1234]
 ip: ""
+
+# new config structure mockup
+web_service:
+  ip: ""
+  ports: [80, 443]
+  ssl:
+    cert: "ssl/localhost-mac.pem"
+    key: "ssl/localhost-mac.key"
+  static:
+    images: "pianogame/static/images"
+    css: "pianogame/static/css"
+    js: "pianogame/static/js"
+    music: "pianogame/static/music"
+  html_templates: [
+    "pianogame/templates/Signup.html",
+    "pianogame/templates/Login.html",
+    "pianogame/templates/Gamepage.html",
+    "pianogame/templates/AnnPage.html"
+  ]
+  jwtSecret: "secret"
+
+api_service:
+  ip: ""
+  ports: [8080, 8443]
+  ssl:
+    cert: "ssl/localhost-mac.pem"
+    key: "ssl/localhost-mac.key"
+  jwtSecret: "secret"
+
+develop:
+  debug: true
