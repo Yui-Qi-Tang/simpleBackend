@@ -32,7 +32,7 @@ func GamePage(c *gin.Context) {
 
 // IndexPage index page
 func IndexPage(c *gin.Context) {
-	resources := [...]string{
+	resources := []string{
 		"/js/annPage.js",
 		"/css/annPage.css",
 		"/images/piano_background.jpg",
