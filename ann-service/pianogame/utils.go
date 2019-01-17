@@ -27,6 +27,11 @@ func getURLInfo(c *gin.Context) *url.URL {
 	return location.Get(c)
 }
 
+// BindIPPort a tool to bind
+func BindIPPort(IP string, PORT int) string {
+	return fmt.Sprintf("%s:%d", IP, PORT)
+}
+
 // GenerateToken generate JWT token
 func GenerateToken(username, password string) (string, error) {
 	tokenExpireTimestamp := time.Now().Add(3 * time.Hour).Unix()
@@ -61,10 +66,7 @@ func IsJwtValid(tokenString string) bool {
 	if err != nil || !token.Valid {
 		return false
 	}
-
-	//log.Println(token.Valid, claims.Username, claims.Password, time.Now().Unix() > claims.ExpiresAt)
 	return true
-
 }
 
 // IsJwtExpired check if JWT expired

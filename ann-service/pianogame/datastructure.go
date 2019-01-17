@@ -17,7 +17,8 @@ type Config struct {
 	Static        staticPath `yaml:"static"`
 	JwtSec        string     `yaml:"jwtSecret"`
 	Ssl           ssl        `yaml:"ssl"`
-	Port          string     `yaml:"port"`
+	Port          int        `yaml:"port"`
+	IP            string     `yaml:"ip"`
 }
 
 // MysqlConfig structure for set mysql db

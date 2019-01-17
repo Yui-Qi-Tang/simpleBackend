@@ -21,12 +21,12 @@ func runserverTLS(server *http.Server, cert string, key string) {
 }
 
 func shutDownGraceful(server *http.Server) {
-	log.Println("Server graceful exiting")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	if err := server.Shutdown(ctx); err != nil {
 		log.Fatal("Server Shutdown:", err)
 	}
+	log.Printf("Server %s graceful exiting...", server.Addr)
 }
 
 func waitQuitSignal(hint string) {
@@ -34,6 +34,25 @@ func waitQuitSignal(hint string) {
 	signal.Notify(quit, os.Interrupt)
 	<-quit
 	log.Println(hint)
+}
+
+func startServers(serverNum int, handler *gin.Engine) {
+	servers := make([]*http.Server, serverNum)
+	for i := 0; i < serverNum; i++ {
+		servers[i] = &http.Server{
+			Addr:    pianogame.BindIPPort(pianogame.SysConfig.IP, pianogame.SysConfig.Port+i),
+			Handler: handler,
+		}
+		log.Println("Start server", servers[i].Addr)
+		go runserverTLS(servers[i], pianogame.SysConfig.Ssl.Cert, pianogame.SysConfig.Ssl.Key)
+	} // for
+
+	waitQuitSignal("Receive Quit server Signal") // block until receive quit signal from system
+
+	// stop servers
+	for _, v := range servers {
+		shutDownGraceful(v) // terminate each server
+	} // for
 }
 
 // main ann-service entry point */
@@ -75,8 +94,8 @@ func main() {
 	mysqlRoute.DELETE("/user", pianogame.DeleteUser)           // just test
 
 	router.POST("/upload", pianogame.UploadFileSample) // file upload demo
-
 	router.POST("/parsejwt", pianogame.DecodeJwt)
+	router.POST("/parse-cookie-jwt", pianogame.DecodeJwtFromCookie)
 
 	/* Web page */
 	router.GET("/login", pianogame.LoginPage)   // login page
@@ -84,19 +103,7 @@ func main() {
 	router.GET("/game", pianogame.GamePage)     // game page
 	router.GET("/", pianogame.IndexPage)        // index page
 
-	/* Run server */
-	log.Println("Start server")
-
-	srv := &http.Server{
-		Addr:    pianogame.SysConfig.Port,
-		Handler: router,
-	}
-
-	go runserverTLS(srv, pianogame.SysConfig.Ssl.Cert, pianogame.SysConfig.Ssl.Key)
-
-	/* Graceful shotdown */
-	waitQuitSignal("Receive Quit server Signal") // block until receive quit signal
-	shutDownGraceful(srv)
-
+	/* Start servers  */
+	startServers(10, router)
 	defer pianogame.MysqlDB.Close()
 }

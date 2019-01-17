@@ -222,7 +222,6 @@ func UploadFileSample(c *gin.Context) {
 
 // DecodeJwt just put this as demo
 func DecodeJwt(c *gin.Context) {
-	// single file
 	var json authData
 	// json decode
 	if err := c.ShouldBindJSON(&json); err != nil {
@@ -247,6 +246,32 @@ func DecodeJwt(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"data":    "ok!",
+	})
+}
+
+// DecodeJwtFromCookie just put this as demo
+func DecodeJwtFromCookie(c *gin.Context) {
+	tokenStr, err := c.Cookie("token")
+	errorCheck(err, "token is unset in cookie")
+	if !IsJwtValid(tokenStr) {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"data":    "invalid",
+		})
+		return
+	}
+
+	if IsJwtExpired(tokenStr) {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"data":    "expired",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"data":    "Some data",
 	})
 }
 

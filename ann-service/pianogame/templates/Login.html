@@ -294,7 +294,6 @@ input:focus {
             "user": Account.value,
             "password": Password.value
         };
-        console.log(data);
         xhttp.open("POST", loginURL, true);
         xhttp.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
         xhttp.send(JSON.stringify(data));
@@ -305,7 +304,7 @@ input:focus {
                 switch(this.status) {
                     case 200:
                         alert(resp.status);
-                        console.log(resp);
+                        document.cookie = `token=${resp.token}`;
                         break;
                     case 400:
                         alert(resp.error);
