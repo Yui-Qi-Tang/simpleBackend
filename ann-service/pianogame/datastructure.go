@@ -17,7 +17,7 @@ type Config struct {
 	Static        staticPath `yaml:"static"`
 	JwtSec        string     `yaml:"jwtSecret"`
 	Ssl           ssl        `yaml:"ssl"`
-	Port          int        `yaml:"port"`
+	Ports         []int      `yaml:"ports"`
 	IP            string     `yaml:"ip"`
 }
 

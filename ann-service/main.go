@@ -36,16 +36,16 @@ func waitQuitSignal(hint string) {
 	log.Println(hint)
 }
 
-func startServers(serverNum int, handler *gin.Engine) {
-	servers := make([]*http.Server, serverNum)
-	for i := 0; i < serverNum; i++ {
+func startServers(handler *gin.Engine) {
+	servers := make([]*http.Server, len(pianogame.SysConfig.Ports))
+	for i, v := range pianogame.SysConfig.Ports {
 		servers[i] = &http.Server{
-			Addr:    pianogame.BindIPPort(pianogame.SysConfig.IP, pianogame.SysConfig.Port+i),
+			Addr:    pianogame.BindIPPort(pianogame.SysConfig.IP, v),
 			Handler: handler,
 		}
 		log.Println("Start server", servers[i].Addr)
 		go runserverTLS(servers[i], pianogame.SysConfig.Ssl.Cert, pianogame.SysConfig.Ssl.Key)
-	} // for
+	}
 
 	waitQuitSignal("Receive Quit server Signal") // block until receive quit signal from system
 
@@ -104,6 +104,6 @@ func main() {
 	router.GET("/", pianogame.IndexPage)        // index page
 
 	/* Start servers  */
-	startServers(10, router)
+	startServers(router)
 	defer pianogame.MysqlDB.Close()
 }
