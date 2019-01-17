@@ -219,3 +219,35 @@ func UploadFileSample(c *gin.Context) {
 
 	c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
 }
+
+// DecodeJwt just put this as demo
+func DecodeJwt(c *gin.Context) {
+	// single file
+	var json authData
+	// json decode
+	if err := c.ShouldBindJSON(&json); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	if !IsJwtValid(json.Token) {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"data":    "Shit",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"data":    "Shit",
+	})
+}
+
+func webPusher(c *gin.Context, resource string) {
+	if pusher := c.Writer.Pusher(); pusher != nil {
+		// use pusher.Push() to do server push
+		if err := pusher.Push(resource, nil); err != nil {
+			// return err
+			log.Printf("Failed to push: %v", err)
+		}
+	}
+}

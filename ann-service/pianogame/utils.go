@@ -29,8 +29,8 @@ func getURLInfo(c *gin.Context) *url.URL {
 // GenerateToken generate JWT token
 func GenerateToken(username, password string) (string, error) {
 	type claimData struct {
-		username string
-		password string
+		Username string `json:"username"`
+		Password string `json:"password"`
 		jwt.StandardClaims
 	}
 	var jwtSecret = []byte("secret")
@@ -51,12 +51,36 @@ func GenerateToken(username, password string) (string, error) {
 	return token, err
 }
 
-func webPusher(c *gin.Context, resource string) {
-	if pusher := c.Writer.Pusher(); pusher != nil {
-		// use pusher.Push() to do server push
-		if err := pusher.Push(resource, nil); err != nil {
-			// return err
-			log.Printf("Failed to push: %v", err)
-		}
+// IsJwtValid generate JWT token
+func IsJwtValid(tokenString string) bool {
+
+	type claimData struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+		jwt.StandardClaims
 	}
+	claims := claimData{}
+
+	t, err := jwt.ParseWithClaims(
+		tokenString,
+		&claims,
+		func(token *jwt.Token) (interface{}, error) {
+			return []byte("secret"), nil
+		},
+	)
+
+	_, err2 := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		return []byte("secret"), nil
+	})
+
+	if err != nil || err2 != nil {
+		return false
+	}
+	log.Println(claims.Username, claims.Password, t)
+	// do something with decoded claims
+	//for key, val := range claims {
+	//	fmt.Printf("Key: %v, value: %v\n", key, val)
+	//}
+	return true
+
 }

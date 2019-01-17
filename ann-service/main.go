@@ -32,11 +32,11 @@ func shutDownGraceful(server *http.Server) {
 	}
 }
 
-func waitQuitSignal() {
+func waitQuitSignal(hint string) {
 	quit := make(chan os.Signal)
 	signal.Notify(quit, os.Interrupt)
 	<-quit
-	log.Println("Received Quit signal ...")
+	log.Println(hint)
 }
 
 // main ann-service entry point */
@@ -65,6 +65,8 @@ func main() {
 	/* Go-Gin setup */
 	gin.SetMode(gin.TestMode)
 	router := gin.Default()
+	/* Use middleware */
+	router.Use(gin.Recovery())
 	router.Use(location.New(location.DefaultConfig()))
 	router.LoadHTMLFiles(config.HTMLTemplates...) // load tempates (Parameters is variadic), ref: https://golang.org/ref/spec#Passing_arguments_to_..._parameters
 
@@ -88,6 +90,8 @@ func main() {
 
 	router.POST("/upload", pianogame.UploadFileSample) // file upload demo
 
+	router.POST("/parsejwt", pianogame.DecodeJwt)
+
 	/* Web page */
 	router.GET("/login", pianogame.LoginPage)   // login page
 	router.GET("/signup", pianogame.SignupPage) // signup page
@@ -105,7 +109,7 @@ func main() {
 	go runserverTLS(srv, config.Ssl.Cert, config.Ssl.Key)
 
 	/* Graceful shotdown */
-	waitQuitSignal() // block until receive quit signal
+	waitQuitSignal("Receive Quit server Signal") // block until receive quit signal
 	shutDownGraceful(srv)
 
 	defer pianogame.MysqlDB.Close()

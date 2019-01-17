@@ -35,3 +35,8 @@ type ssl struct {
 	Cert string `yaml:"cert"`
 	Key  string `yaml:"key"`
 }
+
+// AuthData authorization
+type authData struct {
+	Token string `json:"token"` // JWT
+}
