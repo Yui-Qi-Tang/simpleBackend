@@ -18,7 +18,7 @@ ports: [8443, 9999, 1234]
 ip: ""
 
 # new config structure mockup
-web_service:
+web_service: # move to web.yaml
   ip: ""
   ports: [80, 443]
   ssl:
@@ -37,7 +37,7 @@ web_service:
   ]
   jwtSecret: "secret"
 
-api_service:
+api_service: # stay here
   ip: ""
   ports: [8080, 8443]
   ssl:
@@ -45,5 +45,5 @@ api_service:
     key: "ssl/localhost-mac.key"
   jwtSecret: "secret"
 
-develop:
+develop: # move to system.yaml
   debug: true
