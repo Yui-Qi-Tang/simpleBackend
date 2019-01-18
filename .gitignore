@@ -1,2 +1,5 @@
-
+simpleBackend
+.go-version
+*.log
+.vscode/
 go\.sum
