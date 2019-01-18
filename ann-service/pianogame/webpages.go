@@ -30,7 +30,7 @@ func GamePage(c *gin.Context) {
 	c.HTML(http.StatusOK, "Gamepage.html", gin.H{})
 }
 
-// IndexPage index page
+// IndexPage index page; just demo
 func IndexPage(c *gin.Context) {
 	resources := []string{
 		"/js/annPage.js",
@@ -41,8 +41,9 @@ func IndexPage(c *gin.Context) {
 		"/images/Piano.jpg",
 		"/music/music.mp3",
 	}
+	pusher := c.Writer.Pusher()
 	for _, v := range resources {
-		go webPusher(c, v)
+		webPusher(pusher, v)
 	}
 	c.HTML(http.StatusOK, "AnnPage.html", gin.H{})
 }

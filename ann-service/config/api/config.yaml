@@ -12,9 +12,9 @@ static:
   music: "pianogame/static/music"
 jwtSecret: "secret"
 ssl:
-  cert: "ssl/localhost-mac.pem"
-  key: "ssl/localhost-mac.key"
-ports: [8443, 9999, 1234]
+  cert: "ssl/localhost.pem"
+  key: "ssl/localhost.key"
+ports: [8443, 1234, 9999]
 ip: ""
 
 # new config structure mockup

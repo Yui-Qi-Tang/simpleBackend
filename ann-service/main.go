@@ -73,6 +73,8 @@ func main() {
 	/* Use middleware */
 	router.Use(gin.Recovery())
 	router.Use(location.New(location.DefaultConfig()))
+	// router.Use(pianogame.TestMiddleware2) // my first middle for auth
+
 	router.LoadHTMLFiles(pianogame.SysConfig.HTMLTemplates...) // load tempates (Parameters is variadic), ref: https://golang.org/ref/spec#Passing_arguments_to_..._parameters
 
 	// set static files

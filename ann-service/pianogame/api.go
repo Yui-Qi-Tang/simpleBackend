@@ -275,11 +275,9 @@ func DecodeJwtFromCookie(c *gin.Context) {
 	})
 }
 
-func webPusher(c *gin.Context, resource string) {
-	if pusher := c.Writer.Pusher(); pusher != nil {
-		// use pusher.Push() to do server push
-		if err := pusher.Push(resource, nil); err != nil {
-			// return err
+func webPusher(p http.Pusher, resource string) {
+	if p != nil {
+		if err := p.Push(resource, nil); err != nil {
 			log.Printf("Failed to push: %v", err)
 		}
 	}
