@@ -6,13 +6,20 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func TestMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		log.Println("Middle First!!")
-	}
+func AuthCheck(c *gin.Context) {
+	// TODO: check JWT here
+	/*
+		    if valid {
+				pass
+			} else {
+				redirect to sign up URL by pass http redirect code for browser
+			}
+	*/
+	log.Println("Hi, I am auth checker!")
 }
 
-func TestMiddleware2(c *gin.Context) {
-	log.Println("Hi M2")
-	c.Next()
+func MiddlewareForMysqlTest(c *gin.Context) {
+	// Just demo
+	log.Println("Hi, I am middleware for mysql")
+	//c.Next()
 }
