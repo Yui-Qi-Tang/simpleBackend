@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"net"
@@ -16,16 +17,22 @@ type socketClient struct {
 	Cmds   []string `yaml:"cmds"`
 }
 
-func check(e error) {
+func check(e error, errMsg string) {
 	if e != nil {
-		panic(e)
+		errorStr := fmt.Sprintf("%s: %v", errMsg, e)
+		panic(errorStr)
 	}
 }
 
 func main() {
 
-	// Read config file
-	yamlFile, ioErr := ioutil.ReadFile("config/server.yaml") // open file and read
+	// Usage
+	logPath := flag.String("log", "./result.log", "log file path")
+	configPath := flag.String("config", "config/config.yaml", "config file path")
+	flag.Parse() // pare variables from commnad line
+
+	// Read config yaml file
+	yamlFile, ioErr := ioutil.ReadFile(*configPath) // open file and read
 	var scData socketClient
 	if ioErr != nil {
 		errorStr := fmt.Sprintf("Read config file error! %v", ioErr)
@@ -45,8 +52,8 @@ func main() {
 	// log file stream
 	var fileStreamErr error
 	var f *os.File
-	f, fileStreamErr = os.Create("./result.log")
-	check(fileStreamErr)
+	f, fileStreamErr = os.Create(*logPath)
+	check(fileStreamErr, "File stream error!")
 	defer f.Close() // close file stream
 
 	// send cmd to server via socket
@@ -61,7 +68,7 @@ func main() {
 			queryFile := []byte(v)
 			queryFile = append(queryFile, '\t')
 			_, fileStreamErr = f.Write(queryFile)
-			check(err)
+			check(err, "Write file error")
 			f.Sync()
 
 			// send query for socket server
@@ -74,7 +81,7 @@ func main() {
 			conn.Read(readBuf)
 			readBuf = append(readBuf, byte('\n'))
 			_, fileStreamErr = f.Write(readBuf)
-			check(err)
+			check(err, "write file error")
 			f.Sync()
 
 			// show result
