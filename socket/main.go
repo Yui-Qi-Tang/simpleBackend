@@ -80,7 +80,7 @@ func main() {
 			// receive result from server
 			conn.Read(readBuf)
 			readBuf = append(readBuf, byte('\n'))
-			_, fileStreamErr = f.Write(readBuf)
+			_, fileStreamErr = f.Write(readBuf) // TODO: write json string
 			check(err, "write file error")
 			f.Sync()
 
