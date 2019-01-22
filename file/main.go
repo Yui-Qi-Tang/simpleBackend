@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"simpleBackend/file/dataset"
 	"strings"
 )
 
@@ -25,8 +26,8 @@ func readFile(filePath string) *os.File {
 	return f
 }
 
-func main() {
-
+// Bad design
+func productoinAnalysis() {
 	filePath := flag.String("file", "./result", "file path")
 	flag.Parse() // pare variables from commnad line
 	file := readFile(*filePath)
@@ -39,7 +40,6 @@ func main() {
 	noMatch, fileStreamErr = os.Create("./noMatched.log")
 	check(fileStreamErr)
 	defer noMatch.Close() // close file stream
-
 	scanner := bufio.NewScanner(file)
 
 	totalItems := 0
@@ -88,4 +88,65 @@ func main() {
 		((correctHits + matchItems) == totalItems), // if true -> queries are correct
 		(correctHits + matchItems), float64(correctHits+matchItems)/float64(totalItems),
 	)
+}
+
+func testAnalysis(filePath string) {
+	file := readFile(filePath)
+	defer file.Close()
+	scanner := bufio.NewScanner(file)
+
+	queryFilePrefix := "/mnt/hdd3.7t/dataSet/afp/mirex/query/"
+	queryFileSuffix := ".wav"
+
+	ansFilePrefix := "/mnt/hdd3.7t/dataSet/afp/mirex/audio/"
+	ansFileSuffix := ".mp3"
+
+	splitChar := "+"
+	totalItems := 0
+	correctHits := 0
+
+	for scanner.Scan() {
+		totalItems++
+		sText := scanner.Text()
+		sText = strings.Replace(sText, "\n", "", -1)
+		resultList := strings.Split(sText, splitChar)
+
+		for i, v := range resultList {
+			if i == 0 {
+				vList := strings.Split(v, "\t")
+				// query name
+				querySongName := strings.Replace(vList[0], queryFilePrefix, "", -1)
+				querySongName = strings.Replace(querySongName, queryFileSuffix, "", -1)
+				// ans name
+				ansSongName := strings.Replace(vList[1], ansFilePrefix, "", -1)
+				ansSongName = strings.Replace(ansSongName, ansFileSuffix, "", -1)
+
+				if ansSongName == dataset.MirexGroundTruth[querySongName] {
+					// fmt.Println("+1")
+					correctHits++
+
+				} // fi
+			} // for
+		} // for
+	} // for
+	fmt.Println(
+		totalItems, // song total number
+		correctHits,
+		float64(correctHits)/float64(totalItems), // correct hit rate
+	)
+}
+
+func main() {
+
+	mode := flag.String("mode", "p", "analysis mode")             // mode: p | t where p is denoted file from production dataset; t is denoted file from test data set
+	logFile := flag.String("file", "result.log", "analysis file") // mode: p | t where p is denoted file from production dataset; t is denoted file from test data set
+	flag.Parse()                                                  // pare variables from commnad line
+
+	if *mode == "p" {
+		// productoinAnalysis() // Dont use!!
+	} else if *mode == "t" {
+		// fmt.Println(dataset.MirexGroundTruth["q0001"])
+		testAnalysis(*logFile)
+	}
+
 } // main
