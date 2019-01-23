@@ -37,14 +37,14 @@ type staticPath struct {
 	Music  string `yaml:"music"`
 }
 
+// SSLPath ssl file path
+type SSLPath struct {
+	Path ssl `yaml:"ssl"`
+}
+
 type ssl struct {
 	Cert string `yaml:"cert"`
 	Key  string `yaml:"key"`
-}
-
-// AuthData authorization
-type authData struct {
-	Token string `json:"token"` // JWT
 }
 
 type jwtClaim struct {
@@ -53,11 +53,27 @@ type jwtClaim struct {
 	jwt.StandardClaims
 }
 
+/* API */
+type apiUserService struct {
+	User []host `yaml:"user"`
+}
+
 type host struct {
 	Name string `yaml:"hostname"`
 	Port string `yaml:"port"`
 }
 
-type apiUserService struct {
-	User []host `yaml:"user"`
+/* For Auth */
+
+// AuthData authorization
+type authData struct {
+	Token string `json:"token"` // JWT
+}
+
+type Auth struct {
+	Secret authSecret `yaml:"secret"`
+}
+
+type authSecret struct {
+	Jwt string `yaml:"jwt"`
 }

@@ -14,6 +14,7 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gin-contrib/location"
 	"github.com/gin-gonic/gin"
+	yaml "gopkg.in/yaml.v2"
 )
 
 func strConcate(s ...string) string {
@@ -49,7 +50,7 @@ func GenerateToken(username, password string) (string, error) {
 	}
 
 	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	token, err := tokenClaims.SignedString([]byte(SysConfig.JwtSec))
+	token, err := tokenClaims.SignedString([]byte(authSettings.Secret.Jwt))
 
 	return token, err
 }
@@ -63,7 +64,7 @@ func IsJwtValid(tokenString string) bool {
 		tokenString,
 		&claims,
 		func(token *jwt.Token) (interface{}, error) {
-			return []byte(SysConfig.JwtSec), nil
+			return []byte(authSettings.Secret.Jwt), nil
 		},
 	)
 
@@ -82,7 +83,7 @@ func IsJwtExpired(tokenString string) bool {
 		tokenString,
 		&claims,
 		func(token *jwt.Token) (interface{}, error) {
-			return []byte(SysConfig.JwtSec), nil
+			return []byte(authSettings.Secret.Jwt), nil
 		},
 	)
 
@@ -138,7 +139,7 @@ func StartServers(handler *gin.Engine) {
 			Handler: handler,
 		}
 		log.Println("Start server", servers[i].Addr)
-		go runserverTLS(servers[i], SysConfig.Ssl.Cert, SysConfig.Ssl.Key)
+		go runserverTLS(servers[i], Ssl.Path.Cert, Ssl.Path.Key)
 	}
 
 	waitQuitSignal("Receive Quit server Signal") // block until receive quit signal from system
@@ -154,4 +155,12 @@ func runserverTLS(server *http.Server, cert string, key string) {
 	if err := server.ListenAndServeTLS(cert, key); err != nil && err != http.ErrServerClosed {
 		log.Fatalf("listen: %s\n", err)
 	}
+}
+
+func loadYAMLConfig(configFilePath, errMsg, successMsg string, configStructure interface{}) {
+	// This is blank
+	bytesData := readFile(configFilePath)
+	configUnmarshalError := yaml.Unmarshal(bytesData, configStructure)
+	errorCheck(configUnmarshalError, errMsg)
+	log.Println(configFilePath, successMsg)
 }
