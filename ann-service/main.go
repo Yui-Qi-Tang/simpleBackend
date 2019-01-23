@@ -1,59 +1,11 @@
 package main
 
 import (
-	"context"
-	"log"
-	"net/http"
-	"os"
-	"os/signal"
 	"simpleBackend/ann-service/pianogame"
-	"time"
 
 	"github.com/gin-contrib/location"
 	"github.com/gin-gonic/gin"
 )
-
-func runserverTLS(server *http.Server, cert string, key string) {
-	// Start HTTPS server by net/http
-	if err := server.ListenAndServeTLS(cert, key); err != nil && err != http.ErrServerClosed {
-		log.Fatalf("listen: %s\n", err)
-	}
-}
-
-func shutDownGraceful(server *http.Server) {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	if err := server.Shutdown(ctx); err != nil {
-		log.Fatal("Server Shutdown:", err)
-	}
-	log.Printf("Server %s graceful exiting...", server.Addr)
-}
-
-func waitQuitSignal(hint string) {
-	quit := make(chan os.Signal)
-	signal.Notify(quit, os.Interrupt)
-	<-quit
-	log.Println(hint)
-}
-
-func startServers(handler *gin.Engine) {
-	servers := make([]*http.Server, len(pianogame.SysConfig.Ports))
-	for i, v := range pianogame.SysConfig.Ports {
-		servers[i] = &http.Server{
-			Addr:    pianogame.BindIPPort(pianogame.SysConfig.IP, v),
-			Handler: handler,
-		}
-		log.Println("Start server", servers[i].Addr)
-		go runserverTLS(servers[i], pianogame.SysConfig.Ssl.Cert, pianogame.SysConfig.Ssl.Key)
-	}
-
-	waitQuitSignal("Receive Quit server Signal") // block until receive quit signal from system
-
-	// stop servers
-	for _, v := range servers {
-		shutDownGraceful(v) // terminate each server
-	} // for
-}
 
 // main ann-service entry point */
 func main() {
@@ -106,6 +58,6 @@ func main() {
 	router.GET("/", pianogame.IndexPage)        // index page
 
 	/* Start servers  */
-	startServers(router)
+	pianogame.StartServers(router)
 	defer pianogame.MysqlDB.Close()
 }

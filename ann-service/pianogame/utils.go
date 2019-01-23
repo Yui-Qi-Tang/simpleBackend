@@ -1,10 +1,14 @@
 package pianogame
 
 import (
+	"context"
 	"fmt"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"net/url"
+	"os"
+	"os/signal"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
@@ -107,4 +111,47 @@ func errorCheck(e error, msg ...string) {
 		}
 		log.Panicf("%s => %v", errorMsg, e)
 	} // fi
+}
+
+func shutDownGraceful(server *http.Server) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := server.Shutdown(ctx); err != nil {
+		log.Fatal("Server Shutdown:", err)
+	}
+	log.Printf("Server %s graceful exiting...", server.Addr)
+}
+
+func waitQuitSignal(hint string) {
+	quit := make(chan os.Signal)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
+	log.Println(hint)
+}
+
+// StartServers HINT
+func StartServers(handler *gin.Engine) {
+	servers := make([]*http.Server, len(SysConfig.Ports))
+	for i, v := range SysConfig.Ports {
+		servers[i] = &http.Server{
+			Addr:    BindIPPort(SysConfig.IP, v),
+			Handler: handler,
+		}
+		log.Println("Start server", servers[i].Addr)
+		go runserverTLS(servers[i], SysConfig.Ssl.Cert, SysConfig.Ssl.Key)
+	}
+
+	waitQuitSignal("Receive Quit server Signal") // block until receive quit signal from system
+
+	// stop servers
+	for _, v := range servers {
+		shutDownGraceful(v) // terminate each server
+	} // for
+}
+
+func runserverTLS(server *http.Server, cert string, key string) {
+	// Start HTTPS server by net/http
+	if err := server.ListenAndServeTLS(cert, key); err != nil && err != http.ErrServerClosed {
+		log.Fatalf("listen: %s\n", err)
+	}
 }

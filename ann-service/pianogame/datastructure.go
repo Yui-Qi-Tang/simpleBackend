@@ -12,13 +12,14 @@ type Login struct {
 
 // Config structure for set API server
 type Config struct {
-	Debug         bool       `yaml:"debug"`
-	HTMLTemplates []string   `yaml:"html_templates"`
-	Static        staticPath `yaml:"static"`
-	JwtSec        string     `yaml:"jwtSecret"`
-	Ssl           ssl        `yaml:"ssl"`
-	Ports         []int      `yaml:"ports"`
-	IP            string     `yaml:"ip"`
+	Debug         bool           `yaml:"debug"`
+	HTMLTemplates []string       `yaml:"html_templates"`
+	Static        staticPath     `yaml:"static"`
+	JwtSec        string         `yaml:"jwtSecret"`
+	Ssl           ssl            `yaml:"ssl"`
+	Ports         []int          `yaml:"ports"`
+	IP            string         `yaml:"ip"`
+	APIGW         apiUserService `yaml:"api_gateway"`
 }
 
 // MysqlConfig structure for set mysql db
@@ -50,4 +51,13 @@ type jwtClaim struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 	jwt.StandardClaims
+}
+
+type host struct {
+	Name string `yaml:"hostname"`
+	Port string `yaml:"port"`
+}
+
+type apiUserService struct {
+	User []host `yaml:"user"`
 }

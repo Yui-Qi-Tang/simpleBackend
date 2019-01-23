@@ -1,0 +1,3 @@
+ssl:
+  cert: "ssl/localhost.pem"
+  key: "ssl/localhost.key"
