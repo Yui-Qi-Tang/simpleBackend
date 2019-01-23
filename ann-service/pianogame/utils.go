@@ -131,23 +131,32 @@ func waitQuitSignal(hint string) {
 }
 
 // StartServers HINT
-func StartServers(handler *gin.Engine) {
-	servers := make([]*http.Server, len(SysConfig.Ports))
-	for i, v := range SysConfig.Ports {
-		servers[i] = &http.Server{
-			Addr:    BindIPPort(SysConfig.IP, v),
-			Handler: handler,
+func StartServers(handler *gin.Engine, config interface{}) {
+	switch v := config.(type) {
+	case Config:
+		website, _ := config.(Config)
+		servers := make([]*http.Server, len(website.Ports))
+		for i, v := range website.Ports {
+			servers[i] = &http.Server{
+				Addr:    BindIPPort(website.IP, v),
+				Handler: handler,
+			}
+			log.Println("Start server", servers[i].Addr)
+			go runserverTLS(servers[i], Ssl.Path.Cert, Ssl.Path.Key) // TODO: Ssl as function parameter
 		}
-		log.Println("Start server", servers[i].Addr)
-		go runserverTLS(servers[i], Ssl.Path.Cert, Ssl.Path.Key)
+
+		waitQuitSignal("Receive Quit server Signal") // block until receive quit signal from system
+
+		// stop servers
+		for _, v := range servers {
+			shutDownGraceful(v) // terminate each server
+		} // for
+
+	//case apiGW:
+
+	default:
+		fmt.Printf("I don't know about type %T!\n", v)
 	}
-
-	waitQuitSignal("Receive Quit server Signal") // block until receive quit signal from system
-
-	// stop servers
-	for _, v := range servers {
-		shutDownGraceful(v) // terminate each server
-	} // for
 }
 
 func runserverTLS(server *http.Server, cert string, key string) {

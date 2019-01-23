@@ -35,17 +35,17 @@ func main() {
 	router.Static("/music", pianogame.SysConfig.Static.Music)
 
 	userRoute := router.Group("user")
-	mysqlRoute := router.Group("mysql")
-	mysqlRoute.Use(pianogame.MiddlewareForMysqlTest) // my first middle for auth
+	// mysqlRoute := router.Group("mysql")
+	// mysqlRoute.Use(pianogame.MiddlewareForMysqlTest) // my first middle for auth
 
 	/* APIs */
 	userRoute.POST("/login", pianogame.UserLogin)       // login
 	userRoute.POST("/register", pianogame.UserRegister) // signup
 
-	mysqlRoute.POST("/test", pianogame.MysqlCheckTable)        // just test
-	mysqlRoute.POST("/user/test", pianogame.InsertUserToMysql) // just test
-	mysqlRoute.GET("/user", pianogame.GetUsers)                // just test
-	mysqlRoute.DELETE("/user", pianogame.DeleteUser)           // just test
+	// mysqlRoute.POST("/test", pianogame.MysqlCheckTable)        // just test
+	// mysqlRoute.POST("/user/test", pianogame.InsertUserToMysql) // just test
+	// mysqlRoute.GET("/user", pianogame.GetUsers)                // just test
+	// mysqlRoute.DELETE("/user", pianogame.DeleteUser)           // just test
 
 	router.POST("/upload", pianogame.UploadFileSample) // file upload demo
 	router.POST("/parsejwt", pianogame.DecodeJwt)
@@ -58,6 +58,6 @@ func main() {
 	router.GET("/", pianogame.IndexPage)        // index page
 
 	/* Start servers  */
-	pianogame.StartServers(router)
+	pianogame.StartServers(router, pianogame.SysConfig)
 	defer pianogame.MysqlDB.Close()
 }

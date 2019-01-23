@@ -54,6 +54,11 @@ type jwtClaim struct {
 }
 
 /* API */
+
+type apiGW struct {
+	User apiUserService `yaml:"api_gateway"`
+}
+
 type apiUserService struct {
 	User []host `yaml:"user"`
 }
