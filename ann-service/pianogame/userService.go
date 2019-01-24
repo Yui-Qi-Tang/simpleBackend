@@ -1,21 +1,19 @@
 package pianogame
 
 import (
-	"fmt"
-
 	"github.com/gin-contrib/location"
 	"github.com/gin-gonic/gin"
 )
 
 func init() {
 	// This is blank
-	// fmt.Println(SysConfig)
-	// fmt.Println(Ssl.Path.Cert)
-	fmt.Println(authSettings.Secret.Jwt)
 }
 
 // UserServiceRouter Simple way to create an gin router for user micro-service
 func UserServiceRouter() *gin.Engine {
+	/*
+	   TODO: Let api function as private in pianogame package
+	*/
 	router := gin.Default()
 	router.Use(gin.Recovery())
 	router.Use(location.New(location.DefaultConfig()))
