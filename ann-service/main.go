@@ -61,7 +61,7 @@ func main() {
 	/* Start servers  */
 	pianogame.ServiceInstances = append(
 		pianogame.StartServers(router, pianogame.WebConfig.Settings.Network),
-		pianogame.StartServers(router, pianogame.APIGW.User.Network)...,
+		pianogame.StartServers(pianogame.UserServiceRouter(), pianogame.APIGW.User.Network)...,
 	)
 	/*
 		HINT: if there does exist another serivce, please append http instances again:
@@ -73,6 +73,7 @@ func main() {
 		...
 
 		another again? please append pianogame.ServiceInstances again an so on...
+		For now, I think it's a bad idea to set multiple service, lol
 	*/
 
 	pianogame.WaitQuitSignal("Receive Quit server Signal") // block until receive quit signal from system
