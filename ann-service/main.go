@@ -17,6 +17,7 @@ func main() {
 
 				mode: variable is denoted the status of gin(test/production)
 			2. add JWT for auth
+			3. Website <-gRPC-> api auth
 	*/
 
 	/* Go-Gin setup */
@@ -62,6 +63,17 @@ func main() {
 		pianogame.StartServers(router, pianogame.WebConfig.Settings.Network),
 		pianogame.StartServers(router, pianogame.APIGW.User.Network)...,
 	)
+	/*
+		HINT: if there does exist another serivce, please append http instances again:
+
+		pianogame.ServiceInstances = append(
+			pianogame.ServiceInstances,
+			pianogame.StartServers(routerForService, pianogame.Service.Network)...
+		)
+		...
+
+		another again? please append pianogame.ServiceInstances again an so on...
+	*/
 
 	pianogame.WaitQuitSignal("Receive Quit server Signal") // block until receive quit signal from system
 
