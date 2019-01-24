@@ -1,27 +1,8 @@
-debug: true
-html_templates: [
-  "pianogame/templates/Signup.html",
-  "pianogame/templates/Login.html",
-  "pianogame/templates/Gamepage.html",
-  "pianogame/templates/AnnPage.html"
-]
-static:
-  images: "pianogame/static/images"
-  css: "pianogame/static/css"
-  js: "pianogame/static/js"
-  music: "pianogame/static/music"
-jwtSecret: "secret"
-ssl:
-  cert: "ssl/localhost.pem"
-  key: "ssl/localhost.key"
-ports: [8443, 1234, 9999]
-ip: ""
-
 api_gateway: # stay here
-  user:
+  userAddrs:
     - hostname: ""
       port: 8080
-    - hostname: ""
+    - hostname: "127.0.0.1"
       port: 8443
     - hostname: ""
       port: 9999

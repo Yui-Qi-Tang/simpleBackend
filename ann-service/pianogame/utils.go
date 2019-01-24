@@ -114,7 +114,7 @@ func errorCheck(e error, msg ...string) {
 	} // fi
 }
 
-func shutDownGraceful(server *http.Server) {
+func ShutDownGraceful(server *http.Server) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	if err := server.Shutdown(ctx); err != nil {
@@ -123,40 +123,35 @@ func shutDownGraceful(server *http.Server) {
 	log.Printf("Server %s graceful exiting...", server.Addr)
 }
 
-func waitQuitSignal(hint string) {
+func WaitQuitSignal(hint string) {
 	quit := make(chan os.Signal)
 	signal.Notify(quit, os.Interrupt)
 	<-quit
 	log.Println(hint)
 }
 
-// StartServers HINT
-func StartServers(handler *gin.Engine, config interface{}) {
-	switch v := config.(type) {
-	case Config:
-		website, _ := config.(Config)
-		servers := make([]*http.Server, len(website.Ports))
-		for i, v := range website.Ports {
-			servers[i] = &http.Server{
-				Addr:    BindIPPort(website.IP, v),
-				Handler: handler,
-			}
-			log.Println("Start server", servers[i].Addr)
-			go runserverTLS(servers[i], Ssl.Path.Cert, Ssl.Path.Key) // TODO: Ssl as function parameter
-		}
+// StartServers Server network setting
+func StartServers(handler *gin.Engine, config []host) []*http.Server {
 
+	servers := make([]*http.Server, len(config))
+
+	for i, v := range config {
+		servers[i] = &http.Server{
+			Addr:    BindIPPort(v.Name, v.Port),
+			Handler: handler,
+		}
+		log.Println("Start server", servers[i].Addr)
+		go runserverTLS(servers[i], Ssl.Path.Cert, Ssl.Path.Key) // TODO: Ssl as function parameter?
+	}
+	return servers
+	/*
 		waitQuitSignal("Receive Quit server Signal") // block until receive quit signal from system
 
 		// stop servers
 		for _, v := range servers {
 			shutDownGraceful(v) // terminate each server
-		} // for
+		} // for*/
 
-	//case apiGW:
-
-	default:
-		fmt.Printf("I don't know about type %T!\n", v)
-	}
 }
 
 func runserverTLS(server *http.Server, cert string, key string) {

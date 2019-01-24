@@ -26,13 +26,13 @@ func main() {
 	router.Use(gin.Recovery())
 	router.Use(location.New(location.DefaultConfig()))
 	router.Use(pianogame.AuthCheck)
-	router.LoadHTMLFiles(pianogame.SysConfig.HTMLTemplates...) // load tempates (Parameters is variadic), ref: https://golang.org/ref/spec#Passing_arguments_to_..._parameters
+	router.LoadHTMLFiles(pianogame.WebConfig.Settings.HTMLTemplates...) // load tempates (Parameters is variadic), ref: https://golang.org/ref/spec#Passing_arguments_to_..._parameters
 
 	// set static files
-	router.Static("/js", pianogame.SysConfig.Static.Js)
-	router.Static("/css", pianogame.SysConfig.Static.CSS)
-	router.Static("/images", pianogame.SysConfig.Static.Images)
-	router.Static("/music", pianogame.SysConfig.Static.Music)
+	router.Static("/js", pianogame.WebConfig.Settings.Static.Js)
+	router.Static("/css", pianogame.WebConfig.Settings.Static.CSS)
+	router.Static("/images", pianogame.WebConfig.Settings.Static.Images)
+	router.Static("/music", pianogame.WebConfig.Settings.Static.Music)
 
 	userRoute := router.Group("user")
 	// mysqlRoute := router.Group("mysql")
@@ -58,6 +58,17 @@ func main() {
 	router.GET("/", pianogame.IndexPage)        // index page
 
 	/* Start servers  */
-	pianogame.StartServers(router, pianogame.SysConfig)
+	pianogame.ServiceInstances = append(
+		pianogame.StartServers(router, pianogame.WebConfig.Settings.Network),
+		pianogame.StartServers(router, pianogame.APIGW.User.Network)...,
+	)
+
+	pianogame.WaitQuitSignal("Receive Quit server Signal") // block until receive quit signal from system
+
+	// stop servers
+	for _, v := range pianogame.ServiceInstances {
+		pianogame.ShutDownGraceful(v) // terminate each server
+	} // for
+
 	defer pianogame.MysqlDB.Close()
 }

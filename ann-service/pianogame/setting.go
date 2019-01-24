@@ -1,32 +1,31 @@
 package pianogame
 
-import "log"
-
-// SysConfig TO-DO: split some data field out
-var SysConfig Config
-
 // Ssl ssl settings
 var Ssl SSLPath
 
 var authSettings Auth
 
-var apigw apiGW
+// APIGW setting
+var APIGW apiGW
+
+// WebConfig settings for website
+var WebConfig WebSiteConfig
 
 func init() {
-	/* Load API config data */
+	/* Load Web site config */
+	loadYAMLConfig(
+		"config/website/config.yaml",
+		"error while unmarshal from website config",
+		"Load website config file finished",
+		&WebConfig,
+	)
+	/* Load API config */
 	loadYAMLConfig(
 		"config/api/config.yaml",
 		"error while unmarshal from API config",
 		"Load API config file finished",
-		&SysConfig,
+		&APIGW,
 	)
-	loadYAMLConfig(
-		"config/api/config.yaml",
-		"error while unmarshal from API config",
-		"Load API config file finished",
-		&apigw,
-	)
-	log.Println(apigw)
 	/* Load SSL config */
 	loadYAMLConfig(
 		"config/ssl/config.yaml",
@@ -41,5 +40,4 @@ func init() {
 		"Load Auth config file finished",
 		&authSettings,
 	)
-
 }

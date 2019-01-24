@@ -1,8 +1,13 @@
 package pianogame
 
 import (
+	"net/http"
+
 	jwt "github.com/dgrijalva/jwt-go"
 )
+
+// ServiceInstances  an array to store the http server instance
+var ServiceInstances []*http.Server
 
 // Login structure for user login
 type Login struct {
@@ -10,16 +15,15 @@ type Login struct {
 	Password string `form:"password" json:"password" xml:"password" binding:"required"`
 }
 
-// Config structure for set API server
-type Config struct {
-	Debug         bool           `yaml:"debug"`
-	HTMLTemplates []string       `yaml:"html_templates"`
-	Static        staticPath     `yaml:"static"`
-	JwtSec        string         `yaml:"jwtSecret"`
-	Ssl           ssl            `yaml:"ssl"`
-	Ports         []int          `yaml:"ports"`
-	IP            string         `yaml:"ip"`
-	APIGW         apiUserService `yaml:"api_gateway"`
+// WebSiteConfig for config website
+type WebSiteConfig struct {
+	Settings webSiteSettings `yaml:"web_service"`
+}
+
+type webSiteSettings struct {
+	Network       []host     `yaml:"addrs"`
+	HTMLTemplates []string   `yaml:"html_templates"`
+	Static        staticPath `yaml:"static"`
 }
 
 // MysqlConfig structure for set mysql db
@@ -54,18 +58,17 @@ type jwtClaim struct {
 }
 
 /* API */
-
 type apiGW struct {
 	User apiUserService `yaml:"api_gateway"`
 }
 
 type apiUserService struct {
-	User []host `yaml:"user"`
+	Network []host `yaml:"userAddrs"`
 }
 
 type host struct {
 	Name string `yaml:"hostname"`
-	Port string `yaml:"port"`
+	Port int    `yaml:"port"`
 }
 
 /* For Auth */
