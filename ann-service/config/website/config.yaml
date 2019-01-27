@@ -1,11 +1,11 @@
 web_service:
   addrs:
     - hostname: ""
-      port: 80
-    - hostname: ""
-      port: 443
-    - hostname: ""
       port: 8081
+    - hostname: ""
+      port: 8082
+    - hostname: ""
+      port: 8083
 
   static:
     images: "pianogame/static/images"

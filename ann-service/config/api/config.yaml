@@ -1,9 +1,9 @@
 api_gateway: # stay here
   userAddrs:
     - hostname: ""
-      port: 8080
+      port: 8084
     - hostname: "127.0.0.1"
-      port: 8443
+      port: 8085
     - hostname: ""
-      port: 9999
+      port: 8086
 
