@@ -42,13 +42,7 @@ func main() {
 	/* APIs */
 	userRoute.POST("/login", pianogame.UserLogin)       // login
 	userRoute.POST("/register", pianogame.UserRegister) // signup
-
-	// mysqlRoute.POST("/test", pianogame.MysqlCheckTable)        // just test
-	// mysqlRoute.POST("/user/test", pianogame.InsertUserToMysql) // just test
-	// mysqlRoute.GET("/user", pianogame.GetUsers)                // just test
-	// mysqlRoute.DELETE("/user", pianogame.DeleteUser)           // just test
-
-	router.POST("/upload", pianogame.UploadFileSample) // file upload demo
+	router.POST("/upload", pianogame.UploadFileSample)  // file upload demo
 	router.POST("/parsejwt", pianogame.DecodeJwt)
 	router.POST("/parse-cookie-jwt", pianogame.DecodeJwtFromCookie)
 

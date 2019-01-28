@@ -44,11 +44,16 @@ func init() {
 		panic("Mysql DB open failed!")
 	}
 	// Migration test
+	/*
+		WARNING: AutoMigrate will ONLY create tables, missing columns and missing indexes,
+		         and WON'T change existing column's type or delete unused columns to protect your data.
+	*/
 	MysqlDB.AutoMigrate(&User{})
 
 	MysqlDB.AutoMigrate(&Email{})
 	MysqlDB.AutoMigrate(&Address{})
 	MysqlDB.AutoMigrate(&CreditCard{})
+	MysqlDB.AutoMigrate(&UserProfile{})
 
 	// Add table suffix when create tables
 	// db.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(&User{})

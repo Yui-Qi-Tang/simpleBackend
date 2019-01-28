@@ -20,12 +20,12 @@ func UserServiceRouter() *gin.Engine {
 	router.Use(AuthCheck)
 	router.Use(MiddlewareForMysqlTest) // my first middle for auth
 
-	authRoute := router.Group("mysql")
+	authRoute := router.Group("member/v2/")
 
-	authRoute.POST("/test", MysqlCheckTable)        // just test
-	authRoute.POST("/user/test", InsertUserToMysql) // just test
-	authRoute.GET("/user", GetUsers)                // just test
-	authRoute.DELETE("/user", DeleteUser)           // just test
+	authRoute.POST("/test", MysqlCheckTable) // just test
+	authRoute.POST("/user", AddUser)         // just test
+	authRoute.GET("/user", GetUsers)         // just test
+	authRoute.DELETE("/user", DeleteUser)    // just test
 
 	return router
 }

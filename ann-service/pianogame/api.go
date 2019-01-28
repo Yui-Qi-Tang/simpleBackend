@@ -2,11 +2,11 @@ package pianogame
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/mongodb/mongo-go-driver/bson"
@@ -97,34 +97,49 @@ func MysqlCheckTable(c *gin.Context) {
 	}
 }
 
-// InsertUserToMysql api for adding user into Mysql User table
-func InsertUserToMysql(c *gin.Context) {
-	timeFormat := "2006-01-02"
-	var t struct {
-		Name string `json:"name" binding:"required"`
-		Age  int    `json:"age" binding:"required"`
-		Dob  string `json:"dob" binding:"required"`
+// AddUser api for adding user into Mysql User table
+func AddUser(c *gin.Context) {
+	// timeFormat := "2006-01-02"
+	var userData struct {
+		Account  string `json:"account" binding:"required"`
+		Password string `json:"password" binding:"required"`
+		// profile
+		Dob    string   `json:"birthday"`
+		Emails []string `json:"emails"`
+		Name   string   `json:"name"`
 	}
-	if err := c.ShouldBindJSON(&t); err != nil {
+	if err := c.ShouldBindJSON(&userData); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	var accountToDB sql.NullString
+	var pwdToDB sql.NullString
+	// err = accountToDB.Scan(userData.Account)
+	errorCheck(accountToDB.Scan(userData.Account), "account for signup is Failed")
+	errorCheck(pwdToDB.Scan(userData.Password), "password for signup is Failed")
+
+	var user User
+	t := MysqlDB.FirstOrCreate(
+		&user,
+		User{
+			Account:  accountToDB,
+			Password: pwdToDB,
+		},
+	).GetErrors()
+	// newRecordStateOfUserData := MysqlDB.NewRecord(user)
 	log.Println(t)
-	dobTime, dobErr := time.Parse(timeFormat, t.Dob)
-	if dobErr != nil {
-		log.Println("Parse time error!", dobErr.Error())
-	}
-	user := User{
-		Name:     t.Name,
-		Age:      t.Age,
-		Birthday: dobTime,
-	}
-	if f := MysqlDB.NewRecord(user); f == true {
-		MysqlDB.Create(&user) // bind base Model data into 'user' and create
-		c.JSON(http.StatusCreated, gin.H{"status": "user created"})
-	} else {
-		c.JSON(http.StatusBadRequest, gin.H{"status": " create failed!!"})
-	}
+	c.JSON(http.StatusCreated, gin.H{"msg": "test!"})
+	/*
+		dobTime, dobErr := time.Parse(timeFormat, t.Dob)
+		if dobErr != nil {
+			log.Println("Parse time error!", dobErr.Error())
+		}
+		if f := MysqlDB.NewRecord(user); f == true {
+			MysqlDB.Create(&user) // bind base Model data into 'user' and create
+			c.JSON(http.StatusCreated, gin.H{"status": "user created"})
+		} else {
+			c.JSON(http.StatusBadRequest, gin.H{"status": " create failed!!"})
+		}*/
 }
 
 // GetUsers api for getting all of users info or single user by id
