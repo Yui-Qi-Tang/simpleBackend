@@ -60,8 +60,8 @@ func main() {
 
 	/* Start servers  */
 	pianogame.ServiceInstances = append(
-		pianogame.StartServers(router, pianogame.WebConfig.Settings.Network),
-		pianogame.StartServers(pianogame.UserServiceRouter(), pianogame.APIGW.User.Network)...,
+		pianogame.StartServers(router, pianogame.WebConfig.Settings.Network, pianogame.WebConfig.Settings.Meta),
+		pianogame.StartServers(pianogame.UserServiceRouter(), pianogame.UserAPIConfig.User.Network, pianogame.UserAPIConfig.User.Meta)...,
 	)
 	/*
 		HINT: if there does exist another serivce, please append http instances again:

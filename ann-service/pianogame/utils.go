@@ -131,10 +131,10 @@ func WaitQuitSignal(hint string) {
 }
 
 // StartServers Server network setting
-func StartServers(handler *gin.Engine, config []host) []*http.Server {
+func StartServers(handler *gin.Engine, config []host, meta serviceMeta) []*http.Server {
 
 	servers := make([]*http.Server, len(config))
-
+	log.Println(meta.Name)
 	for i, v := range config {
 		servers[i] = &http.Server{
 			Addr:    BindIPPort(v.Name, v.Port),
@@ -144,14 +144,6 @@ func StartServers(handler *gin.Engine, config []host) []*http.Server {
 		go runserverTLS(servers[i], Ssl.Path.Cert, Ssl.Path.Key) // TODO: Ssl as function parameter?
 	}
 	return servers
-	/*
-		waitQuitSignal("Receive Quit server Signal") // block until receive quit signal from system
-
-		// stop servers
-		for _, v := range servers {
-			shutDownGraceful(v) // terminate each server
-		} // for*/
-
 }
 
 func runserverTLS(server *http.Server, cert string, key string) {

@@ -5,8 +5,8 @@ var Ssl SSLPath
 
 var authSettings Auth
 
-// APIGW setting
-var APIGW apiGW
+// UserAPIConfig setting
+var UserAPIConfig userAPI
 
 // WebConfig settings for website
 var WebConfig WebSiteConfig
@@ -24,7 +24,7 @@ func init() {
 		"config/api/config.yaml",
 		"error while unmarshal from API config",
 		"Load API config file finished",
-		&APIGW,
+		&UserAPIConfig,
 	)
 	/* Load SSL config */
 	loadYAMLConfig(

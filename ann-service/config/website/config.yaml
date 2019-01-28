@@ -1,4 +1,6 @@
 web_service:
+  meta:
+    name: "Web service"
   addrs:
     - hostname: ""
       port: 8081

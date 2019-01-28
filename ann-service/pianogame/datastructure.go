@@ -15,15 +15,20 @@ type Login struct {
 	Password string `form:"password" json:"password" xml:"password" binding:"required"`
 }
 
+type serviceMeta struct {
+	Name string `yaml:"name"`
+}
+
 // WebSiteConfig for config website
 type WebSiteConfig struct {
 	Settings webSiteSettings `yaml:"web_service"`
 }
 
 type webSiteSettings struct {
-	Network       []host     `yaml:"addrs"`
-	HTMLTemplates []string   `yaml:"html_templates"`
-	Static        staticPath `yaml:"static"`
+	Network       []host      `yaml:"addrs"`
+	HTMLTemplates []string    `yaml:"html_templates"`
+	Static        staticPath  `yaml:"static"`
+	Meta          serviceMeta `yaml:"meta"`
 }
 
 // MysqlConfig structure for set mysql db
@@ -58,12 +63,13 @@ type jwtClaim struct {
 }
 
 /* API */
-type apiGW struct {
-	User apiUserService `yaml:"api_gateway"`
+type userAPI struct {
+	User apiUserService `yaml:"user_api"`
 }
 
 type apiUserService struct {
-	Network []host `yaml:"userAddrs"`
+	Network []host      `yaml:"addrs"`
+	Meta    serviceMeta `yaml:"meta"`
 }
 
 type host struct {
