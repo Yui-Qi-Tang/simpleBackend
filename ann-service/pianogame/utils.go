@@ -17,6 +17,10 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
+func dumpStructData(data interface{}) {
+	log.Printf("%+v\n", data)
+}
+
 func strConcate(s ...string) string {
 	result := ""
 	for _, v := range s {
@@ -55,6 +59,23 @@ func GenerateToken(username, password string) (string, error) {
 	return token, err
 }
 
+// GenerateMemberToken generate JWT token
+func GenerateMemberToken(ID uint) (string, error) {
+	tokenExpireTimestamp := time.Now().Add(3 * time.Hour).Unix()
+
+	claims := AuthMemberClaim{
+		ID,
+		jwt.StandardClaims{
+			ExpiresAt: tokenExpireTimestamp,
+		},
+	}
+
+	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	token, err := tokenClaims.SignedString([]byte(authSettings.Secret.Jwt))
+
+	return token, err
+}
+
 // IsJwtValid JWT Validation
 func IsJwtValid(tokenString string) bool {
 
@@ -69,6 +90,65 @@ func IsJwtValid(tokenString string) bool {
 	)
 
 	if err != nil || !token.Valid {
+		return false
+	}
+	return true
+}
+
+// IsMemberJWTValid JWT Validation
+func IsMemberJWTValid(tokenString string) bool {
+
+	claims := AuthMemberClaim{}
+
+	token, err := jwt.ParseWithClaims(
+		tokenString,
+		&claims,
+		func(token *jwt.Token) (interface{}, error) {
+			return []byte(authSettings.Secret.Jwt), nil
+		},
+	)
+	if err != nil || !token.Valid {
+		return false
+	}
+	return true
+}
+
+// getUserIDByToken JWT Validation
+func getUserIDByToken(tokenString string) uint {
+
+	claims := AuthMemberClaim{}
+
+	token, err := jwt.ParseWithClaims(
+		tokenString,
+		&claims,
+		func(token *jwt.Token) (interface{}, error) {
+			return []byte(authSettings.Secret.Jwt), nil
+		},
+	)
+	if err != nil || !token.Valid {
+		panic("Token is invalid")
+	}
+	return claims.ID
+}
+
+// IsMemberJWTExpired check if JWT expired
+func IsMemberJWTExpired(tokenString string) bool {
+
+	claims := AuthMemberClaim{}
+
+	token, err := jwt.ParseWithClaims(
+		tokenString,
+		&claims,
+		func(token *jwt.Token) (interface{}, error) {
+			return []byte(authSettings.Secret.Jwt), nil
+		},
+	)
+
+	if err != nil || !token.Valid {
+		panic("IsJwtExpires => parse or token is invalid")
+	}
+
+	if !(time.Now().Unix() > claims.ExpiresAt) {
 		return false
 	}
 	return true

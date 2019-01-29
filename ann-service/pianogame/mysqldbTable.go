@@ -2,7 +2,6 @@ package pianogame
 
 import (
 	"database/sql"
-	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
@@ -11,10 +10,9 @@ import (
 
 // Email comment
 type Email struct {
-	ID         int
-	UserID     int    `gorm:"index"`                          // Foreign key (belongs to), tag `index` will create index for this column
-	Email      string `gorm:"type:varchar(100);unique_index"` // `type` set sql type, `unique_index` will create unique index for this column
-	Subscribed bool
+	ID            uint
+	UserProfileID uint
+	Email         string `gorm:"type:varchar(100)"` // `type` set sql type, `unique_index` will create unique index for this column
 }
 
 // Address comment
@@ -50,8 +48,13 @@ type User struct {
 
 // UserProfile detail info of user
 type UserProfile struct {
-	ID       int
-	Birthday time.Time
+	ID       uint
+	UserID   uint
+	Birthday string  `gorm:"size:32"`
 	Name     string  `gorm:"size:255"` // Default size for string is 255, reset it with this tag
 	Emails   []Email // One-To-Many relationship (has many - use Email's UserID as foreign key)
 }
+
+// type (up *UserProfile) Save(data interface{}) {
+//
+// }

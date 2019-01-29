@@ -48,6 +48,9 @@ func init() {
 		WARNING: AutoMigrate will ONLY create tables, missing columns and missing indexes,
 		         and WON'T change existing column's type or delete unused columns to protect your data.
 	*/
+	// reset tables in test!
+	// MysqlDB.DropTableIfExists(&User{}, &Email{}, &Address{}, &CreditCard{}, &UserProfile{}) // comment out if in production!!
+
 	MysqlDB.AutoMigrate(&User{})
 
 	MysqlDB.AutoMigrate(&Email{})

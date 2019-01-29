@@ -91,3 +91,8 @@ type Auth struct {
 type authSecret struct {
 	Jwt string `yaml:"jwt"`
 }
+
+type AuthMemberClaim struct {
+	ID uint `json:"ID"`
+	jwt.StandardClaims
+}

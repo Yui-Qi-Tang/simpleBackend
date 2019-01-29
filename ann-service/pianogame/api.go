@@ -10,6 +10,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/mongodb/mongo-go-driver/bson"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // UserLogin api for user login request
@@ -99,7 +100,6 @@ func MysqlCheckTable(c *gin.Context) {
 
 // AddUser api for adding user into Mysql User table
 func AddUser(c *gin.Context) {
-	// timeFormat := "2006-01-02"
 	var userData struct {
 		Account  string `json:"account" binding:"required"`
 		Password string `json:"password" binding:"required"`
@@ -112,34 +112,115 @@ func AddUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
 	var accountToDB sql.NullString
 	var pwdToDB sql.NullString
-	// err = accountToDB.Scan(userData.Account)
+	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(userData.Password), 8)
 	errorCheck(accountToDB.Scan(userData.Account), "account for signup is Failed")
-	errorCheck(pwdToDB.Scan(userData.Password), "password for signup is Failed")
+	errorCheck(pwdToDB.Scan(string(hashedPassword)), "password for signup is Failed")
 
+	// create new user
 	var user User
-	t := MysqlDB.FirstOrCreate(
+	newUser := MysqlDB.FirstOrCreate(
 		&user,
 		User{
 			Account:  accountToDB,
 			Password: pwdToDB,
 		},
-	).GetErrors()
-	// newRecordStateOfUserData := MysqlDB.NewRecord(user)
-	log.Println(t)
-	c.JSON(http.StatusCreated, gin.H{"msg": "test!"})
-	/*
-		dobTime, dobErr := time.Parse(timeFormat, t.Dob)
-		if dobErr != nil {
-			log.Println("Parse time error!", dobErr.Error())
-		}
-		if f := MysqlDB.NewRecord(user); f == true {
-			MysqlDB.Create(&user) // bind base Model data into 'user' and create
-			c.JSON(http.StatusCreated, gin.H{"status": "user created"})
-		} else {
-			c.JSON(http.StatusBadRequest, gin.H{"status": " create failed!!"})
-		}*/
+	)
+	// check if acount exists
+	if newUser.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "Account has be registed"})
+		return
+	}
+	// bind profile to user
+	user.Profile = UserProfile{
+		Birthday: userData.Dob,
+		Name:     userData.Name,
+		Emails: func(emailData []string) []Email {
+			var results []Email
+			for _, v := range emailData {
+				var email Email
+				email.Email = v
+				results = append(results, email)
+			}
+			return results
+		}(userData.Emails),
+	}
+	MysqlDB.Save(&user)
+
+	c.JSON(http.StatusCreated, gin.H{"msg": "success"})
+}
+
+// UserValidation verify username/password, if valid, response JWT, otherwise respone failed
+func UserValidation(c *gin.Context) {
+	var userData struct {
+		Account  string `json:"account" binding:"required"`
+		Password string `json:"password" binding:"required"`
+	}
+	if err := c.ShouldBindJSON(&userData); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var accountToDB sql.NullString
+	errorCheck(accountToDB.Scan(userData.Account), "account for sign in is Failed")
+
+	var user User
+	queryResult := MysqlDB.Where(&User{Account: accountToDB}).First(&user)
+
+	if queryResult.RowsAffected == 0 {
+		c.JSON(http.StatusNotFound, gin.H{"error": "找不到使用者"})
+		return
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password.String), []byte(userData.Password)); err != nil {
+		// If the two passwords don't match, return a 401 status
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
+	// JWT
+	if tokenStr, err := GenerateMemberToken(user.ID); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	} else {
+		c.JSON(http.StatusOK, gin.H{"msg": "Welcome", "token": tokenStr})
+	}
+}
+
+// GetUserInfoByToken just put this as demo
+func GetUserInfoByToken(c *gin.Context) {
+	tokenStr := c.Param("token")
+	if IsMemberJWTValid(tokenStr) != true {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": "Token is invalid",
+		})
+		return
+	}
+
+	if IsMemberJWTExpired(tokenStr) {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg": "Token is expired",
+		})
+		return
+	}
+
+	// A simple way to get user info by orm relation
+	// TO-DO: try to use Specify Foreign Key & Association Key in table definition
+	// refer: http://doc.gorm.io/associations.html#has-one
+	userID := getUserIDByToken(tokenStr)
+	var user User
+	var userProfile UserProfile
+	MysqlDB.First(&user, userID)
+	MysqlDB.Model(&user).Related(&userProfile)
+	// log.Println(userID, userProfile)
+
+	c.JSON(http.StatusOK, gin.H{
+		"msg":      "Token is valid",
+		"username": userProfile.Name,
+	})
+	// c.String(http.StatusOK, "Hello %s", name)
+
 }
 
 // GetUsers api for getting all of users info or single user by id
@@ -258,6 +339,7 @@ func DecodeJwt(c *gin.Context) {
 		})
 		return
 	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"data":    "ok!",
