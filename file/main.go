@@ -141,7 +141,7 @@ func main() {
 	flag.Parse()                                                  // pare variables from commnad line
 
 	if *mode == "p" {
-		productoinAnalysis(*logFile) // Dont use!!
+		productoinAnalysis(*logFile)
 	} else if *mode == "t" {
 		// fmt.Println(dataset.MirexGroundTruth["q0001"])
 		testAnalysis(*logFile)
