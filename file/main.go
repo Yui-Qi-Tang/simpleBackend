@@ -27,10 +27,8 @@ func readFile(filePath string) *os.File {
 }
 
 // Bad design
-func productoinAnalysis() {
-	filePath := flag.String("file", "./result", "file path")
-	flag.Parse() // pare variables from commnad line
-	file := readFile(*filePath)
+func productoinAnalysis(filePath string) {
+	file := readFile(filePath)
 	defer file.Close()
 
 	var fileStreamErr error
@@ -143,7 +141,7 @@ func main() {
 	flag.Parse()                                                  // pare variables from commnad line
 
 	if *mode == "p" {
-		// productoinAnalysis() // Dont use!!
+		productoinAnalysis(*logFile) // Dont use!!
 	} else if *mode == "t" {
 		// fmt.Println(dataset.MirexGroundTruth["q0001"])
 		testAnalysis(*logFile)
