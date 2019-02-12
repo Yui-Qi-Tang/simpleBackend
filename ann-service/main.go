@@ -22,7 +22,8 @@ func main() {
 				 An front-API in website to receive data;
 				 a 'middler' receives the data from front api and push data to back-API-service
 				 Fig.
-				    user request -HTTP-> front-API on website -gRPC-> back-API-service
+					user request -HTTP-> front-API on website -gRPC-> back-API-service
+			4. Use NewSQL server lol
 	*/
 
 	/* Go-Gin setup */
