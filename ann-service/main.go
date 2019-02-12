@@ -18,6 +18,11 @@ func main() {
 				mode: variable is denoted the status of gin(test/production)
 			2. add JWT for auth
 			3. Website <-gRPC-> api auth
+				 need to create an API as a wrapper for internal API
+				 An front-API in website to receive data;
+				 a 'middler' receives the data from front api and push data to back-API-service
+				 Fig.
+				    user request -HTTP-> front-API on website -gRPC-> back-API-service
 	*/
 
 	/* Go-Gin setup */
