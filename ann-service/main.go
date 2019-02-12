@@ -45,12 +45,13 @@ func main() {
 	// mysqlRoute := router.Group("mysql")
 	// mysqlRoute.Use(pianogame.MiddlewareForMysqlTest) // my first middle for auth
 
-	/* APIs */
+	/* Front APIs */
 	userRoute.POST("/login", pianogame.UserLogin)       // login
 	userRoute.POST("/register", pianogame.UserRegister) // signup
 	router.POST("/upload", pianogame.UploadFileSample)  // file upload demo
 	router.POST("/parsejwt", pianogame.DecodeJwt)
 	router.POST("/parse-cookie-jwt", pianogame.DecodeJwtFromCookie)
+	router.GET("/game/socket", pianogame.GameWebSocketHandler)
 
 	/* Web page */
 	router.GET("/login", pianogame.LoginPage)   // login page

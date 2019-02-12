@@ -4,7 +4,9 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="/js/jquery-3.3.1.min.js"></script>
+<script src="/js/getCookie.js"></script>
+<script src="/js/websocket.js"></script>
 <style>
 * {
   box-sizing: border-box;
@@ -295,23 +297,23 @@ h2 {
             
 
         <!--Keyboard sounds-->
-        <audio data-key="65" src="http://carolinegabriel.com/demo/js-keyboard/sounds/040.wav"></audio>
-        <audio data-key="87" src="http://carolinegabriel.com/demo/js-keyboard/sounds/041.wav"></audio>
-        <audio data-key="83" src="http://carolinegabriel.com/demo/js-keyboard/sounds/042.wav"></audio>
-        <audio data-key="69" src="http://carolinegabriel.com/demo/js-keyboard/sounds/043.wav"></audio>
-        <audio data-key="68" src="http://carolinegabriel.com/demo/js-keyboard/sounds/044.wav"></audio>
-        <audio data-key="70" src="http://carolinegabriel.com/demo/js-keyboard/sounds/045.wav"></audio>
-        <audio data-key="84" src="http://carolinegabriel.com/demo/js-keyboard/sounds/046.wav"></audio>
-        <audio data-key="71" src="http://carolinegabriel.com/demo/js-keyboard/sounds/047.wav"></audio>
-        <audio data-key="89" src="http://carolinegabriel.com/demo/js-keyboard/sounds/048.wav"></audio>
-        <audio data-key="72" src="http://carolinegabriel.com/demo/js-keyboard/sounds/049.wav"></audio>
-        <audio data-key="85" src="http://carolinegabriel.com/demo/js-keyboard/sounds/050.wav"></audio>
-        <audio data-key="74" src="http://carolinegabriel.com/demo/js-keyboard/sounds/051.wav"></audio>
-        <audio data-key="75" src="http://carolinegabriel.com/demo/js-keyboard/sounds/052.wav"></audio>
-        <audio data-key="79" src="http://carolinegabriel.com/demo/js-keyboard/sounds/053.wav"></audio>
-        <audio data-key="76" src="http://carolinegabriel.com/demo/js-keyboard/sounds/054.wav"></audio>
-        <audio data-key="80" src="http://carolinegabriel.com/demo/js-keyboard/sounds/055.wav"></audio>
-        <audio data-key="186" src="http://carolinegabriel.com/demo/js-keyboard/sounds/056.wav"></audio>
+        <audio data-key="65" src="https://carolinegabriel.com/demo/js-keyboard/sounds/040.wav"></audio>
+        <audio data-key="87" src="https://carolinegabriel.com/demo/js-keyboard/sounds/041.wav"></audio>
+        <audio data-key="83" src="https://carolinegabriel.com/demo/js-keyboard/sounds/042.wav"></audio>
+        <audio data-key="69" src="https://carolinegabriel.com/demo/js-keyboard/sounds/043.wav"></audio>
+        <audio data-key="68" src="https://carolinegabriel.com/demo/js-keyboard/sounds/044.wav"></audio>
+        <audio data-key="70" src="https://carolinegabriel.com/demo/js-keyboard/sounds/045.wav"></audio>
+        <audio data-key="84" src="https://carolinegabriel.com/demo/js-keyboard/sounds/046.wav"></audio>
+        <audio data-key="71" src="https://carolinegabriel.com/demo/js-keyboard/sounds/047.wav"></audio>
+        <audio data-key="89" src="https://carolinegabriel.com/demo/js-keyboard/sounds/048.wav"></audio>
+        <audio data-key="72" src="https://carolinegabriel.com/demo/js-keyboard/sounds/049.wav"></audio>
+        <audio data-key="85" src="https://carolinegabriel.com/demo/js-keyboard/sounds/050.wav"></audio>
+        <audio data-key="74" src="https://carolinegabriel.com/demo/js-keyboard/sounds/051.wav"></audio>
+        <audio data-key="75" src="https://carolinegabriel.com/demo/js-keyboard/sounds/052.wav"></audio>
+        <audio data-key="79" src="https://carolinegabriel.com/demo/js-keyboard/sounds/053.wav"></audio>
+        <audio data-key="76" src="https://carolinegabriel.com/demo/js-keyboard/sounds/054.wav"></audio>
+        <audio data-key="80" src="https://carolinegabriel.com/demo/js-keyboard/sounds/055.wav"></audio>
+        <audio data-key="186" src="https://carolinegabriel.com/demo/js-keyboard/sounds/056.wav"></audio>
 </section>
 
 <div id="sheetnumber"></div>
@@ -416,13 +418,13 @@ window.addEventListener('keydown', Define);
 
 function Define(event){
     if(event.keyCode == 65 || event.keyCode == 87 || event.keyCode == 83 || event.keyCode == 69 || event.keyCode == 68 || event.keyCode == 70 || event.keyCode == 84 || event.keyCode == 71 || event.keyCode == 89 || event.keyCode == 72 || event.keyCode == 85 || event.keyCode == 74 || event.keyCode == 75 || event.keyCode == 79 || event.keyCode == 76|| event.keyCode == 80 || event.keyCode == 186){
-        SetMeasure2();
+        // SetMeasure2();
         playNote(event);
     } else {
         return;
     }
 };
-var SetMeasure2 = (function() {
+var SetMeasure2 = function() {
     var executed = false;
     return function() {
         if (!executed) {
@@ -440,7 +442,7 @@ var SetMeasure2 = (function() {
             };
         };
     };
-})();
+};
 
 //Just triggered one keydown event by adding fired flag;
 var fired = false;
@@ -472,12 +474,12 @@ function Keyup(event){
     };
     function KeyupCountTime(event){
         var n2 = event.timeStamp;
-        console.log(n2);
+        //console.log(n2);
         var n1 = document.getElementById('showtime').innerHTML;
         var timelapse =((n2-n1)/1000);
         var rate = document.getElementById('MusicRate').value;
-        var sheetnumber = document.getElementById('sheetnumber').textContent;
-        console.log(timelapse);
+        var sheetnumber = document.getElementById('sheetnumber').textContent; // I think this is 五線譜？
+        // console.log(timelapse); 
         //Rate
         var beat2 = (60/rate)*2;
         var beat4 = (60/rate);
@@ -538,7 +540,7 @@ function Keyup(event){
             keynumber2 = 16;
             break; 
         };
-
+/*      Buggy so comment out
         if(timelapse > beat2){
             document.getElementById(`sheet${sheetnumber}`).innerHTML += `<img src ='https://img.icons8.com/windows/32/000000/musical.png' style='width:50px; height:30px;position:relative;margin-left:3%;top:${(52-keynumber2)}%;'>`
         }else if(timelapse > beat4 && timelapse < beat2){
@@ -548,6 +550,7 @@ function Keyup(event){
         }else if(timelapse < beat8){
             document.getElementById(`sheet${sheetnumber}`).innerHTML += `<img src ='https://img.icons8.com/material-sharp/32/000000/musical-notes.png' style='width:50px;height:30px;position:relative;margin-left:3%;top:${(52-keynumber2)}%;'>`
         };
+*/
     };
 };
 
@@ -569,6 +572,23 @@ $(document).ready(function(){
     $('h2').click(function (){  
         $('.keys').fadeToggle(3000);
     });
+    let token = getCookie("token");
+    if(token == undefined) {
+        window.location = "/login";
+    }
+    //TODO: check if the token valid
+    // Start websocket
+    let ok = support_websocket();
+    if(!ok) {
+        alert("just pass the game");
+        return;
+    }
+    try {
+        let gameSocket = new GameWebSocket("wss://127.0.0.1:8081/game/socket");
+    } catch(e) {
+        alert(e.message); // TODO: Show it on status area
+    }
+    
 });
 </script>
 </body>

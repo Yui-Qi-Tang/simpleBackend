@@ -5,13 +5,43 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
 	"github.com/mongodb/mongo-go-driver/bson"
 	"golang.org/x/crypto/bcrypt"
 )
+
+type user struct {
+	id     int
+	wsconn *websocket.Conn
+}
+
+func generateUserID() int {
+	s1 := rand.NewSource(time.Now().UnixNano())
+	r1 := rand.New(s1)
+	return r1.Intn(1000)
+}
+
+var upgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+}
+
+type msg struct {
+	Text string
+	MyID interface{}
+	To   interface{}
+	From interface{}
+}
+
+var clients = make(map[*user]bool)
+
+var flag = make(chan bool)
 
 // UserLogin api for user login request
 func UserLogin(c *gin.Context) {
@@ -377,5 +407,65 @@ func webPusher(p http.Pusher, resource string) {
 		if err := p.Push(resource, nil); err != nil {
 			log.Printf("Failed to push: %v", err)
 		}
+	}
+}
+
+// GameWebSocketHandler web socket handler for pian game
+func GameWebSocketHandler(c *gin.Context) {
+	// establish web socket
+	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	// allocate user id
+	newUserID := generateUserID()
+	for k := range clients {
+		if k.id == newUserID {
+			newUserID = generateUserID()
+			continue
+		}
+	}
+
+	sendFirstJoinMsg(conn, newUserID)
+	// add new user
+	newUser := &user{wsconn: conn, id: newUserID}
+	clients[newUser] = true
+	// go echo(conn)
+	go chatHandle(newUser)
+}
+
+func sendFirstJoinMsg(conn *websocket.Conn, guessID int) {
+	welcome := &msg{Text: "Hello!!Wellcome join us!!", MyID: guessID, To: nil, From: nil}
+	conn.WriteJSON(welcome)
+}
+
+func chatHandle(chater *user) {
+	for {
+		m := msg{} // custom msg
+		err := chater.wsconn.ReadJSON(&m)
+		if err != nil {
+			fmt.Println("Error reading json.", err)
+			chater.wsconn.Close()
+			delete(clients, chater)
+			fmt.Println(clients)
+			flag <- false
+		}
+
+		fmt.Printf("Got message: %#v\n", m)
+		// board cast msg
+		for k := range clients {
+			if k.id != chater.id {
+				m.From = chater.id
+				m.MyID = nil
+
+				err := k.wsconn.WriteJSON(m)
+				if err != nil {
+					fmt.Printf("send failed!")
+				}
+			}
+		}
+
 	}
 }
