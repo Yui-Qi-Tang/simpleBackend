@@ -17,7 +17,7 @@ import (
 )
 
 type user struct {
-	id     int
+	id     string
 	wsconn *websocket.Conn
 }
 
@@ -420,13 +420,7 @@ func GameWebSocketHandler(c *gin.Context) {
 	}
 
 	// allocate user id
-	newUserID := generateUserID()
-	for k := range clients {
-		if k.id == newUserID {
-			newUserID = generateUserID()
-			continue
-		}
-	}
+	newUserID, err := c.Cookie("token")
 
 	sendFirstJoinMsg(conn, newUserID)
 	// add new user
@@ -436,7 +430,7 @@ func GameWebSocketHandler(c *gin.Context) {
 	go chatHandle(newUser)
 }
 
-func sendFirstJoinMsg(conn *websocket.Conn, guessID int) {
+func sendFirstJoinMsg(conn *websocket.Conn, guessID string) {
 	welcome := &msg{Text: "Hello!!Wellcome join us!!", MyID: guessID, To: nil, From: nil}
 	conn.WriteJSON(welcome)
 }

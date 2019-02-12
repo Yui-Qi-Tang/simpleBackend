@@ -568,7 +568,7 @@ hints.forEach(hintsOn);
 keys.forEach(key => key.addEventListener("transitionend", removeTransition));
 
 
-$(document).ready(function(){
+$(document).ready(async function(){
     $('h2').click(function (){  
         $('.keys').fadeToggle(3000);
     });
@@ -584,7 +584,8 @@ $(document).ready(function(){
         return;
     }
     try {
-        let gameSocket = new GameWebSocket("wss://127.0.0.1:8081/game/socket");
+        let gameSocket = await start_connect_to_server();
+        console.log(gameSocket);
     } catch(e) {
         alert(e.message); // TODO: Show it on status area
     }
