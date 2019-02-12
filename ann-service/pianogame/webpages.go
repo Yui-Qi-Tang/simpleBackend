@@ -2,6 +2,7 @@ package pianogame
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -9,8 +10,10 @@ import (
 // LoginPage show login UI from template page
 func LoginPage(c *gin.Context) {
 	host := getURLInfo(c)
+	// Bad design for concate website and API service...TODO, use API gateway
+	signinAPI := strConcate("https://", UserAPIConfig.User.Network[1].Name, ":", strconv.Itoa(UserAPIConfig.User.Network[1].Port), "/member/v2/user/validation")
 	c.HTML(http.StatusOK, "Login.html", gin.H{
-		"loginURL":   strConcate(host.String(), "/user/login"),
+		"loginURL":   signinAPI,
 		"signupPage": strConcate(host.String(), "/signup"),
 		"loginPage":  strConcate(host.String(), "/login"),
 	})
@@ -18,10 +21,10 @@ func LoginPage(c *gin.Context) {
 
 // SignupPage show sign-up UI from template page
 func SignupPage(c *gin.Context) {
-	host := getURLInfo(c)
-	registerURL := "/user/register"
+	// Bad design for concate website and API service...TODO, use API gateway
+	signupAPI := strConcate("https://", UserAPIConfig.User.Network[1].Name, ":", strconv.Itoa(UserAPIConfig.User.Network[1].Port), "/member/v2/user")
 	c.HTML(http.StatusOK, "Signup.html", gin.H{
-		"registerURL": strConcate(host.String(), registerURL),
+		"registerURL": signupAPI,
 	})
 }
 

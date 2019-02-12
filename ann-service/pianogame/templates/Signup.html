@@ -27,7 +27,7 @@
             var Account = document.getElementById("account0");
             var Password = document.getElementById("password0");
             var Information = {
-                "user":Account.value,
+                "account":Account.value,
                 "password":Password.value
             };
             console.log(Information);
@@ -37,13 +37,12 @@
             sendData.onreadystatechange = function(){
                 if (this.readyState == 4){
                     var resp = JSON.parse(this.responseText);
-                    console.log(this.status);
                     switch(this.status) {
                         case 201:
-                            alert(resp.status);
+                            alert(resp.msg);
                             break;
                         case 400:
-                            alert(resp.status);
+                            alert(resp.error);
                             break;
                         default:
                             alert("FATAL ERROR!!");                    

@@ -130,7 +130,7 @@ func AddUser(c *gin.Context) {
 	)
 	// check if acount exists
 	if newUser.RowsAffected == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"msg": "Account has be registed"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Account has be registed"})
 		return
 	}
 	// bind profile to user
@@ -176,7 +176,7 @@ func UserValidation(c *gin.Context) {
 
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password.String), []byte(userData.Password)); err != nil {
 		// If the two passwords don't match, return a 401 status
-		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "帳號或是密碼錯誤"})
 		return
 	}
 

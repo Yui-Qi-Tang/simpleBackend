@@ -1,6 +1,7 @@
 package pianogame
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/location"
 	"github.com/gin-gonic/gin"
 )
@@ -17,10 +18,11 @@ func UserServiceRouter() *gin.Engine {
 	router := gin.Default()
 	router.Use(gin.Recovery())
 	router.Use(location.New(location.DefaultConfig()))
+	router.Use(cors.Default())
 	// router.Use(AuthCheck)
 	// router.Use(MiddlewareForMysqlTest) // my first middle for auth
 
-	authRoute := router.Group("member/v2/")
+	authRoute := router.Group("member/v2")
 	authRoute.POST("/user", AddUser)                   // api for sign-up
 	authRoute.POST("/user/validation", UserValidation) // api for sign-in
 	authRoute.GET("/user/:token/", GetUserInfoByToken) // just test
