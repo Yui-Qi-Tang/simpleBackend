@@ -14,8 +14,10 @@ let socketClientEvents = {
     },
     receiveMsg: function(e) {
         let myData = JSON.parse(e.data);
-        this.MyID = myData.MyID;
         console.log(myData);
+        if(myData.PianoKey) {
+            playPianoKey(myData.PianoKey);
+        }
         /*
         if(!myData.From) {
           chatInfo.append(`<h2>${myData.Text}</h2>`);
@@ -42,30 +44,21 @@ let socketClientEvents = {
 /**
  * TODO: create socket and return
  */
-class GameWebSocket {
+class GameWebSocketFactory {
     constructor(socketServerURL) {
         this.serverURL = socketServerURL;
-        this.socket = new WebSocket(socketServerURL);
-        this.socket.onopen = socketClientEvents.open;
-        this.socket.onmessage = socketClientEvents.receiveMsg;
-        this.socket.onclose = socketClientEvents.destroy;
-        this.socket.onerror = socketClientEvents.error;
     }
 
-    createSocket() {
+    create() {
         if(this.serverURL == undefined || this.serverURL == null) {
             return false;
         }
-        this.socket = new WebSocket(socketServerURL);
-        this.socket.onopen = socketClientEvents.open;
-        this.socket.onmessage = socketClientEvents.receiveMsg;
-        this.socket.onclose = socketClientEvents.destroy;
-        this.socket.onerror = socketClientEvents.error;
-        return this.socket;
-    }
-
-    send(msg) {
-        this.socket.send()
+        let socket = new WebSocket(this.serverURL);
+        socket.onopen = socketClientEvents.open;
+        socket.onmessage = socketClientEvents.receiveMsg;
+        socket.onclose = socketClientEvents.destroy;
+        socket.onerror = socketClientEvents.error;
+        return socket;
     }
 }
 

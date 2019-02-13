@@ -33,10 +33,11 @@ var upgrader = websocket.Upgrader{
 }
 
 type msg struct {
-	Text string
-	MyID interface{}
-	To   interface{}
-	From interface{}
+	Text     string
+	PianoKey interface{}
+	MyID     interface{}
+	To       interface{}
+	From     interface{}
 }
 
 var clients = make(map[*user]bool)

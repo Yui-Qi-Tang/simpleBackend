@@ -31,7 +31,7 @@ func init() {
 	//x = strConcate(config.User, config.Password, config.DBName)
 	//log.Println(x)
 	DBOpenSetting = strConcateF(
-		"%s:%s@/%s?charset=utf8&parseTime=True&loc=Local",
+		"%s:%s@/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		config.User,
 		config.Password,
 		config.DBName,
@@ -49,17 +49,18 @@ func init() {
 		         and WON'T change existing column's type or delete unused columns to protect your data.
 	*/
 	// reset tables in test!
-	// MysqlDB.DropTableIfExists(&User{}, &Email{}, &Address{}, &CreditCard{}, &UserProfile{}) // comment out if in production!!
+	//MysqlDB.DropTableIfExists(&User{}, &Email{}, &Address{}, &CreditCard{}, &UserProfile{}) // comment out if in production!!
+	MysqlDB = MysqlDB.Set("gorm:table_options", "ENGINE=InnoDB")
 
 	MysqlDB.AutoMigrate(&User{})
 
 	MysqlDB.AutoMigrate(&Email{})
-	MysqlDB.AutoMigrate(&Address{})
-	MysqlDB.AutoMigrate(&CreditCard{})
+	// MysqlDB.AutoMigrate(&Address{})
+	// MysqlDB.AutoMigrate(&CreditCard{})
 	MysqlDB.AutoMigrate(&UserProfile{})
 
 	// Add table suffix when create tables
-	// db.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(&User{})
+	//MysqlDB.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(&User{})
 
 	// defer MysqlDB.Close()
 }

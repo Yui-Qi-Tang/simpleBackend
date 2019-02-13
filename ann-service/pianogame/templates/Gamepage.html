@@ -4,230 +4,17 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="/css/game.css">
 <script src="/js/jquery-3.3.1.min.js"></script>
 <script src="/js/getCookie.js"></script>
 <script src="/js/websocket.js"></script>
-<style>
-* {
-  box-sizing: border-box;
-}
-
-[class*="col-"] {
-  width: 100%;
-  float: left;
-  padding: 15px;
-}
-
-h1{
-    color:black;
-    font-size:40px;
-    font-style: italic;
-    font-weight: 400;   
-}
-h2 {
-    color:black;
-    font-size: 40px;
-    font-weight: 400;
-    cursor: pointer;
-}
-
-.nowplaying {
-    text-align: center;
-    font-size: 120px;
-    line-height: 1;
-    color: black;
-    text-shadow: 0 0 5rem #028ae9;
-    transition: all .07s ease;
-    min-height: 120px;
-}
-
-.keys {
-    display: none;
-    width: 100%;
-    max-width: 880px;
-    position: relative;
-    margin: 40px auto 0;
-    cursor: pointer;
-}
-
-.key {
-    position: relative;
-    border: 4px solid black;
-    border-radius: .5rem;
-    transition: all .07s ease;
-    display: block;
-    box-sizing: border-box;
-    z-index: 2;
-}
-
-.key:not(.sharp) {
-    float: left;
-    width: 10%;
-    height: 100%;
-    background: rgba(255, 255, 255, .8);    
-}
-
-.key.sharp {
-    position: absolute;
-    width: 6%;
-    height: 60%;
-    background: #000;
-    color: #eee;
-    top: 0;
-    z-index: 3;
-}
-
-.key[data-key="87"] {
-    left: 7%;
-}
-
-.key[data-key="69"] {
-    left: 17%;
-}
-
-.key[data-key="84"]  {
-    left: 37%;
-}
-
-.key[data-key="89"] {
-    left: 47%;
-}
-
-.key[data-key="85"] {
-    left: 57%;    
-}
-
-.key[data-key="79"] {
-    left: 77%;    
-}
-
-.key[data-key="80"] {
-    left: 87%;    
-}
-
-.playing {
-    transform: scale(.95);
-    border-color: #028ae9;
-    box-shadow: 0 0 1rem #028ae9;
-}
-
-.hints {
-    display: block;
-    width: 100%;
-    opacity: 0;
-    position: absolute;
-    bottom: 7px;
-    transition: opacity .3s ease-out;
-    font-size: 20px;
-}
-
-.keys:hover .hints {
-    opacity: 1;
-}
-
-.sheet{
-    background-image:url('/images/five_line_sheet.png');
-    background-repeat:no-repeat;
-    background-position:center;
-    display: flex;
-}
-.button {
-    background-color: #4CAF50; /* Green */
-    height: 40px;
-    border: none;
-    color: white;
-    padding: 5 10px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 14px;
-    margin-left: 4%;
-    margin-top: 3%;
-    -webkit-transition-duration: 0.4s; /* Safari */
-    transition-duration: 0.4s;
-    cursor: pointer;
-}
-
-.button5 {
-    background-color: white;
-    color: black;
-    border: 2px solid #555555;
-}
-
-.button5:hover {
-    background-color: #555555;
-    color: white;
-}
-.line{
-    position: static;
-    border-left: 2px solid black;
-    height: 80px;
-    margin-left: 10%;
-    margin-top: 24%;
-}
-/* For mobile phones: */
-[class*="col-"] {
-  width: 100%;
-}
-[class*="keys"]{
-    height: 150px;
-}
-[id*="main"]{
-    height:220px;
-}
-[id*="sheet"]{
-    height: 300px;
-    background-size:320px 120px;
-}
-[class*="img"]{
-    width:10px; 
-    position:relative; 
-    left:20%;
-}
-@media only screen and (min-width: 600px) {
-  /* For tablets: */
-  .col-s-1 {width: 8.33%;}
-  .col-s-2 {width: 16.66%;}
-  .col-s-3 {width: 25%;}
-  .col-s-4 {width: 33.33%;}
-  .col-s-5 {width: 41.66%;}
-  .col-s-6 {width: 50%;}
-  .col-s-7 {width: 58.33%;}
-  .col-s-8 {width: 66.66%;}
-  .col-s-9 {width: 75%;}
-  .col-s-10 {width: 83.33%;}
-  .col-s-11 {width: 91.66%;}
-  .col-s-12 {width: 100%;}
-  .keys{height: 350px;}
-  #main{height: 500px;}
-  #sheet{height: 500px;
-         background-size: 800px 300px; 
-  }
-}
-@media only screen and (min-width: 768px) {
-  /* For desktop: */
-  .col-1 {width: 8.33%;}
-  .col-2 {width: 16.66%;}
-  .col-3 {width: 25%;}
-  .col-4 {width: 33.33%;}
-  .col-5 {width: 41.66%;}
-  .col-6 {width: 50%;}
-  .col-7 {width: 58.33%;}
-  .col-8 {width: 66.66%;}
-  .col-9 {width: 75%;}
-  .col-10 {width: 83.33%;}
-  .col-11 {width: 91.66%;}
-  .col-12 {width: 100%;}
-  .keys{height: 350px;}
-  #main{height: 500px;}
-  #sheet{height: 500px;
-         background-size: 800px 300px; 
-        }
-}
-</style>
+<script src="/js/game/key_events.js"></script>
 </head>
 <body>
 
+
+<button type="button" id="closeSocket">Close socket</button>
+<button type="button" id="linkStart">link Start</button> <!-- for now nothing-->
 <header class="col-12 col-s-12" style="text-align:center;">
     <h1 tyle="text-align:center;">Use your keyboard. Hover for hints.</h1>
     <h2>Show Piano</h2>
@@ -335,14 +122,6 @@ h2 {
 
 
 <script>
-$(document).ready(function(){
-    $('#MusicRateBtn').click(function(){
-        $(this).fadeOut(2000);
-        $('#MusicRate').fadeOut(2000);
-        $('#MusicRateArea').append(`<p id='NowRate' style='margin-left: 5%; display:none; font-size: 30px;'>${$('#MusicRate').val()}</p>`);
-        $('#NowRate').fadeIn(5000);
-    });
-});
 
 //Play piano by Mouse
 const keys = document.querySelectorAll(".key"),
@@ -414,16 +193,8 @@ function playNote2(event,keynumber) {
 //Play piano by keyboard
 
 window.addEventListener('keyup',Keyup);
-window.addEventListener('keydown', Define);
 
-function Define(event){
-    if(event.keyCode == 65 || event.keyCode == 87 || event.keyCode == 83 || event.keyCode == 69 || event.keyCode == 68 || event.keyCode == 70 || event.keyCode == 84 || event.keyCode == 71 || event.keyCode == 89 || event.keyCode == 72 || event.keyCode == 85 || event.keyCode == 74 || event.keyCode == 75 || event.keyCode == 79 || event.keyCode == 76|| event.keyCode == 80 || event.keyCode == 186){
-        // SetMeasure2();
-        playNote(event);
-    } else {
-        return;
-    }
-};
+
 var SetMeasure2 = function() {
     var executed = false;
     return function() {
@@ -444,116 +215,6 @@ var SetMeasure2 = function() {
     };
 };
 
-//Just triggered one keydown event by adding fired flag;
-var fired = false;
-function playNote(event) {
-    if(!fired){//這裡的 (!fired) = true，所以會繼續執行 if 後面的 Code，但在 Code 的第一行已經把 fired 變成 true，所以下次的 (!fired) = false，就會跳出 if 的執行圈了。  
-        fired = true;
-        var n1 = event.timeStamp;
-        console.log(n1);
-        document.getElementById('showtime').innerHTML = n1;
-    };
-    const audio = document.querySelector(`audio[data-key="${event.keyCode}"]`),
-            key = document.querySelector(`.key[data-key="${event.keyCode}"]`);
-    if (!key) {
-        return;
-    }
-    const keyNote = key.getAttribute("data-note");
-    key.classList.add("playing");
-    note.innerHTML = keyNote;
-    audio.currentTime = 0;
-    audio.play();
-    
-};
-
-function Keyup(event){
-    if(event.keyCode == 65 || event.keyCode == 87 || event.keyCode == 83 || event.keyCode == 69 || event.keyCode == 68 || event.keyCode == 70 || event.keyCode == 84 || event.keyCode == 71 || event.keyCode == 89 || event.keyCode == 72 || event.keyCode == 85 || event.keyCode == 74 || event.keyCode == 75 || event.keyCode == 79 || event.keyCode == 76|| event.keyCode == 80 || event.keyCode == 186){
-        KeyupCountTime(event);
-    } else {
-        return;
-    };
-    function KeyupCountTime(event){
-        var n2 = event.timeStamp;
-        //console.log(n2);
-        var n1 = document.getElementById('showtime').innerHTML;
-        var timelapse =((n2-n1)/1000);
-        var rate = document.getElementById('MusicRate').value;
-        var sheetnumber = document.getElementById('sheetnumber').textContent; // I think this is 五線譜？
-        // console.log(timelapse); 
-        //Rate
-        var beat2 = (60/rate)*2;
-        var beat4 = (60/rate);
-        var beat8 = (60/rate/2);
-        var beat15 = (60/rate/4);
-
-        var keynumber2;
-        switch (event.key){
-          case 'a' :
-            keynumber2 = 0;
-            break;
-          case 'w' :
-            keynumber2 = 1;
-            break;
-          case 's' :
-            keynumber2 = 2;
-            break;
-          case 'e' :
-            keynumber2 = 3;
-            break;
-          case 'd' :
-            keynumber2 = 4;
-            break;
-          case 'f' :
-            keynumber2 = 5;
-            break;
-          case 't' :
-            keynumber2 = 6;
-            break;
-          case 'g' :
-            keynumber2 = 7;
-            break;
-          case 'y' :
-            keynumber2 = 8;
-            break;
-          case 'h' :
-            keynumber2 = 9;
-            break;
-          case 'u' :
-            keynumber2 = 10;
-            break;
-          case 'j' :
-            keynumber2 = 11;
-            break;
-          case 'k' :
-            keynumber2 = 12;
-            break;
-          case 'o' :
-            keynumber2 = 13;
-            break;
-          case 'l' :
-            keynumber2 = 14;
-            break;
-          case 'p' :
-            keynumber2 = 15;
-            break;
-          case ';' :
-            keynumber2 = 16;
-            break; 
-        };
-/*      Buggy so comment out
-        if(timelapse > beat2){
-            document.getElementById(`sheet${sheetnumber}`).innerHTML += `<img src ='https://img.icons8.com/windows/32/000000/musical.png' style='width:50px; height:30px;position:relative;margin-left:3%;top:${(52-keynumber2)}%;'>`
-        }else if(timelapse > beat4 && timelapse < beat2){
-            document.getElementById(`sheet${sheetnumber}`).innerHTML += `<img src ='https://img.icons8.com/ultraviolet/32/000000/musical.png' style='width:50px;height:30px;position:relative;margin-left:3%;top:${(52-keynumber2)}%;'>`
-        }else if(timelapse < beat4 && timelapse > beat8){
-            document.getElementById(`sheet${sheetnumber}`).innerHTML += `<img src ='https://img.icons8.com/ios/32/000000/musical-filled.png' style='width:50px;height:30px;position:relative;margin-left:3%;top:${(52-keynumber2)}%;'>`
-        }else if(timelapse < beat8){
-            document.getElementById(`sheet${sheetnumber}`).innerHTML += `<img src ='https://img.icons8.com/material-sharp/32/000000/musical-notes.png' style='width:50px;height:30px;position:relative;margin-left:3%;top:${(52-keynumber2)}%;'>`
-        };
-*/
-    };
-};
-
 function removeTransition(e) {
   if (e.propertyName !== "transform") return;
   this.classList.remove("playing");
@@ -568,24 +229,51 @@ hints.forEach(hintsOn);
 keys.forEach(key => key.addEventListener("transitionend", removeTransition));
 
 
-$(document).ready(async function(){
-    $('h2').click(function (){  
-        $('.keys').fadeToggle(3000);
+
+// A buggy to lead the socket link string is not integrety 
+$('#MusicRateBtn').click(function(){
+        // $(this).fadeOut(500);??
+        // $('#MusicRate').fadeOut(500);
+        $('#MusicRateArea').append(`<p id='NowRate' style='margin-left: 5%; display:none; font-size: 30px;'>${$('#MusicRate').val()}</p>`);
+        // $('#NowRate').fadeIn(500);
+});
+
+$(document).ready(function(){
+    $('h2').click(function(){  
+        $('.keys').fadeToggle(300);
     });
+
     let token = getCookie("token");
     if(token == undefined) {
         window.location = "/login";
     }
     //TODO: check if the token valid
     // Start websocket
-    let ok = support_websocket();
-    if(!ok) {
-        alert("just pass the game");
+    if(!support_websocket()) {
+        alert("Play game if you are auth. user");
         return;
     }
     try {
-        let gameSocket = await start_connect_to_server();
-        console.log(gameSocket);
+        let wSocketServer = "wss://127.0.0.1:8081/game/socket"; // link from server renderer
+        let socketFact = new GameWebSocketFactory(wSocketServer);
+        let gameSocket = socketFact.create();
+        // 當務之急應該解決ID拿不到的問題，若不行，就開個全域變數好了...
+        // simply send key code
+        window.addEventListener('keydown', function(event) {
+            if(event.keyCode == 65 || event.keyCode == 87 || event.keyCode == 83 || event.keyCode == 69 || event.keyCode == 68 || event.keyCode == 70 || event.keyCode == 84 || event.keyCode == 71 || event.keyCode == 89 || event.keyCode == 72 || event.keyCode == 85 || event.keyCode == 74 || event.keyCode == 75 || event.keyCode == 79 || event.keyCode == 76|| event.keyCode == 80 || event.keyCode == 186){
+                gameSocket.send(JSON.stringify({
+                    //MyId: parseInt($("#numberfield").val()),
+                    Text: "hi",
+                    From: 123,
+                    PianoKey: event.keyCode,
+                }));
+                playNote(event);
+            }
+        });
+        $('#closeSocket').click(function (e) {
+          e.preventDefault();
+          gameSocket.close();
+        });
     } catch(e) {
         alert(e.message); // TODO: Show it on status area
     }

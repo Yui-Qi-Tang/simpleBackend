@@ -32,8 +32,9 @@ func SignupPage(c *gin.Context) {
 func GamePage(c *gin.Context) {
 	resources := []string{
 		"/js/websocket.js",
-		"/js/getCookie.css",
+		"/js/getCookie.js",
 		"/js/jquery-3.3.1.min.js",
+		"/css/game.css",
 	}
 	pusher := c.Writer.Pusher()
 	for _, v := range resources {
