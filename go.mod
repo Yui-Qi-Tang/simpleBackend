@@ -8,6 +8,8 @@ require (
 	github.com/gin-gonic/gin v1.3.0
 	github.com/go-sql-driver/mysql v1.4.1
 	github.com/go-stack/stack v1.8.0 // indirect
+	github.com/golang/mock v1.1.1
+	github.com/golang/protobuf v1.2.0
 	github.com/golang/snappy v0.0.0-20180518054509-2e65f85255db // indirect
 	github.com/google/pprof v0.0.0-20190109223431-e84dfd68c163 // indirect
 	github.com/gorilla/websocket v1.4.0
@@ -20,6 +22,7 @@ require (
 	github.com/xdg/stringprep v1.0.0 // indirect
 	golang.org/x/arch v0.0.0-20181203225421-5a4828bb7045 // indirect
 	golang.org/x/crypto v0.0.0-20180904163835-0709b304e793
-	golang.org/x/text v0.3.0 // indirect
+	golang.org/x/net v0.0.0-20181220203305-927f97764cc3
+	google.golang.org/grpc v1.18.0
 	gopkg.in/yaml.v2 v2.2.2
 )
