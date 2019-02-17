@@ -1,13 +1,18 @@
+/*
+    gRPC protocal buffer
+*/
+
 syntax = "proto3";
 
-package usergrpc;
+package authentication;
 
-// Greeting service
-service UserGreeting {
+// AuthenticationGreeter a greeter for authenticating
+service AuthenticationGreeter {
     rpc Login (LoginRequest) returns (LoginResponse) {}
     rpc Logout (LogoutRequest) returns (LogoutResponse) {}
 }
 
+/* message interfaces here */
 message LoginRequest {
     string Account = 1;
     string Password = 2;

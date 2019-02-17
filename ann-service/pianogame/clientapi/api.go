@@ -8,13 +8,13 @@ import (
 
 	"google.golang.org/grpc"
 
-	usergrpc "simpleBackend/ann-service/pianogame/grpc"
+	authenticationPb "simpleBackend/ann-service/pianogame/protocol-buffer/authentication"
 
 	"github.com/gin-gonic/gin"
 )
 
-// ServiceLogin a client api to call gRPC service
-func ServiceLogin(c *gin.Context) {
+// Login a client api to call gRPC service
+func Login(c *gin.Context) {
 	const (
 		address  = "localhost:9001" // gRPC server that is set in ann-servie/main.go now
 		account  = "tester"
@@ -42,9 +42,9 @@ func ServiceLogin(c *gin.Context) {
 	}
 	defer conn.Close()
 	/* set client */
-	grpcClient := usergrpc.NewUserGreetingClient(conn)
+	grpcClient := authenticationPb.NewAuthenticationGreeterClient(conn)
 
-	r, err := grpcClient.Login(ctx, &usergrpc.LoginRequest{Account: user.Account, Password: user.Password})
+	r, err := grpcClient.Login(ctx, &authenticationPb.LoginRequest{Account: user.Account, Password: user.Password})
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 		c.JSON(http.StatusBadRequest, gin.H{

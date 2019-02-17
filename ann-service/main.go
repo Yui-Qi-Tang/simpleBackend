@@ -8,9 +8,9 @@ import (
 
 	"google.golang.org/grpc"
 
-	clientapi "simpleBackend/ann-service/pianogame/client_api"
+	"simpleBackend/ann-service/pianogame/clientapi"
 
-	usergrpc "simpleBackend/ann-service/pianogame/grpc"
+	authenticationPb "simpleBackend/ann-service/pianogame/protocol-buffer/authentication"
 
 	"github.com/gin-contrib/location"
 	"github.com/gin-gonic/gin"
@@ -21,16 +21,16 @@ import (
 /* gRPC */
 type gRPCServer struct{}
 
-// Login implements usergrpc.UserGreeting
-func (s *gRPCServer) Login(ctx context.Context, in *usergrpc.LoginRequest) (*usergrpc.LoginResponse, error) {
+// Login implements authenticationPb.AuthenticationGreeter
+func (s *gRPCServer) Login(ctx context.Context, in *authenticationPb.LoginRequest) (*authenticationPb.LoginResponse, error) {
 	log.Printf("Received account/password: %v/%v", in.Account, in.Password)
-	return &usergrpc.LoginResponse{Msg: "Hello, got login req and response token for you", Token: "token value"}, nil
+	return &authenticationPb.LoginResponse{Msg: "Hello, got login req and response token for you", Token: "token value"}, nil
 }
 
-// Logout implements usergrpc.UserGreeting
-func (s *gRPCServer) Logout(ctx context.Context, in *usergrpc.LogoutRequest) (*usergrpc.LogoutResponse, error) {
+// Logout implements authenticationPb.AuthenticationGreeter
+func (s *gRPCServer) Logout(ctx context.Context, in *authenticationPb.LogoutRequest) (*authenticationPb.LogoutResponse, error) {
 	log.Printf("Received token: %v", in.Token)
-	return &usergrpc.LogoutResponse{Msg: "Goodbye"}, nil
+	return &authenticationPb.LogoutResponse{Msg: "Goodbye"}, nil
 }
 
 func startGRPCService() {
@@ -42,7 +42,7 @@ func startGRPCService() {
 	}
 	s := grpc.NewServer()
 	log.Printf("Start gRPC server at %v", port)
-	usergrpc.RegisterUserGreetingServer(s, &gRPCServer{})
+	authenticationPb.RegisterAuthenticationGreeterServer(s, &gRPCServer{})
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
@@ -94,7 +94,7 @@ func main() {
 	router.POST("/parse-cookie-jwt", pianogame.DecodeJwtFromCookie)
 	router.GET("/game/socket", pianogame.GameWebSocketHandler)
 
-	router.POST("/fake/login", clientapi.ServiceLogin)
+	router.POST("/fake/login", clientapi.Login)
 
 	/* Web page */
 	router.GET("/login", pianogame.LoginPage)   // login page
