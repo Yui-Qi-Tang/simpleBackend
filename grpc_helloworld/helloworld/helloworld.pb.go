@@ -35,7 +35,7 @@ func (m *HelloRequest) Reset()         { *m = HelloRequest{} }
 func (m *HelloRequest) String() string { return proto.CompactTextString(m) }
 func (*HelloRequest) ProtoMessage()    {}
 func (*HelloRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_helloworld_b0ce01d0f82766ee, []int{0}
+	return fileDescriptor_helloworld_d8bfb1abab2a86d0, []int{0}
 }
 func (m *HelloRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_HelloRequest.Unmarshal(m, b)
@@ -74,7 +74,7 @@ func (m *HelloReply) Reset()         { *m = HelloReply{} }
 func (m *HelloReply) String() string { return proto.CompactTextString(m) }
 func (*HelloReply) ProtoMessage()    {}
 func (*HelloReply) Descriptor() ([]byte, []int) {
-	return fileDescriptor_helloworld_b0ce01d0f82766ee, []int{1}
+	return fileDescriptor_helloworld_d8bfb1abab2a86d0, []int{1}
 }
 func (m *HelloReply) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_HelloReply.Unmarshal(m, b)
@@ -113,7 +113,7 @@ func (m *MyRequest) Reset()         { *m = MyRequest{} }
 func (m *MyRequest) String() string { return proto.CompactTextString(m) }
 func (*MyRequest) ProtoMessage()    {}
 func (*MyRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_helloworld_b0ce01d0f82766ee, []int{2}
+	return fileDescriptor_helloworld_d8bfb1abab2a86d0, []int{2}
 }
 func (m *MyRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_MyRequest.Unmarshal(m, b)
@@ -152,7 +152,7 @@ func (m *MyResponse) Reset()         { *m = MyResponse{} }
 func (m *MyResponse) String() string { return proto.CompactTextString(m) }
 func (*MyResponse) ProtoMessage()    {}
 func (*MyResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_helloworld_b0ce01d0f82766ee, []int{3}
+	return fileDescriptor_helloworld_d8bfb1abab2a86d0, []int{3}
 }
 func (m *MyResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_MyResponse.Unmarshal(m, b)
@@ -295,10 +295,10 @@ var _Greeter_serviceDesc = grpc.ServiceDesc{
 	Metadata: "helloworld.proto",
 }
 
-func init() { proto.RegisterFile("helloworld.proto", fileDescriptor_helloworld_b0ce01d0f82766ee) }
+func init() { proto.RegisterFile("helloworld.proto", fileDescriptor_helloworld_d8bfb1abab2a86d0) }
 
-var fileDescriptor_helloworld_b0ce01d0f82766ee = []byte{
-	// 214 bytes of a gzipped FileDescriptorProto
+var fileDescriptor_helloworld_d8bfb1abab2a86d0 = []byte{
+	// 179 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xe2, 0x12, 0xc8, 0x48, 0xcd, 0xc9,
 	0xc9, 0x2f, 0xcf, 0x2f, 0xca, 0x49, 0xd1, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x42, 0x88,
 	0x28, 0x29, 0x71, 0xf1, 0x78, 0x80, 0x78, 0x41, 0xa9, 0x85, 0xa5, 0xa9, 0xc5, 0x25, 0x42, 0x42,
@@ -309,8 +309,6 @@ var fileDescriptor_helloworld_b0ce01d0f82766ee = []byte{
 	0xa6, 0x96, 0xa4, 0x16, 0x09, 0xd9, 0x71, 0x71, 0x04, 0x27, 0x56, 0x82, 0xed, 0x17, 0x92, 0xd0,
 	0x43, 0xf2, 0x0b, 0xb2, 0xb3, 0xa5, 0xc4, 0xb0, 0xc8, 0x00, 0x1d, 0xab, 0xc4, 0x20, 0x64, 0xc5,
 	0xc5, 0xee, 0x0b, 0xd5, 0x2e, 0x8a, 0xac, 0x08, 0xee, 0x52, 0x54, 0xbd, 0x08, 0xf7, 0x29, 0x31,
-	0x38, 0x19, 0x70, 0x49, 0x67, 0xe6, 0xeb, 0xa5, 0x17, 0x15, 0x24, 0xeb, 0xa5, 0x56, 0x24, 0xe6,
-	0x16, 0xe4, 0xa4, 0x16, 0x23, 0xa9, 0x75, 0xe2, 0x07, 0x1b, 0x1b, 0x0e, 0x62, 0x07, 0x80, 0x02,
-	0x36, 0x80, 0x31, 0x89, 0x0d, 0x1c, 0xc2, 0xc6, 0x80, 0x00, 0x00, 0x00, 0xff, 0xff, 0x17, 0x12,
-	0x69, 0x75, 0x75, 0x01, 0x00, 0x00,
+	0x24, 0xb1, 0x81, 0xc3, 0xcb, 0x18, 0x10, 0x00, 0x00, 0xff, 0xff, 0x65, 0xbc, 0xec, 0x2c, 0x43,
+	0x01, 0x00, 0x00,
 }

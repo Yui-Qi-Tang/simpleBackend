@@ -1,11 +1,52 @@
 package main
 
 import (
+	"context"
+	"log"
+	"net"
 	"simpleBackend/ann-service/pianogame"
+
+	"google.golang.org/grpc"
+
+	clientapi "simpleBackend/ann-service/pianogame/client_api"
+
+	usergrpc "simpleBackend/ann-service/pianogame/grpc"
 
 	"github.com/gin-contrib/location"
 	"github.com/gin-gonic/gin"
 )
+
+// go:generate protoc -I pianogame/grpc/ pianogame/grpc/user_service.proto --go_out=plugins=grpc:pianogame/grpc
+
+/* gRPC */
+type gRPCServer struct{}
+
+// Login implements usergrpc.UserGreeting
+func (s *gRPCServer) Login(ctx context.Context, in *usergrpc.LoginRequest) (*usergrpc.LoginResponse, error) {
+	log.Printf("Received account/password: %v/%v", in.Account, in.Password)
+	return &usergrpc.LoginResponse{Msg: "Hello, got login req and response token for you", Token: "token value"}, nil
+}
+
+// Logout implements usergrpc.UserGreeting
+func (s *gRPCServer) Logout(ctx context.Context, in *usergrpc.LogoutRequest) (*usergrpc.LogoutResponse, error) {
+	log.Printf("Received token: %v", in.Token)
+	return &usergrpc.LogoutResponse{Msg: "Goodbye"}, nil
+}
+
+func startGRPCService() {
+	const port = ":9001"
+
+	lis, err := net.Listen("tcp", port)
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+	s := grpc.NewServer()
+	log.Printf("Start gRPC server at %v", port)
+	usergrpc.RegisterUserGreetingServer(s, &gRPCServer{})
+	if err := s.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
+}
 
 // main ann-service entry point */
 func main() {
@@ -53,6 +94,8 @@ func main() {
 	router.POST("/parse-cookie-jwt", pianogame.DecodeJwtFromCookie)
 	router.GET("/game/socket", pianogame.GameWebSocketHandler)
 
+	router.POST("/fake/login", clientapi.ServiceLogin)
+
 	/* Web page */
 	router.GET("/login", pianogame.LoginPage)   // login page
 	router.GET("/signup", pianogame.SignupPage) // signup page
@@ -64,6 +107,8 @@ func main() {
 		pianogame.StartServers(router, pianogame.WebConfig.Settings.Network, pianogame.WebConfig.Settings.Meta),
 		pianogame.StartServers(pianogame.UserServiceRouter(), pianogame.UserAPIConfig.User.Network, pianogame.UserAPIConfig.User.Meta)...,
 	)
+	/* gRPC server */
+	go startGRPCService()
 	/*
 		HINT: if there does exist another serivce, please append http instances again:
 
