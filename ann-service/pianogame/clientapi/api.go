@@ -21,8 +21,8 @@ func Login(c *gin.Context) {
 		password = "testpassword"
 	)
 	var user struct {
-		Account  string `form:"name" json:"name" xml:"name"  binding:"required"`
-		Password string `form:"pwd" json:"pwd" xml:"pwd"  binding:"required"`
+		Account  string `form:"account" json:"account" xml:"account"  binding:"required"`
+		Password string `form:"password" json:"password" xml:"password"  binding:"required"`
 	}
 
 	if c.ShouldBind(&user) != nil {
@@ -46,13 +46,14 @@ func Login(c *gin.Context) {
 
 	r, err := grpcClient.Login(ctx, &authenticationPb.LoginRequest{Account: user.Account, Password: user.Password})
 	if err != nil {
-		log.Fatalf("could not greet: %v", err)
+		log.Printf("could not greet: %v", err)
 		c.JSON(http.StatusBadRequest, gin.H{
-			"status": "grpcClient Fatal error",
+			"error": err.Error(),
 		})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"status": r.Msg,
+		"msg":   r.Msg,
+		"token": r.Token,
 	})
 }

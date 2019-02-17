@@ -194,6 +194,18 @@ func errorCheck(e error, msg ...string) {
 	} // fi
 }
 
+// ErrorCheck a convience to check error
+func ErrorCheck(e error, msg ...string) {
+	// TO-DO: better to logging error
+	if e != nil {
+		errorMsg := ""
+		for _, v := range msg {
+			errorMsg += v
+		}
+		log.Panicf("%s => %v", errorMsg, e)
+	} // fi
+}
+
 func ShutDownGraceful(server *http.Server) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()

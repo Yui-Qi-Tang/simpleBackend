@@ -59,7 +59,7 @@ func main() {
 	router.POST("/parse-cookie-jwt", pianogame.DecodeJwtFromCookie)
 	router.GET("/game/socket", pianogame.GameWebSocketHandler)
 
-	router.POST("/fake/login", clientapi.Login)
+	router.POST("/microservice/login", clientapi.Login)
 
 	/* Web page */
 	router.GET("/login", pianogame.LoginPage)   // login page

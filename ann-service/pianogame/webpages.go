@@ -14,6 +14,7 @@ func LoginPage(c *gin.Context) {
 	signinAPI := strConcate("https://", UserAPIConfig.User.Network[1].Name, ":", strconv.Itoa(UserAPIConfig.User.Network[1].Port), "/member/v2/user/validation")
 	c.HTML(http.StatusOK, "Login.html", gin.H{
 		"loginURL":   signinAPI,
+		"loginPBURL": strConcate(host.String(), "/microservice/login"),
 		"signupPage": strConcate(host.String(), "/signup"),
 		"loginPage":  strConcate(host.String(), "/login"),
 	})
@@ -25,6 +26,7 @@ func SignupPage(c *gin.Context) {
 	signupAPI := strConcate("https://", UserAPIConfig.User.Network[1].Name, ":", strconv.Itoa(UserAPIConfig.User.Network[1].Port), "/member/v2/user")
 	c.HTML(http.StatusOK, "Signup.html", gin.H{
 		"registerURL": signupAPI,
+		// TODO: add microservice login
 	})
 }
 

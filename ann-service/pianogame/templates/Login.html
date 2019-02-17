@@ -280,15 +280,19 @@ input:focus {
             <a style="text-decoration: none;" href="{{ .signupPage }}">Sign up</a>
         </div>
         <div class="log" id="btn">LogIn</div>
+        <hr/>
+        <div class="log" id="btnrpc">LogIn(micro-service)</div>
     </div>
 <script>
-    //JSON 版本
-    let Account = document.getElementById(`account0`);
-    let Password = document.getElementById(`password0`);
     let Btn = document.getElementById("btn");
     Btn.addEventListener("click",loadDoc2);
-    function loadDoc2(){
-        const loginURL = "{{ .loginURL }}";
+
+    let btnRpc = document.getElementById("btnrpc");
+    btnRpc.addEventListener("click", sendToRpc);
+    function sendToRpc(){
+        const loginURL = "{{ .loginPBURL }}";
+        let Account = document.getElementById(`account0`);
+        let Password = document.getElementById(`password0`);
         var xhttp = new XMLHttpRequest();
         var data = {
             "account": Account.value,
@@ -319,18 +323,43 @@ input:focus {
                 } // switch
             }; // fi
         }; // onreadystatechange
-    };
-    function VerifyAccount(myArray){
-        let founded = myArray.find(Search);
-        function Search(value, index){
-            return value.Name == Account.value && value.Password == Password.value;
+    }; // sendToRpc()
+    
+    function loadDoc2(){
+        const loginURL = "{{ .loginURL }}";
+        let Account = document.getElementById(`account0`);
+        let Password = document.getElementById(`password0`);
+        var xhttp = new XMLHttpRequest();
+        var data = {
+            "account": Account.value,
+            "password": Password.value
         };
-        if (founded == undefined){
-            document.getElementById("warn").innerHTML = "Don't have an account!"
-        } else {
-            window.location.assign("http://127.0.0.1/web_front_end/Javascript/Mypage/Ann's_page.html")
-        };
-    };
+        xhttp.open("POST", loginURL, true);
+        xhttp.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        xhttp.send(JSON.stringify(data));
+
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4) {
+                var resp = JSON.parse(this.responseText);
+                switch(this.status) {
+                    case 200:
+                        let now = new Date();
+                        let cookieTime = new Date(now.getTime() +1000*60*60*24*365); // 1 year, just for test
+                        alert(resp.msg);
+                        window.document.cookie = `token=${resp.token};expires=${cookieTime}`;
+                        break;
+                    case 401:
+                        alert(resp.error);
+                        break;
+                    case 404:
+                        alert(resp.error);
+                        break;
+                    default:
+                        alert("FATAL ERROR!!");                    
+                } // switch
+            }; // fi
+        }; // onreadystatechange
+    }; // loadDoc2()
     
 </script>
 </article>
