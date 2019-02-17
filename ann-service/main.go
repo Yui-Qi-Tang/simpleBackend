@@ -1,52 +1,17 @@
 package main
 
 import (
-	"context"
-	"log"
-	"net"
 	"simpleBackend/ann-service/pianogame"
-
-	"google.golang.org/grpc"
 
 	"simpleBackend/ann-service/pianogame/clientapi"
 
-	authenticationPb "simpleBackend/ann-service/pianogame/protocol-buffer/authentication"
+	"simpleBackend/ann-service/pianogame/protocol-buffer/pbserver"
 
 	"github.com/gin-contrib/location"
 	"github.com/gin-gonic/gin"
 )
 
 // go:generate protoc -I pianogame/grpc/ pianogame/grpc/user_service.proto --go_out=plugins=grpc:pianogame/grpc
-
-/* gRPC */
-type gRPCServer struct{}
-
-// Login implements authenticationPb.AuthenticationGreeter
-func (s *gRPCServer) Login(ctx context.Context, in *authenticationPb.LoginRequest) (*authenticationPb.LoginResponse, error) {
-	log.Printf("Received account/password: %v/%v", in.Account, in.Password)
-	return &authenticationPb.LoginResponse{Msg: "Hello, got login req and response token for you", Token: "token value"}, nil
-}
-
-// Logout implements authenticationPb.AuthenticationGreeter
-func (s *gRPCServer) Logout(ctx context.Context, in *authenticationPb.LogoutRequest) (*authenticationPb.LogoutResponse, error) {
-	log.Printf("Received token: %v", in.Token)
-	return &authenticationPb.LogoutResponse{Msg: "Goodbye"}, nil
-}
-
-func startGRPCService() {
-	const port = ":9001"
-
-	lis, err := net.Listen("tcp", port)
-	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
-	}
-	s := grpc.NewServer()
-	log.Printf("Start gRPC server at %v", port)
-	authenticationPb.RegisterAuthenticationGreeterServer(s, &gRPCServer{})
-	if err := s.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
-	}
-}
 
 // main ann-service entry point */
 func main() {
@@ -108,7 +73,7 @@ func main() {
 		pianogame.StartServers(pianogame.UserServiceRouter(), pianogame.UserAPIConfig.User.Network, pianogame.UserAPIConfig.User.Meta)...,
 	)
 	/* gRPC server */
-	go startGRPCService()
+	go pbserver.StartAuthenticationService()
 	/*
 		HINT: if there does exist another serivce, please append http instances again:
 
