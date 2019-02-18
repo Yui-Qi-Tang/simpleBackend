@@ -16,9 +16,7 @@ import (
 // Login a client api to call gRPC service
 func Login(c *gin.Context) {
 	const (
-		address  = "localhost:9001" // gRPC server that is set in ann-servie/main.go now
-		account  = "tester"
-		password = "testpassword"
+		address = "localhost:9001" // gRPC server that is set in ann-servie/main.go now
 	)
 	var user struct {
 		Account  string `form:"account" json:"account" xml:"account"  binding:"required"`
