@@ -171,7 +171,7 @@ func IsJwtExpired(tokenString string) bool {
 		panic("IsJwtExpires => parse or token is invalid")
 	}
 
-	if !(time.Now().Unix() > claims.ExpiresAt) {
+	if !(time.Now().Unix() >= claims.ExpiresAt) {
 		return false
 	}
 	return true

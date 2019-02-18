@@ -7,20 +7,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// AuthenticationCheck check if JWT token is valid
 func AuthenticationCheck(c *gin.Context) {
-	// TODO: check JWT here
-	/*
-		    if valid {
-				pass
-			} else {
-				redirect to sign up URL by pass http redirect code for browser
-			}
-	*/
 	if cookie, err := c.Cookie("token"); err != nil {
 		c.Redirect(http.StatusMovedPermanently, "/login")
 	} else {
-		log.Println("Hi, I am auth checker!", cookie)
+		if !IsMemberJWTValid(cookie) || IsMemberJWTExpired(cookie) {
+			c.Redirect(http.StatusMovedPermanently, "/login")
+		}
 	}
+	// log.Println("Authentication pass")
+	c.Next()
 }
 
 func MiddlewareForMysqlTest(c *gin.Context) {
