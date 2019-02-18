@@ -279,14 +279,10 @@ input:focus {
         <div style="font-size:24px;position: relative; bottom:15%;">
             <a style="text-decoration: none;" href="{{ .signupPage }}">Sign up</a>
         </div>
-        <div class="log" id="btn">LogIn</div>
-        <hr/>
-        <div class="log" id="btnrpc">LogIn(micro-service)</div>
+        <div class="log" id="btnrpc">Sign in</div>
     </div>
 <script>
-    let Btn = document.getElementById("btn");
-    Btn.addEventListener("click",loadDoc2);
-
+    
     let btnRpc = document.getElementById("btnrpc");
     btnRpc.addEventListener("click", sendToRpc);
     function sendToRpc(){
@@ -311,6 +307,7 @@ input:focus {
                         let cookieTime = new Date(now.getTime() +1000*60*60*24*365); // 1 year, just for test
                         alert(resp.msg);
                         window.document.cookie = `token=${resp.token};expires=${cookieTime}`;
+                        window.location.replace("/game");
                         break;
                     case 401:
                         alert(resp.error);
@@ -324,43 +321,6 @@ input:focus {
             }; // fi
         }; // onreadystatechange
     }; // sendToRpc()
-    
-    function loadDoc2(){
-        const loginURL = "{{ .loginURL }}";
-        let Account = document.getElementById(`account0`);
-        let Password = document.getElementById(`password0`);
-        var xhttp = new XMLHttpRequest();
-        var data = {
-            "account": Account.value,
-            "password": Password.value
-        };
-        xhttp.open("POST", loginURL, true);
-        xhttp.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-        xhttp.send(JSON.stringify(data));
-
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4) {
-                var resp = JSON.parse(this.responseText);
-                switch(this.status) {
-                    case 200:
-                        let now = new Date();
-                        let cookieTime = new Date(now.getTime() +1000*60*60*24*365); // 1 year, just for test
-                        alert(resp.msg);
-                        window.document.cookie = `token=${resp.token};expires=${cookieTime}`;
-                        break;
-                    case 401:
-                        alert(resp.error);
-                        break;
-                    case 404:
-                        alert(resp.error);
-                        break;
-                    default:
-                        alert("FATAL ERROR!!");                    
-                } // switch
-            }; // fi
-        }; // onreadystatechange
-    }; // loadDoc2()
-    
 </script>
 </article>
 

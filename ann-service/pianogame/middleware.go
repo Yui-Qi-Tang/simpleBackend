@@ -2,11 +2,12 @@ package pianogame
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-func AuthCheck(c *gin.Context) {
+func AuthenticationCheck(c *gin.Context) {
 	// TODO: check JWT here
 	/*
 		    if valid {
@@ -15,7 +16,11 @@ func AuthCheck(c *gin.Context) {
 				redirect to sign up URL by pass http redirect code for browser
 			}
 	*/
-	log.Println("Hi, I am auth checker!")
+	if cookie, err := c.Cookie("token"); err != nil {
+		c.Redirect(http.StatusMovedPermanently, "/login")
+	} else {
+		log.Println("Hi, I am auth checker!", cookie)
+	}
 }
 
 func MiddlewareForMysqlTest(c *gin.Context) {

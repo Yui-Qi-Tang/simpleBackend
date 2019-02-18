@@ -38,7 +38,7 @@ func main() {
 	/* Use middleware */
 	router.Use(gin.Recovery())
 	router.Use(location.New(location.DefaultConfig()))
-	router.Use(pianogame.AuthCheck)
+	//router.Use(pianogame.AuthenticationCheck)
 	router.LoadHTMLFiles(pianogame.WebConfig.Settings.HTMLTemplates...) // load tempates (Parameters is variadic), ref: https://golang.org/ref/spec#Passing_arguments_to_..._parameters
 
 	// set static files
@@ -48,6 +48,8 @@ func main() {
 	router.Static("/music", pianogame.WebConfig.Settings.Static.Music)
 
 	userRoute := router.Group("user")
+	gameRoute := router.Group("game")
+	gameRoute.Use(pianogame.AuthenticationCheck)
 	// mysqlRoute := router.Group("mysql")
 	// mysqlRoute.Use(pianogame.MiddlewareForMysqlTest) // my first middle for auth
 
@@ -64,7 +66,7 @@ func main() {
 	/* Web page */
 	router.GET("/login", pianogame.LoginPage)   // login page
 	router.GET("/signup", pianogame.SignupPage) // signup page
-	router.GET("/game", pianogame.GamePage)     // game page
+	gameRoute.GET("/", pianogame.GamePage)      // game page
 	router.GET("/", pianogame.IndexPage)        // index page
 
 	/* Start servers  */
