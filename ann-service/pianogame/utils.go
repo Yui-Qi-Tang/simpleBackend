@@ -108,6 +108,7 @@ func IsMemberJWTValid(tokenString string) bool {
 		},
 	)
 	if err != nil || !token.Valid {
+		log.Printf("IsMemberJWTValid => err: %v, token format valid; %v", err, token.Valid)
 		return false
 	}
 	return true
@@ -145,9 +146,10 @@ func IsMemberJWTExpired(tokenString string) bool {
 	)
 
 	if err != nil || !token.Valid {
-		panic("IsJwtExpires => parse or token is invalid")
+		log.Printf("IsMemberJWTExpired => err: %v, token format valid; %v", err, token.Valid)
 	}
 
+	// TO-DO: create a function to check all of field of JWT token
 	if !(time.Now().Unix() > claims.ExpiresAt) {
 		return false
 	}

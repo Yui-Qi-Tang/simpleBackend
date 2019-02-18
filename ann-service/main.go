@@ -22,8 +22,8 @@ func main() {
 				Q: specify db and collection, in mongdb.go??
 
 				mode: variable is denoted the status of gin(test/production)
-			2. add JWT for auth
-			3. Website <-gRPC-> api auth
+			2. add JWT for auth -- first ok
+			3. Website <-gRPC-> api auth -- first ok!
 				 need to create an API as a wrapper for internal API
 				 An front-API in website to receive data;
 				 a 'middler' receives the data from front api and push data to back-API-service
