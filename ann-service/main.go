@@ -38,7 +38,6 @@ func main() {
 	/* Use middleware */
 	router.Use(gin.Recovery())
 	router.Use(location.New(location.DefaultConfig()))
-	//router.Use(pianogame.AuthenticationCheck)
 	router.LoadHTMLFiles(pianogame.WebConfig.Settings.HTMLTemplates...) // load tempates (Parameters is variadic), ref: https://golang.org/ref/spec#Passing_arguments_to_..._parameters
 
 	// set static files
@@ -47,26 +46,20 @@ func main() {
 	router.Static("/images", pianogame.WebConfig.Settings.Static.Images)
 	router.Static("/music", pianogame.WebConfig.Settings.Static.Music)
 
-	userRoute := router.Group("user")
+	/* Game router */
 	gameRoute := router.Group("game")
+	// middleware
 	gameRoute.Use(pianogame.AuthenticationCheck)
-	// mysqlRoute := router.Group("mysql")
-	// mysqlRoute.Use(pianogame.MiddlewareForMysqlTest) // my first middle for auth
+	gameRoute.GET("/socket", pianogame.GameWebSocketHandler)
+	gameRoute.GET("/", pianogame.GamePage) // game page
 
 	/* Front APIs */
-	userRoute.POST("/login", pianogame.UserLogin)       // login
-	userRoute.POST("/register", pianogame.UserRegister) // signup
-	router.POST("/upload", pianogame.UploadFileSample)  // file upload demo
-	router.POST("/parsejwt", pianogame.DecodeJwt)
-	router.POST("/parse-cookie-jwt", pianogame.DecodeJwtFromCookie)
-	router.GET("/game/socket", pianogame.GameWebSocketHandler)
-
-	router.POST("/microservice/login", clientapi.Login)
+	router.POST("/upload", pianogame.UploadFileSample) // file upload demo
+	router.POST("/login", clientapi.Login)
 
 	/* Web page */
 	router.GET("/login", pianogame.LoginPage)   // login page
 	router.GET("/signup", pianogame.SignupPage) // signup page
-	gameRoute.GET("/", pianogame.GamePage)      // game page
 	router.GET("/", pianogame.IndexPage)        // index page
 
 	/* Start servers  */

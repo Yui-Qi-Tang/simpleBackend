@@ -286,7 +286,7 @@ input:focus {
     let btnRpc = document.getElementById("btnrpc");
     btnRpc.addEventListener("click", sendToRpc);
     function sendToRpc(){
-        const loginURL = "{{ .loginPBURL }}";
+        const loginURL = "{{ .loginURL }}";
         let Account = document.getElementById(`account0`);
         let Password = document.getElementById(`password0`);
         var xhttp = new XMLHttpRequest();
@@ -309,14 +309,14 @@ input:focus {
                         window.document.cookie = `token=${resp.token};expires=${cookieTime}`;
                         window.location.replace("/game");
                         break;
+                    case 400:
                     case 401:
-                        alert(resp.error);
-                        break;
                     case 404:
                         alert(resp.error);
                         break;
                     default:
-                        alert("FATAL ERROR!!");                    
+                        alert("FATAL ERROR!!");    
+                        break;                
                 } // switch
             }; // fi
         }; // onreadystatechange

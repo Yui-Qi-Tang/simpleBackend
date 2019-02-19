@@ -9,6 +9,8 @@ import (
 
 // AuthenticationCheck check if JWT token is valid
 func AuthenticationCheck(c *gin.Context) {
+	// TODO: do not check the request from websocket
+	// log.Println("enter auth check")
 	if cookie, err := c.Cookie("token"); err != nil {
 		c.Redirect(http.StatusMovedPermanently, "/login")
 	} else {
@@ -16,7 +18,7 @@ func AuthenticationCheck(c *gin.Context) {
 			c.Redirect(http.StatusMovedPermanently, "/login")
 		}
 	}
-	// log.Println("Authentication pass")
+	log.Println("Authentication pass")
 	c.Next()
 }
 
