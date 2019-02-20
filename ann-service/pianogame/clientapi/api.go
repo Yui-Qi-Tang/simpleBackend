@@ -44,7 +44,7 @@ func Login(c *gin.Context) {
 
 	r, err := grpcClient.Login(ctx, &authenticationPb.LoginRequest{Account: user.Account, Password: user.Password})
 	if err != nil {
-		log.Printf("could not greet: %v", err)
+		// log.Printf("could not greet: %v", err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})

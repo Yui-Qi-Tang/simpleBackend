@@ -15,8 +15,8 @@ let socketClientEvents = {
     receiveMsg: function(e) {
         let myData = JSON.parse(e.data);
         console.log(myData);
-        if(myData.PianoKey) {
-            playPianoKey(myData.PianoKey);
+        if(myData.Key) {
+            playPianoKey(myData.Key);
         }
         /*
         if(!myData.From) {

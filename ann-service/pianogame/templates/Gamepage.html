@@ -263,9 +263,9 @@ $(document).ready(function(){
             if(event.keyCode == 65 || event.keyCode == 87 || event.keyCode == 83 || event.keyCode == 69 || event.keyCode == 68 || event.keyCode == 70 || event.keyCode == 84 || event.keyCode == 71 || event.keyCode == 89 || event.keyCode == 72 || event.keyCode == 85 || event.keyCode == 74 || event.keyCode == 75 || event.keyCode == 79 || event.keyCode == 76|| event.keyCode == 80 || event.keyCode == 186){
                 gameSocket.send(JSON.stringify({
                     //MyId: parseInt($("#numberfield").val()),
-                    Text: "hi",
+                    To: "all",
                     From: 123,
-                    PianoKey: event.keyCode,
+                    Key: event.keyCode,
                 }));
                 playNote(event);
             }

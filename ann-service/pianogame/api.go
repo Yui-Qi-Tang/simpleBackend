@@ -5,32 +5,19 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"math/rand"
 	"net/http"
+	"simpleBackend/ann-service/pianogame/datastructure"
+	"simpleBackend/ann-service/pianogame/utils"
 	"strconv"
-	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gorilla/websocket"
 	"github.com/mongodb/mongo-go-driver/bson"
 	"golang.org/x/crypto/bcrypt"
+
+	gameMsg "simpleBackend/ann-service/pianogame/msg"
+
+	"github.com/google/uuid"
 )
-
-type user struct {
-	id     string
-	wsconn *websocket.Conn
-}
-
-func generateUserID() int {
-	s1 := rand.NewSource(time.Now().UnixNano())
-	r1 := rand.New(s1)
-	return r1.Intn(1000)
-}
-
-var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
-}
 
 type msg struct {
 	Text     string
@@ -40,9 +27,7 @@ type msg struct {
 	From     interface{}
 }
 
-var clients = make(map[*user]bool)
-
-var flag = make(chan bool)
+var clients = make(map[*datastructure.WebSocketUser]bool)
 
 // UserLogin api for user login request
 func UserLogin(c *gin.Context) {
@@ -414,51 +399,43 @@ func webPusher(p http.Pusher, resource string) {
 // GameWebSocketHandler web socket handler for pian game
 func GameWebSocketHandler(c *gin.Context) {
 	// establish web socket
-	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
-	if err != nil {
-		log.Println(err)
-		return
-	}
+	websocketUpgrader := utils.NewWSocketUpgrader(1024, 1024)
+	conn, err := websocketUpgrader.Upgrade(c.Writer, c.Request, nil)
+	errorCheck(err, "Web socket connection failed")
 
 	// allocate user id
-	newUserID, err := c.Cookie("token")
-
-	sendFirstJoinMsg(conn, newUserID)
-	// add new user
-	newUser := &user{wsconn: conn, id: newUserID}
-	clients[newUser] = true
-	// go echo(conn)
-	go chatHandle(newUser)
+	newUserID := uuid.New().String()
+	newUser := &datastructure.WebSocketUser{}
+	newUser.SetID(newUserID)
+	newUser.SetWsConn(conn)
+	// send first msg for new user
+	newUser.SendMsg(&gameMsg.Welcome{ID: newUserID, Text: "Welcom!" + "userName!" + "Your game ID is: " + newUserID})
+	clients[newUser] = true // store new user for system
+	go gameHandle(newUser)
 }
 
-func sendFirstJoinMsg(conn *websocket.Conn, guessID string) {
-	welcome := &msg{Text: "Hello!!Wellcome join us!!", MyID: guessID, To: nil, From: nil}
-	conn.WriteJSON(welcome)
-}
-
-func chatHandle(chater *user) {
+func gameHandle(gamer *datastructure.WebSocketUser) {
 	for {
-		m := msg{} // custom msg
-		err := chater.wsconn.ReadJSON(&m)
+		m := gameMsg.PianoKey{} // custom msg
+		err := gamer.GetConn().ReadJSON(&m)
+
 		if err != nil {
 			fmt.Println("Error reading json.", err)
-			chater.wsconn.Close()
-			delete(clients, chater)
+			gamer.Close()
+			delete(clients, gamer)
 			fmt.Println(clients)
-			flag <- false
+			return
 		}
 
 		fmt.Printf("Got message: %#v\n", m)
+
 		// board cast msg
 		for k := range clients {
-			if k.id != chater.id {
-				m.From = chater.id
-				m.MyID = nil
+			if k.GetID() != gamer.GetID() {
+				m.From = gamer.GetID()
+				m.To = "all"
 
-				err := k.wsconn.WriteJSON(m)
-				if err != nil {
-					fmt.Printf("send failed!")
-				}
+				k.SendMsg(m)
 			}
 		}
 
