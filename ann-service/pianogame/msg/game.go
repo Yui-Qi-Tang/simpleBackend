@@ -23,6 +23,12 @@ type Welcome struct {
 	Text string
 }
 
+// Exit for client exits the game
+type Exit struct {
+	msgSrcAndDest
+	Text interface{}
+}
+
 // Error error message for client
 type Error struct {
 	Text string

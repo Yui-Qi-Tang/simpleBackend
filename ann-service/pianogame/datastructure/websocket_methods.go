@@ -7,12 +7,12 @@ import (
 )
 
 // GetID returns WebSocketUser's
-func (w WebSocketUser) GetID() string {
+func (w *WebSocketUser) GetID() string {
 	return w.id
 }
 
 // GetConn returns WebSocketUser's
-func (w WebSocketUser) GetConn() *websocket.Conn {
+func (w *WebSocketUser) GetConn() *websocket.Conn {
 	return w.wsconn
 }
 
@@ -32,7 +32,7 @@ func (w *WebSocketUser) Close() {
 }
 
 // SendMsg send message
-func (w WebSocketUser) SendMsg(message interface{}) {
+func (w *WebSocketUser) SendMsg(message interface{}) {
 	switch v := message.(type) {
 	case *msg.Welcome:
 		w.wsconn.WriteJSON(v)
@@ -43,6 +43,6 @@ func (w WebSocketUser) SendMsg(message interface{}) {
 	case msg.PianoKey:
 		w.wsconn.WriteJSON(v)
 	default:
-		w.wsconn.WriteJSON(&msg.Error{Text: "Send message error!"})
+		w.wsconn.WriteJSON(&msg.Error{Text: "Unknow msg structure"})
 	}
 }

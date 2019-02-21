@@ -33,7 +33,8 @@ let socketClientEvents = {
           );  
         }*/
     },
-    destroy: () => {
+    destroy: (code) => {
+        console.log(code);
         console.log("close socket");
     },
     error: () => {

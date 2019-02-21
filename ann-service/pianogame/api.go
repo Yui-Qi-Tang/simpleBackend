@@ -3,6 +3,7 @@ package pianogame
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -409,27 +410,74 @@ func GameWebSocketHandler(c *gin.Context) {
 	newUser.SetID(newUserID)
 	newUser.SetWsConn(conn)
 	// send first msg for new user
-	newUser.SendMsg(&gameMsg.Welcome{ID: newUserID, Text: "Welcom!" + "userName!" + "Your game ID is: " + newUserID})
+	newUser.SendMsg(&gameMsg.Welcome{ID: newUserID, Text: strConcate("Welcom!", "userName!", "Your game ID is: ", newUserID)})
 	clients[newUser] = true // store new user for system
+
 	go gameHandle(newUser)
+}
+
+func broadcastToClient(msg interface{}, gamerID string) {
+	log.Println(msg)
+	var result interface{}
+	switch v := msg.(type) {
+	case *gameMsg.PianoKey:
+		log.Println("star")
+	case gameMsg.PianoKey:
+		v.From = gamerID
+		result = v
+		log.Println("instance", v)
+	default:
+		log.Println("Hi!")
+	}
+	log.Println(result)
+
+	// for client := range clients {
+	// 	if client.GetID() != gamerID {
+	// 		//msg.From = gamerID
+	// 		//msg.To = "all"
+	// 		//client.SendMsg(msg)
+	// 	}
+	// }
 }
 
 func gameHandle(gamer *datastructure.WebSocketUser) {
 	for {
+		// messageType, p, errNew := gamer.GetConn().ReadMessage()
+		// log.Println(messageType, p, errNew)
+		// if errNew != nil {
+		// 	log.Println(errNew)
+		// 	return
+		// }
+		//m := make(map[string]interface{})
 		m := gameMsg.PianoKey{} // custom msg
 		err := gamer.GetConn().ReadJSON(&m)
-
+		log.Println(clients)
+		// the behavior of handler: receive 'close' then board msg to all client
+		gamer.GetConn().SetCloseHandler(
+			func(code int, text string) error {
+				log.Println(gamer.GetID(), "leave")
+				return errors.New("Client closes the connection")
+			},
+		)
+		log.Println(clients)
 		if err != nil {
-			fmt.Println("Error reading json.", err)
-			gamer.Close()
 			delete(clients, gamer)
-			fmt.Println(clients)
+			// gamer.SendMsg(&gameMsg.Error{Text: "Error reading json, disconnect..."})
+			// board cast msg
+			for k := range clients {
+				if k.GetID() != gamer.GetID() {
+					m.From = gamer.GetID()
+					m.To = "leave"
+
+					k.SendMsg(m)
+				}
+			}
+			gamer.Close()
 			return
 		}
 
-		fmt.Printf("Got message: %#v\n", m)
-
-		// board cast msg
+		broadcastToClient(m, "543")
+		// board cast msg, use broadcastToClienst instead of
 		for k := range clients {
 			if k.GetID() != gamer.GetID() {
 				m.From = gamer.GetID()
