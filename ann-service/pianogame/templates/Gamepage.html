@@ -254,7 +254,7 @@ $(document).ready(function(){
         return;
     }
     try {
-        let wSocketServer = "wss://192.168.100.102:8081/game/socket"; // link from server renderer
+        let wSocketServer = "wss://"+location.host+"/game/socket";
         let socketFact = new GameWebSocketFactory(wSocketServer);
         let gameSocket = socketFact.create();
         // 當務之急應該解決ID拿不到的問題，若不行，就開個全域變數好了...
