@@ -1,6 +1,5 @@
 package pbserver
 
-/*
 // Need to rebuild pianoplayPb
 import (
 	"context"
@@ -19,4 +18,4 @@ type pianoplayService struct{}
 func (s *pianoplayService) Save(ctx context.Context, in *pianoplayPb.UserData) (*pianoplayPb.Response, error) {
 	log.Println("I got", in.UUID, in.To, in.PianoKey, in.From)
 	return &pianoplayPb.Response{Success: true, Msg: "test ok!"}, nil
-}*/
+}

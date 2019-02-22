@@ -4,6 +4,7 @@ import (
 	"log"
 	"net"
 	authenticationPb "simpleBackend/ann-service/pianogame/protocol-buffer/authentication"
+	pianoPlayPb "simpleBackend/ann-service/pianogame/protocol-buffer/pianoplay"
 
 	"google.golang.org/grpc"
 )
@@ -19,6 +20,7 @@ func StartAuthenticationService() {
 	s := grpc.NewServer()
 	log.Printf("Start gRPC server at %v", port)
 	authenticationPb.RegisterAuthenticationGreeterServer(s, &authenticationService{})
+	pianoPlayPb.RegisterPianoplayGreeterServer(s, &pianoplayService{})
 	// TODO: add pianoplaypb here
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
