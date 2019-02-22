@@ -442,7 +442,7 @@ func connErrorOrExit(connErr error, u *datastructure.WebSocketUser) bool {
 	var userLeaveMsg interface{}
 	if c := connErr.Error(); c == "client disconnects" {
 		userLeaveMsg = &gameMsg.Exit{
-			MsgBase: gameMsg.MsgBase{
+			Base: gameMsg.Base{
 				To:     "all",
 				From:   u.GetID(),
 				Action: gameMsg.ExitConn,
@@ -457,12 +457,13 @@ func connErrorOrExit(connErr error, u *datastructure.WebSocketUser) bool {
 func gameHandle(gamer *datastructure.WebSocketUser) {
 	var recMsg interface{}
 	for {
-		err := gamer.GetConn().ReadJSON(&recMsg)
+		err := gamer.GetConn().ReadJSON(&recMsg) // load data from client as inteface
 		if connErrorOrExit(err, gamer) {
 			return
 		}
-		recMsgMap := recMsg.(map[string]interface{})
-		switch act := recMsgMap["Action"]; act.(float64) {
+		recMsgMap := recMsg.(map[string]interface{}) // decode interface{}
+		// check Action of receivced msg and do something
+		switch act := recMsgMap["Action"]; act.(float64) { // decode map["Action"] interface as float64 and switch
 		case gameMsg.SendPianoKey:
 			var pianoMsg gameMsg.PianoKey
 			mapstructure.Decode(recMsgMap, &pianoMsg)

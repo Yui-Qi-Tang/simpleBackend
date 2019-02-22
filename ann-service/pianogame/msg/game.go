@@ -3,11 +3,13 @@ package msg
 // Let front-end follow?
 const (
 	SendPianoKey = iota
-	ExitConn
+	ExitConn     // necessary?
 	ResetConn
+	WelcomeConn // necessary?
 )
 
-type MsgBase struct {
+// Base message base
+type Base struct {
 	To     interface{}
 	From   interface{}
 	Action int
@@ -15,13 +17,13 @@ type MsgBase struct {
 
 // PianoKey for client exchange the piano key who  is pressed
 type PianoKey struct {
-	MsgBase
+	Base
 	Key interface{}
 }
 
 // Text for client exchange the text msg
 type Text struct {
-	MsgBase
+	Base
 	Text string
 }
 
@@ -33,7 +35,7 @@ type Welcome struct {
 
 // Exit for client exits the game
 type Exit struct {
-	MsgBase
+	Base
 	Text interface{}
 }
 

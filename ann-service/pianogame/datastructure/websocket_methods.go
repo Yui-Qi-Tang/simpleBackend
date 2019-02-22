@@ -31,21 +31,29 @@ func (w *WebSocketUser) Close() {
 	w.wsconn.Close()
 }
 
-// SendMsg send message
+// SendMsg send message by message type
 func (w *WebSocketUser) SendMsg(message interface{}) {
+	/*
+		Message category:
+			1. piano key
+			2. welcom message
+	*/
+	// need to be check all type? must be survey a better solution
 	switch v := message.(type) {
 	case *msg.Welcome:
 		w.wsconn.WriteJSON(v)
 	case msg.Welcome:
 		w.wsconn.WriteJSON(v)
 	case *msg.PianoKey:
-		w.wsconn.WriteJSON(v)
+		// number of msg = n-1
+		if v.From != w.id {
+			w.wsconn.WriteJSON(v)
+		}
 	case msg.PianoKey:
-		w.wsconn.WriteJSON(v)
-	case msg.Exit:
-		w.wsconn.WriteJSON(v)
-	case *msg.Exit:
-		w.wsconn.WriteJSON(v)
+		// number of msg = n-1
+		if v.From != w.id {
+			w.wsconn.WriteJSON(v)
+		}
 	default:
 		w.wsconn.WriteJSON(&msg.Error{Text: "Unknow msg structure"})
 	}
