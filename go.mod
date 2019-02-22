@@ -17,6 +17,7 @@ require (
 	github.com/ianlancetaylor/demangle v0.0.0-20181102032728-5e5cf60278f6 // indirect
 	github.com/jinzhu/gorm v1.9.2
 	github.com/jinzhu/inflection v0.0.0-20180308033659-04140366298a // indirect
+	github.com/mitchellh/mapstructure v1.1.2
 	github.com/mongodb/mongo-go-driver v0.1.0
 	github.com/sirupsen/logrus v1.2.0
 	github.com/xdg/scram v0.0.0-20180814205039-7eeb5667e42c // indirect

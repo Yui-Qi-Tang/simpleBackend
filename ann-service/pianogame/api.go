@@ -18,6 +18,7 @@ import (
 	gameMsg "simpleBackend/ann-service/pianogame/msg"
 
 	"github.com/google/uuid"
+	"github.com/mitchellh/mapstructure"
 )
 
 type msg struct {
@@ -411,81 +412,65 @@ func GameWebSocketHandler(c *gin.Context) {
 	newUser.SetWsConn(conn)
 	// send first msg for new user
 	newUser.SendMsg(&gameMsg.Welcome{ID: newUserID, Text: strConcate("Welcom!", "userName!", "Your game ID is: ", newUserID)})
+	// the behavior of handler: receive 'close' then board msg to all client
+	newUser.GetConn().SetCloseHandler(
+		func(code int, text string) error {
+			// loggin code?
+			log.Println(newUser.GetID(), "in close handler, just mark!")
+			return errors.New("client disconnects")
+		},
+	)
+
 	clients[newUser] = true // store new user for system
 
 	go gameHandle(newUser)
 }
 
-func broadcastToClient(msg interface{}, gamerID string) {
-	log.Println(msg)
-	var result interface{}
-	switch v := msg.(type) {
-	case *gameMsg.PianoKey:
-		log.Println("star")
-	case gameMsg.PianoKey:
-		v.From = gamerID
-		result = v
-		log.Println("instance", v)
-	default:
-		log.Println("Hi!")
+func broadcastToClient(msg interface{}) {
+	for client := range clients {
+		client.SendMsg(msg)
 	}
-	log.Println(result)
+}
 
-	// for client := range clients {
-	// 	if client.GetID() != gamerID {
-	// 		//msg.From = gamerID
-	// 		//msg.To = "all"
-	// 		//client.SendMsg(msg)
-	// 	}
-	// }
+// close socket connection if error or leave
+func connErrorOrExit(connErr error, u *datastructure.WebSocketUser) bool {
+	if connErr == nil {
+		return false
+	}
+	delete(clients, u) // remove socket user from shared model
+	u.Close()          // close socket connectioin
+	var userLeaveMsg interface{}
+	if c := connErr.Error(); c == "client disconnects" {
+		userLeaveMsg = &gameMsg.Exit{
+			MsgBase: gameMsg.MsgBase{
+				To:     "all",
+				From:   u.GetID(),
+				Action: gameMsg.ExitConn,
+			},
+			Text: strConcate("Good bye!", u.GetID()),
+		}
+	}
+	broadcastToClient(userLeaveMsg)
+	return true
 }
 
 func gameHandle(gamer *datastructure.WebSocketUser) {
+	var recMsg interface{}
 	for {
-		// messageType, p, errNew := gamer.GetConn().ReadMessage()
-		// log.Println(messageType, p, errNew)
-		// if errNew != nil {
-		// 	log.Println(errNew)
-		// 	return
-		// }
-		//m := make(map[string]interface{})
-		m := gameMsg.PianoKey{} // custom msg
-		err := gamer.GetConn().ReadJSON(&m)
-		log.Println(clients)
-		// the behavior of handler: receive 'close' then board msg to all client
-		gamer.GetConn().SetCloseHandler(
-			func(code int, text string) error {
-				log.Println(gamer.GetID(), "leave")
-				return errors.New("Client closes the connection")
-			},
-		)
-		log.Println(clients)
-		if err != nil {
-			delete(clients, gamer)
-			// gamer.SendMsg(&gameMsg.Error{Text: "Error reading json, disconnect..."})
-			// board cast msg
-			for k := range clients {
-				if k.GetID() != gamer.GetID() {
-					m.From = gamer.GetID()
-					m.To = "leave"
-
-					k.SendMsg(m)
-				}
-			}
-			gamer.Close()
+		err := gamer.GetConn().ReadJSON(&recMsg)
+		if connErrorOrExit(err, gamer) {
 			return
 		}
-
-		broadcastToClient(m, "543")
-		// board cast msg, use broadcastToClienst instead of
-		for k := range clients {
-			if k.GetID() != gamer.GetID() {
-				m.From = gamer.GetID()
-				m.To = "all"
-
-				k.SendMsg(m)
+		recMsgMap := recMsg.(map[string]interface{})
+		switch act := recMsgMap["Action"]; act.(float64) {
+		case gameMsg.SendPianoKey:
+			var pianoMsg gameMsg.PianoKey
+			mapstructure.Decode(recMsgMap, &pianoMsg)
+			pianoMsg.From = gamer.GetID()
+			if pianoMsg.To == nil {
+				pianoMsg.To = "all"
 			}
-		}
-
-	}
+			broadcastToClient(pianoMsg)
+		} // switch
+	} // for
 }

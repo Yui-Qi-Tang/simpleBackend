@@ -42,6 +42,10 @@ func (w *WebSocketUser) SendMsg(message interface{}) {
 		w.wsconn.WriteJSON(v)
 	case msg.PianoKey:
 		w.wsconn.WriteJSON(v)
+	case msg.Exit:
+		w.wsconn.WriteJSON(v)
+	case *msg.Exit:
+		w.wsconn.WriteJSON(v)
 	default:
 		w.wsconn.WriteJSON(&msg.Error{Text: "Unknow msg structure"})
 	}
