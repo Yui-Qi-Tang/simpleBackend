@@ -1,6 +1,7 @@
 package pianogame
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 
@@ -58,4 +59,13 @@ func IndexPage(c *gin.Context) {
 		webPusher(pusher, v)
 	}
 	c.HTML(http.StatusOK, "AnnPage.html", gin.H{})
+}
+
+// for http2 push
+func webPusher(p http.Pusher, resource string) {
+	if p != nil {
+		if err := p.Push(resource, nil); err != nil {
+			log.Printf("Failed to push: %v", err)
+		}
+	}
 }

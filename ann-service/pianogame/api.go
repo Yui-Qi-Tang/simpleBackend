@@ -28,7 +28,7 @@ type msg struct {
 	From     interface{}
 }
 
-var clients = make(map[*datastructure.WebSocketUser]bool)
+var clients = make(map[*datastructure.WebSocketUser]bool) // bad idea to stroe all user in websocket service
 
 // UserLogin api for user login request
 func UserLogin(c *gin.Context) {
@@ -387,14 +387,6 @@ func DecodeJwtFromCookie(c *gin.Context) {
 		"success": true,
 		"data":    "Some data",
 	})
-}
-
-func webPusher(p http.Pusher, resource string) {
-	if p != nil {
-		if err := p.Push(resource, nil); err != nil {
-			log.Printf("Failed to push: %v", err)
-		}
-	}
 }
 
 // GameWebSocketHandler web socket handler for pian game

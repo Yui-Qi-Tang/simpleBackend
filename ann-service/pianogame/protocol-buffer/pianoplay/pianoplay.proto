@@ -1,0 +1,29 @@
+/*
+    gRPC protocal buffer
+*/
+
+syntax = "proto3";
+
+package pianoplay;
+
+// PianoplayGreeter a greeter for recording piano play from user
+service PianoplayGreeter {
+    rpc Save (UserData) returns (Response) {}
+}
+
+/* message interfaces here */
+message UserData {
+    string UUID = 1;
+    string PianoKey = 2;
+    string To = 3;
+    string From = 4;
+}
+
+message Response {
+    bool Success = 1;
+    string Msg = 2;
+}
+
+
+
+
