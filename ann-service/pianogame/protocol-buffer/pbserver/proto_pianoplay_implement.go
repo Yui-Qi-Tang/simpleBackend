@@ -3,9 +3,8 @@ package pbserver
 // Need to rebuild pianoplayPb
 import (
 	"context"
-	"time"
-
 	"simpleBackend/ann-service/pianogame"
+	"time"
 
 	pianoplayPb "simpleBackend/ann-service/pianogame/protocol-buffer/pianoplay"
 
@@ -15,7 +14,7 @@ import (
 type pianoplayService struct{}
 
 func (s *pianoplayService) Save(ctx context.Context, in *pianoplayPb.UserData) (*pianoplayPb.Response, error) {
-	collection := pianogame.Mongodb.Database("piano_game").Collection("user_log")
+	collection := pianogame.MongoGreeter.GaDBCollection("piano_game", "user_log")
 	newGameData := bson.M{
 		"uuid":      in.UUID,
 		"to":        in.To,

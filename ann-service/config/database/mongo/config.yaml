@@ -1,1 +1,2 @@
 # mongdb config here
+server: "mongodb://localhost:27017"

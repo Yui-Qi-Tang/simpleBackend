@@ -39,7 +39,7 @@ func UserLogin(c *gin.Context) {
 		return
 	}
 	// get db collection
-	collection := Mongodb.Database("testing").Collection("user")
+	collection := MongoGreeter.GaDBCollection("testing", "user")
 	// prepare filter to query
 	filter := bson.M{
 		"name":     json.User,
