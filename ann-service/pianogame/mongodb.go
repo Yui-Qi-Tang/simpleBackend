@@ -45,8 +45,3 @@ func init() {
 	} //fi
 	log.Println("init in pianogame success")
 } // end of initMongoDB
-
-func gaCollection(DB string, collection string) *mongo.Collection {
-	// bad idea
-	return Mongodb.Database(DB).Collection(collection)
-}

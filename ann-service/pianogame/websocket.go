@@ -89,7 +89,7 @@ func saveMsg(uuid, pianoKey, to, from, msgText string) {
 	defer conn.Close()
 	grpcClient := pianoplayPb.NewPianoplayGreeterClient(conn)
 
-	r, err := grpcClient.Save(
+	_, err = grpcClient.Save(
 		ctx,
 		&pianoplayPb.UserData{
 			UUID:     uuid,
@@ -102,5 +102,4 @@ func saveMsg(uuid, pianoKey, to, from, msgText string) {
 	if err != nil {
 		log.Printf("could not greet: %v", err)
 	}
-	log.Println(r)
 } // saveMsg()

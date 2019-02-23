@@ -66,39 +66,6 @@ func UserLogin(c *gin.Context) {
 	}
 }
 
-// UserRegister api for user register request
-func UserRegister(c *gin.Context) {
-
-	var registerData Login
-
-	if err := c.ShouldBindJSON(&registerData); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	collection := gaCollection("testing", "user")
-	filter := bson.M{
-		"name": registerData.User,
-	}
-	r := Login{}
-	err := collection.FindOne(context.Background(), filter).Decode(&r)
-	if err != nil {
-		newUserData := bson.M{
-			"name":     registerData.User,
-			"password": registerData.Password,
-		}
-		_, err := collection.InsertOne(context.Background(), newUserData)
-
-		if err != nil {
-			log.Println("Insert one failed: ", err)
-			c.JSON(http.StatusBadRequest, gin.H{"status": "create new user Failed!"})
-			return
-		}
-		c.JSON(http.StatusCreated, gin.H{"status": "register ok!"})
-	} else {
-		c.JSON(http.StatusBadRequest, gin.H{"status": "This account has been registed!"})
-	}
-}
-
 // MysqlCheckTable api for checking mysql table exist or not
 func MysqlCheckTable(c *gin.Context) {
 	var t struct {
@@ -391,13 +358,16 @@ func DecodeJwtFromCookie(c *gin.Context) {
 
 // GameWebSocketHandler web socket handler for pian game
 func GameWebSocketHandler(c *gin.Context) {
+	/*
+	   TODO: bind token and UUID to userplaytable(Mysql)?
+	*/
 	// establish web socket
 	websocketUpgrader := utils.NewWSocketUpgrader(1024, 1024)
 	conn, err := websocketUpgrader.Upgrade(c.Writer, c.Request, nil)
 	errorCheck(err, "Web socket connection failed")
 
 	// allocate user id
-	newUserID := uuid.New().String()
+	newUserID := uuid.New().String() // use redis to store the uuid?if (token, uuid) does not in redis then set it, otherwise skip;(This data hust exist a time we set(3 hrs?or 24hrs?))
 	newUser := &datastructure.WebSocketUser{}
 	newUser.SetID(newUserID)
 	newUser.SetWsConn(conn)

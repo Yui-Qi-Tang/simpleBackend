@@ -18,6 +18,7 @@ message UserData {
     string To = 3;
     string From = 4;
     string Text = 5;
+    // play time?
 }
 
 message Response {
