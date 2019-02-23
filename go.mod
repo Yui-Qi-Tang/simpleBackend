@@ -11,6 +11,7 @@ require (
 	github.com/golang/mock v1.1.1
 	github.com/golang/protobuf v1.2.0
 	github.com/golang/snappy v0.0.0-20180518054509-2e65f85255db // indirect
+	github.com/google/go-cmp v0.2.0 // indirect
 	github.com/google/pprof v0.0.0-20190109223431-e84dfd68c163 // indirect
 	github.com/google/uuid v1.1.0
 	github.com/gorilla/websocket v1.4.0
@@ -20,6 +21,7 @@ require (
 	github.com/mitchellh/mapstructure v1.1.2
 	github.com/mongodb/mongo-go-driver v0.1.0
 	github.com/sirupsen/logrus v1.2.0
+	github.com/tidwall/pretty v0.0.0-20180105212114-65a9db5fad51 // indirect
 	github.com/xdg/scram v0.0.0-20180814205039-7eeb5667e42c // indirect
 	github.com/xdg/stringprep v1.0.0 // indirect
 	golang.org/x/arch v0.0.0-20181203225421-5a4828bb7045 // indirect
