@@ -21,7 +21,6 @@ func StartAuthenticationService() {
 	log.Printf("Start gRPC server at %v", port)
 	authenticationPb.RegisterAuthenticationGreeterServer(s, &authenticationService{})
 	pianoPlayPb.RegisterPianoplayGreeterServer(s, &pianoplayService{})
-	// TODO: add pianoplaypb here
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}

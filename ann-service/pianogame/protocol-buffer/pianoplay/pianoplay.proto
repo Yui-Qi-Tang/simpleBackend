@@ -17,6 +17,7 @@ message UserData {
     string PianoKey = 2;
     string To = 3;
     string From = 4;
+    string Text = 5;
 }
 
 message Response {
