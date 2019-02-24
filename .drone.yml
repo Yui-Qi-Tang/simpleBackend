@@ -15,4 +15,5 @@ pipeline:
       - go test ./drone/testpkg/ -v
       - go test ./drone/testpkg/ -bench=. -v
       - go test ./consistency/ -v
+      - go test ./ann-service/pianogame/utils/ -v
       - go test -timeout 30s ./grpc_helloworld/mock_helloworld
