@@ -12,7 +12,7 @@ import (
 
 // StartGrpcService start gRPC server
 func StartGrpcService() {
-	lis, err := net.Listen(pianogame.GrpcConfig.Protocol, pianogame.GrpcConfig.Server) // TODO: procotol of network that is set from config file
+	lis, err := net.Listen(pianogame.GrpcConfig.Protocol, pianogame.GrpcConfig.Server)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
