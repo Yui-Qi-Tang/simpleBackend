@@ -6,6 +6,7 @@ package pianogame
 
 import (
 	"simpleBackend/ann-service/pianogame/datastructure"
+	"simpleBackend/ann-service/pianogame/utils"
 )
 
 // Ssl ssl settings
@@ -27,42 +28,42 @@ var GrpcConfig datastructure.GRPCSetting
 
 func init() {
 	/* Load Web site config */
-	loadYAMLConfig(
+	utils.LoadYAMLConfig(
 		"config/website/config.yaml",
 		"error while unmarshal from website config",
 		"Load website config file finished",
 		&WebConfig,
 	)
 	/* Load API config */
-	loadYAMLConfig(
+	utils.LoadYAMLConfig(
 		"config/api/config.yaml",
 		"error while unmarshal from API config",
 		"Load API config file finished",
 		&UserAPIConfig,
 	)
 	/* Load SSL config */
-	loadYAMLConfig(
+	utils.LoadYAMLConfig(
 		"config/ssl/config.yaml",
 		"error while unmarshal from ssl config",
 		"Load SSL config file finished",
 		&Ssl,
 	)
 	/* Load auth secret */
-	loadYAMLConfig(
+	utils.LoadYAMLConfig(
 		"config/auth/config.yaml",
 		"error while unmarshal from auth config",
 		"Load Auth config file finished",
 		&authSettings,
 	)
 	/* Load mong db config */
-	loadYAMLConfig(
+	utils.LoadYAMLConfig(
 		"config/database/mongo/config.yaml",
 		"error while unmarshal from mongo db config",
 		"Load mongo db config file finished",
 		&MongoConfig,
 	)
 	/* Load grpc config */
-	loadYAMLConfig(
+	utils.LoadYAMLConfig(
 		"config/grpc/config.yaml",
 		"error while unmarshal from grpc config",
 		"Load grpc config file finished",

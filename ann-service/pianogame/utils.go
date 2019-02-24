@@ -3,7 +3,6 @@ package pianogame
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -14,7 +13,6 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gin-contrib/location"
 	"github.com/gin-gonic/gin"
-	yaml "gopkg.in/yaml.v2"
 )
 
 func dumpStructData(data interface{}) {
@@ -179,12 +177,6 @@ func IsJwtExpired(tokenString string) bool {
 	return true
 }
 
-func readFile(filePath string) []byte {
-	fileBytes, err := ioutil.ReadFile(filePath) // open file and read
-	errorCheck(err, "readFile Error")
-	return fileBytes
-}
-
 func errorCheck(e error, msg ...string) {
 	// TO-DO: better to logging error
 	if e != nil {
@@ -245,12 +237,4 @@ func runserverTLS(server *http.Server, cert string, key string) {
 	if err := server.ListenAndServeTLS(cert, key); err != nil && err != http.ErrServerClosed {
 		log.Fatalf("listen: %s\n", err)
 	}
-}
-
-func loadYAMLConfig(configFilePath, errMsg, successMsg string, configStructure interface{}) {
-	// This is blank
-	bytesData := readFile(configFilePath)
-	configUnmarshalError := yaml.Unmarshal(bytesData, configStructure)
-	errorCheck(configUnmarshalError, errMsg)
-	log.Println(configFilePath, successMsg)
 }

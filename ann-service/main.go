@@ -68,7 +68,7 @@ func main() {
 		pianogame.StartServers(pianogame.UserServiceRouter(), pianogame.UserAPIConfig.User.Network, pianogame.UserAPIConfig.User.Meta)...,
 	)
 	/* gRPC server */
-	go pbserver.StartAuthenticationService()
+	go pbserver.StartGrpcService()
 	/*
 		HINT: if there does exist another serivce, please append http instances again:
 
