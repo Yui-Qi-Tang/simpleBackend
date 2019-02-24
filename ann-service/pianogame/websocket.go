@@ -76,13 +76,10 @@ func gameHandle(gamer *datastructure.WebSocketUser) {
 
 func saveMsg(uuid, pianoKey, to, from, msgText string) {
 	// grpc settings
-	const (
-		address = "localhost:9001" // gRPC server that is set in ann-servie/main.go now
-	)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 	/* Set connection */
-	conn, err := grpc.Dial(address, grpc.WithInsecure())
+	conn, err := grpc.Dial(GrpcConfig.Server, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}

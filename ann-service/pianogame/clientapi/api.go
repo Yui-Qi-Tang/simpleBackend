@@ -8,6 +8,7 @@ import (
 
 	"google.golang.org/grpc"
 
+	"simpleBackend/ann-service/pianogame"
 	authenticationPb "simpleBackend/ann-service/pianogame/protocol-buffer/authentication"
 
 	"github.com/gin-gonic/gin"
@@ -15,9 +16,6 @@ import (
 
 // Login a client api to call gRPC service
 func Login(c *gin.Context) {
-	const (
-		address = "localhost:9001" // gRPC server that is set in ann-servie/main.go now
-	)
 	var user struct {
 		Account  string `form:"account" json:"account" xml:"account"  binding:"required"`
 		Password string `form:"password" json:"password" xml:"password"  binding:"required"`
@@ -34,7 +32,7 @@ func Login(c *gin.Context) {
 	defer cancel()
 
 	/* Set connection */
-	conn, err := grpc.Dial(address, grpc.WithInsecure())
+	conn, err := grpc.Dial(pianogame.GrpcConfig.Server, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
