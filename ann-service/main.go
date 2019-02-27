@@ -11,25 +11,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// go:generate protoc -I pianogame/grpc/ pianogame/grpc/user_service.proto --go_out=plugins=grpc:pianogame/grpc
-
 // main ann-service entry point */
 func main() {
 	/*
-		TO-DO:
-			1. load config from file for mongodb
-			    Base data: host/port/connect protocol
-				Q: specify db and collection, in mongdb.go??
-
-				mode: variable is denoted the status of gin(test/production)
-			2. add JWT for auth -- first ok
-			3. Website <-gRPC-> api auth -- first ok!
-				 need to create an API as a wrapper for internal API
-				 An front-API in website to receive data;
-				 a 'middler' receives the data from front api and push data to back-API-service
-				 Fig.
-					user request -HTTP-> front-API on website -gRPC-> back-API-service
-			4. Use NewSQL server lol
+		TO-DO:Use NewSQL server lol
 	*/
 
 	/* Go-Gin setup */
@@ -63,12 +48,6 @@ func main() {
 	router.GET("/", pianogame.IndexPage)        // index page
 
 	/* Start servers  */
-	pianogame.ServiceInstances = append(
-		pianogame.StartServers(router, pianogame.WebConfig.Settings.Network, pianogame.WebConfig.Settings.Meta),
-		pianogame.StartServers(pianogame.UserServiceRouter(), pianogame.UserAPIConfig.User.Network, pianogame.UserAPIConfig.User.Meta)...,
-	)
-	/* gRPC server */
-	go pbserver.StartGrpcService()
 	/*
 		HINT: if there does exist another serivce, please append http instances again:
 
@@ -81,6 +60,12 @@ func main() {
 		another again? please append pianogame.ServiceInstances again an so on...
 		For now, I think it's a bad idea to set multiple service, lol
 	*/
+	pianogame.ServiceInstances = append(
+		pianogame.StartServers(router, pianogame.WebConfig.Settings.Network, pianogame.WebConfig.Settings.Meta),
+		// pianogame.StartServers(pianogame.UserServiceRouter(), pianogame.UserAPIConfig.User.Network, pianogame.UserAPIConfig.User.Meta)..., // not used so comment out
+	)
+	/* gRPC server */
+	go pbserver.StartGrpcService()
 
 	pianogame.WaitQuitSignal("Receive Quit server Signal") // block until receive quit signal from system
 

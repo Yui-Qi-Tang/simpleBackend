@@ -10,6 +10,8 @@ import (
 	"google.golang.org/grpc"
 )
 
+// go:generate protoc -I path/to/folder path/to/YOUR_GRPCSERVICE.proto --go_out=plugins=grpc:output/to/folder
+
 // StartGrpcService start gRPC server
 func StartGrpcService() {
 	lis, err := net.Listen(pianogame.GrpcConfig.Protocol, pianogame.GrpcConfig.Server)
