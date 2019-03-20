@@ -243,10 +243,7 @@ $(document).ready(function(){
         $('.keys').fadeToggle(300);
     });
 
-    let token = getCookie("token");
-    if(token == undefined) {
-        window.location = "/login";
-    }
+    
     //TODO: check if the token valid
     // Start websocket
     if(!support_websocket()) {

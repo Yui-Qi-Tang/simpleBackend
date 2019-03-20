@@ -303,10 +303,6 @@ input:focus {
                 var resp = JSON.parse(this.responseText);
                 switch(this.status) {
                     case 200:
-                        let now = new Date();
-                        let cookieTime = new Date(now.getTime() +1000*60*60*24*365); // 1 year, just for test
-                        alert(resp.msg);
-                        window.document.cookie = `token=${resp.token};expires=${cookieTime}`;
                         window.location.replace("/game");
                         break;
                     case 400:

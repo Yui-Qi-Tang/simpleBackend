@@ -3,6 +3,7 @@ package clientapi
 import (
 	"context"
 	"log"
+	"net"
 	"net/http"
 	"time"
 
@@ -10,6 +11,8 @@ import (
 
 	"simpleBackend/ann-service/pianogame"
 	authenticationPb "simpleBackend/ann-service/pianogame/protocol-buffer/authentication"
+
+	// "github.com/gin-contrib/location" // bad design
 
 	"github.com/gin-gonic/gin"
 )
@@ -48,8 +51,11 @@ func Login(c *gin.Context) {
 		})
 		return
 	}
+	host, _, _ := net.SplitHostPort(c.Request.Host)
+
+	c.SetCookie("token", r.Token, 86400, "/", host, true, true)
+
 	c.JSON(http.StatusOK, gin.H{
-		"msg":   r.Msg,
-		"token": r.Token,
+		"msg": r.Msg,
 	})
 }
