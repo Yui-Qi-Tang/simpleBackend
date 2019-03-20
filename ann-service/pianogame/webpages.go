@@ -10,6 +10,14 @@ import (
 
 // LoginPage show login UI from template page
 func LoginPage(c *gin.Context) {
+	resources := []string{
+		"/css/login.css",
+		"/js/login.js",
+	}
+	pusher := c.Writer.Pusher()
+	for _, v := range resources {
+		webPusher(pusher, v)
+	}
 	host := getURLInfo(c)
 	// Bad design for concate website and API service...TODO, use API gateway
 	c.HTML(http.StatusOK, "Login.html", gin.H{
