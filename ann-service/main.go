@@ -7,6 +7,7 @@ import (
 
 	"simpleBackend/ann-service/pianogame/protocol-buffer/pbserver"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/location"
 	"github.com/gin-gonic/gin"
 )
@@ -23,6 +24,7 @@ func main() {
 	/* Use middleware */
 	router.Use(gin.Recovery())
 	router.Use(location.New(location.DefaultConfig()))
+	router.Use(cors.Default())
 	router.LoadHTMLFiles(pianogame.WebConfig.Settings.HTMLTemplates...) // load tempates (Parameters is variadic), ref: https://golang.org/ref/spec#Passing_arguments_to_..._parameters
 
 	// set static files
@@ -62,7 +64,7 @@ func main() {
 	*/
 	pianogame.ServiceInstances = append(
 		pianogame.StartServers(router, pianogame.WebConfig.Settings.Network, pianogame.WebConfig.Settings.Meta),
-		// pianogame.StartServers(pianogame.UserServiceRouter(), pianogame.UserAPIConfig.User.Network, pianogame.UserAPIConfig.User.Meta)..., // not used so comment out
+		pianogame.StartServers(pianogame.UserServiceRouter(), pianogame.UserAPIConfig.User.Network, pianogame.UserAPIConfig.User.Meta)...,
 	)
 	/* gRPC server */
 	go pbserver.StartGrpcService()

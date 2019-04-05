@@ -41,8 +41,8 @@ type CreditCard struct {
 // User comment
 type User struct {
 	gorm.Model
-	Account  sql.NullString `gorm:"type:varchar(191);unique;not null"` // max of utf8b4: https://github.com/go-xorm/xorm/issues/566
-	Password sql.NullString `gorm:"type:varchar(191);not null"`
+	Account  sql.NullString `gorm:"type:varchar(255);unique;not null"` // max of utf8b4: https://github.com/go-xorm/xorm/issues/566
+	Password sql.NullString `gorm:"type:varchar(255);not null"`
 	Profile  UserProfile
 }
 
