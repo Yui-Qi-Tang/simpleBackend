@@ -20,6 +20,7 @@ func main() {
 
 	/* Go-Gin setup */
 	gin.SetMode(gin.TestMode)
+	gin.DisableConsoleColor()
 	router := gin.Default()
 	/* Use middleware */
 	router.Use(gin.Recovery())
@@ -43,6 +44,7 @@ func main() {
 	/* Front APIs */
 	router.POST("/upload", pianogame.UploadFileSample) // file upload demo
 	router.POST("/login", clientapi.Login)
+	router.POST("/signup", clientapi.Signup)
 
 	/* Web page */
 	router.GET("/login", pianogame.LoginPage)   // login page
@@ -64,7 +66,7 @@ func main() {
 	*/
 	pianogame.ServiceInstances = append(
 		pianogame.StartServers(router, pianogame.WebConfig.Settings.Network, pianogame.WebConfig.Settings.Meta),
-		pianogame.StartServers(pianogame.UserServiceRouter(), pianogame.UserAPIConfig.User.Network, pianogame.UserAPIConfig.User.Meta)...,
+		//pianogame.StartServers(pianogame.UserServiceRouter(), pianogame.UserAPIConfig.User.Network, pianogame.UserAPIConfig.User.Meta)...,
 	)
 	/* gRPC server */
 	go pbserver.StartGrpcService()

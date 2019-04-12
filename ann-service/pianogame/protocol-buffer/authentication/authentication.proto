@@ -10,6 +10,7 @@ package authentication;
 service AuthenticationGreeter {
     rpc Login (LoginRequest) returns (LoginResponse) {}
     rpc Logout (LogoutRequest) returns (LogoutResponse) {}
+    rpc Register (RegisterRequest) returns (RegisterResponse) {}
 }
 
 /* message interfaces here */
@@ -28,6 +29,18 @@ message LogoutRequest {
 }
 
 message LogoutResponse {
+    string Msg = 1;
+}
+
+message RegisterRequest {
+    string Account = 1;
+    string Password = 2;
+    string Dob = 3;
+    repeated string Emails = 4;
+    string Name = 5;
+}
+
+message RegisterResponse {
     string Msg = 1;
 }
 

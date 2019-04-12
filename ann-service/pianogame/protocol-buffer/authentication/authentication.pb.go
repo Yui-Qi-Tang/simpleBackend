@@ -36,7 +36,7 @@ func (m *LoginRequest) Reset()         { *m = LoginRequest{} }
 func (m *LoginRequest) String() string { return proto.CompactTextString(m) }
 func (*LoginRequest) ProtoMessage()    {}
 func (*LoginRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_authentication_9e928ca903671c3c, []int{0}
+	return fileDescriptor_authentication_7eee8249615fceb9, []int{0}
 }
 func (m *LoginRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_LoginRequest.Unmarshal(m, b)
@@ -82,7 +82,7 @@ func (m *LoginResponse) Reset()         { *m = LoginResponse{} }
 func (m *LoginResponse) String() string { return proto.CompactTextString(m) }
 func (*LoginResponse) ProtoMessage()    {}
 func (*LoginResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_authentication_9e928ca903671c3c, []int{1}
+	return fileDescriptor_authentication_7eee8249615fceb9, []int{1}
 }
 func (m *LoginResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_LoginResponse.Unmarshal(m, b)
@@ -127,7 +127,7 @@ func (m *LogoutRequest) Reset()         { *m = LogoutRequest{} }
 func (m *LogoutRequest) String() string { return proto.CompactTextString(m) }
 func (*LogoutRequest) ProtoMessage()    {}
 func (*LogoutRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_authentication_9e928ca903671c3c, []int{2}
+	return fileDescriptor_authentication_7eee8249615fceb9, []int{2}
 }
 func (m *LogoutRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_LogoutRequest.Unmarshal(m, b)
@@ -165,7 +165,7 @@ func (m *LogoutResponse) Reset()         { *m = LogoutResponse{} }
 func (m *LogoutResponse) String() string { return proto.CompactTextString(m) }
 func (*LogoutResponse) ProtoMessage()    {}
 func (*LogoutResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_authentication_9e928ca903671c3c, []int{3}
+	return fileDescriptor_authentication_7eee8249615fceb9, []int{3}
 }
 func (m *LogoutResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_LogoutResponse.Unmarshal(m, b)
@@ -192,11 +192,121 @@ func (m *LogoutResponse) GetMsg() string {
 	return ""
 }
 
+type RegisterRequest struct {
+	Account              string   `protobuf:"bytes,1,opt,name=Account,proto3" json:"Account,omitempty"`
+	Password             string   `protobuf:"bytes,2,opt,name=Password,proto3" json:"Password,omitempty"`
+	Dob                  string   `protobuf:"bytes,3,opt,name=Dob,proto3" json:"Dob,omitempty"`
+	Emails               []string `protobuf:"bytes,4,rep,name=Emails,proto3" json:"Emails,omitempty"`
+	Name                 string   `protobuf:"bytes,5,opt,name=Name,proto3" json:"Name,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *RegisterRequest) Reset()         { *m = RegisterRequest{} }
+func (m *RegisterRequest) String() string { return proto.CompactTextString(m) }
+func (*RegisterRequest) ProtoMessage()    {}
+func (*RegisterRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_authentication_7eee8249615fceb9, []int{4}
+}
+func (m *RegisterRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RegisterRequest.Unmarshal(m, b)
+}
+func (m *RegisterRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RegisterRequest.Marshal(b, m, deterministic)
+}
+func (dst *RegisterRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RegisterRequest.Merge(dst, src)
+}
+func (m *RegisterRequest) XXX_Size() int {
+	return xxx_messageInfo_RegisterRequest.Size(m)
+}
+func (m *RegisterRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_RegisterRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RegisterRequest proto.InternalMessageInfo
+
+func (m *RegisterRequest) GetAccount() string {
+	if m != nil {
+		return m.Account
+	}
+	return ""
+}
+
+func (m *RegisterRequest) GetPassword() string {
+	if m != nil {
+		return m.Password
+	}
+	return ""
+}
+
+func (m *RegisterRequest) GetDob() string {
+	if m != nil {
+		return m.Dob
+	}
+	return ""
+}
+
+func (m *RegisterRequest) GetEmails() []string {
+	if m != nil {
+		return m.Emails
+	}
+	return nil
+}
+
+func (m *RegisterRequest) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+type RegisterResponse struct {
+	Msg                  string   `protobuf:"bytes,1,opt,name=Msg,proto3" json:"Msg,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *RegisterResponse) Reset()         { *m = RegisterResponse{} }
+func (m *RegisterResponse) String() string { return proto.CompactTextString(m) }
+func (*RegisterResponse) ProtoMessage()    {}
+func (*RegisterResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_authentication_7eee8249615fceb9, []int{5}
+}
+func (m *RegisterResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RegisterResponse.Unmarshal(m, b)
+}
+func (m *RegisterResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RegisterResponse.Marshal(b, m, deterministic)
+}
+func (dst *RegisterResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RegisterResponse.Merge(dst, src)
+}
+func (m *RegisterResponse) XXX_Size() int {
+	return xxx_messageInfo_RegisterResponse.Size(m)
+}
+func (m *RegisterResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_RegisterResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RegisterResponse proto.InternalMessageInfo
+
+func (m *RegisterResponse) GetMsg() string {
+	if m != nil {
+		return m.Msg
+	}
+	return ""
+}
+
 func init() {
 	proto.RegisterType((*LoginRequest)(nil), "authentication.LoginRequest")
 	proto.RegisterType((*LoginResponse)(nil), "authentication.LoginResponse")
 	proto.RegisterType((*LogoutRequest)(nil), "authentication.LogoutRequest")
 	proto.RegisterType((*LogoutResponse)(nil), "authentication.LogoutResponse")
+	proto.RegisterType((*RegisterRequest)(nil), "authentication.RegisterRequest")
+	proto.RegisterType((*RegisterResponse)(nil), "authentication.RegisterResponse")
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -213,6 +323,7 @@ const _ = grpc.SupportPackageIsVersion4
 type AuthenticationGreeterClient interface {
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error)
+	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 }
 
 type authenticationGreeterClient struct {
@@ -241,10 +352,20 @@ func (c *authenticationGreeterClient) Logout(ctx context.Context, in *LogoutRequ
 	return out, nil
 }
 
+func (c *authenticationGreeterClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
+	out := new(RegisterResponse)
+	err := c.cc.Invoke(ctx, "/authentication.AuthenticationGreeter/Register", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthenticationGreeterServer is the server API for AuthenticationGreeter service.
 type AuthenticationGreeterServer interface {
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	Logout(context.Context, *LogoutRequest) (*LogoutResponse, error)
+	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 }
 
 func RegisterAuthenticationGreeterServer(s *grpc.Server, srv AuthenticationGreeterServer) {
@@ -287,6 +408,24 @@ func _AuthenticationGreeter_Logout_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthenticationGreeter_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthenticationGreeterServer).Register(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/authentication.AuthenticationGreeter/Register",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthenticationGreeterServer).Register(ctx, req.(*RegisterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _AuthenticationGreeter_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "authentication.AuthenticationGreeter",
 	HandlerType: (*AuthenticationGreeterServer)(nil),
@@ -299,29 +438,38 @@ var _AuthenticationGreeter_serviceDesc = grpc.ServiceDesc{
 			MethodName: "Logout",
 			Handler:    _AuthenticationGreeter_Logout_Handler,
 		},
+		{
+			MethodName: "Register",
+			Handler:    _AuthenticationGreeter_Register_Handler,
+		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "authentication.proto",
 }
 
 func init() {
-	proto.RegisterFile("authentication.proto", fileDescriptor_authentication_9e928ca903671c3c)
+	proto.RegisterFile("authentication.proto", fileDescriptor_authentication_7eee8249615fceb9)
 }
 
-var fileDescriptor_authentication_9e928ca903671c3c = []byte{
-	// 222 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xe2, 0x12, 0x49, 0x2c, 0x2d, 0xc9,
-	0x48, 0xcd, 0x2b, 0xc9, 0x4c, 0x4e, 0x2c, 0xc9, 0xcc, 0xcf, 0xd3, 0x2b, 0x28, 0xca, 0x2f, 0xc9,
-	0x17, 0xe2, 0x43, 0x15, 0x55, 0x72, 0xe1, 0xe2, 0xf1, 0xc9, 0x4f, 0xcf, 0xcc, 0x0b, 0x4a, 0x2d,
-	0x2c, 0x4d, 0x2d, 0x2e, 0x11, 0x92, 0xe0, 0x62, 0x77, 0x4c, 0x4e, 0xce, 0x2f, 0xcd, 0x2b, 0x91,
-	0x60, 0x54, 0x60, 0xd4, 0xe0, 0x0c, 0x82, 0x71, 0x85, 0xa4, 0xb8, 0x38, 0x02, 0x12, 0x8b, 0x8b,
-	0xcb, 0xf3, 0x8b, 0x52, 0x24, 0x98, 0xc0, 0x52, 0x70, 0xbe, 0x92, 0x39, 0x17, 0x2f, 0xd4, 0x94,
-	0xe2, 0x82, 0xfc, 0xbc, 0xe2, 0x54, 0x21, 0x01, 0x2e, 0x66, 0xdf, 0xe2, 0x74, 0xa8, 0x11, 0x20,
-	0xa6, 0x90, 0x08, 0x17, 0x6b, 0x48, 0x7e, 0x76, 0x6a, 0x1e, 0x54, 0x2f, 0x84, 0xa3, 0xa4, 0x0a,
-	0xd6, 0x98, 0x5f, 0x5a, 0x02, 0xb3, 0x1f, 0xae, 0x8c, 0x11, 0x59, 0x99, 0x12, 0x17, 0x1f, 0x4c,
-	0x19, 0x2e, 0x0b, 0x8c, 0x56, 0x31, 0x72, 0x89, 0x3a, 0xa2, 0x78, 0xce, 0xbd, 0x28, 0x35, 0xb5,
-	0x24, 0xb5, 0x48, 0xc8, 0x8d, 0x8b, 0x15, 0xec, 0x3a, 0x21, 0x19, 0x3d, 0xb4, 0x30, 0x41, 0xf6,
-	0xba, 0x94, 0x2c, 0x0e, 0x59, 0x88, 0x8d, 0x4a, 0x0c, 0x42, 0x9e, 0x5c, 0x6c, 0x10, 0x57, 0x08,
-	0x61, 0x53, 0x8a, 0xf0, 0x84, 0x94, 0x1c, 0x2e, 0x69, 0x98, 0x51, 0x49, 0x6c, 0xe0, 0xd8, 0x30,
-	0x06, 0x04, 0x00, 0x00, 0xff, 0xff, 0x62, 0xea, 0x39, 0xa6, 0xa5, 0x01, 0x00, 0x00,
+var fileDescriptor_authentication_7eee8249615fceb9 = []byte{
+	// 302 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xa4, 0x52, 0x4d, 0x4b, 0xc3, 0x40,
+	0x10, 0x35, 0xb6, 0x89, 0x75, 0xd0, 0x5a, 0x86, 0x2a, 0x4b, 0xf0, 0x23, 0x2c, 0x0a, 0x9e, 0x7a,
+	0xd0, 0x83, 0xe7, 0x42, 0x55, 0x04, 0xbf, 0x08, 0xfe, 0x81, 0x34, 0x2e, 0x31, 0x68, 0x77, 0x6a,
+	0x76, 0x83, 0xbf, 0xc0, 0x5f, 0xed, 0xc5, 0x74, 0xf3, 0xd1, 0x36, 0xb8, 0x27, 0x6f, 0xf3, 0x76,
+	0xde, 0xbc, 0x99, 0x79, 0xb3, 0x30, 0x8c, 0x72, 0xfd, 0x26, 0xa4, 0x4e, 0xe3, 0x48, 0xa7, 0x24,
+	0x47, 0xf3, 0x8c, 0x34, 0x61, 0x7f, 0xfd, 0x95, 0x4f, 0x60, 0xe7, 0x9e, 0x92, 0x54, 0x86, 0xe2,
+	0x33, 0x17, 0x4a, 0x23, 0x83, 0xad, 0x71, 0x1c, 0x53, 0x2e, 0x35, 0x73, 0x02, 0xe7, 0x7c, 0x3b,
+	0xac, 0x21, 0xfa, 0xd0, 0x7b, 0x8e, 0x94, 0xfa, 0xa2, 0xec, 0x95, 0x6d, 0x9a, 0x54, 0x83, 0xf9,
+	0x15, 0xec, 0x56, 0x2a, 0x6a, 0x4e, 0x52, 0x09, 0x1c, 0x40, 0xe7, 0x41, 0x25, 0x95, 0xc4, 0x22,
+	0xc4, 0x21, 0xb8, 0x2f, 0xf4, 0x2e, 0x64, 0x55, 0x5b, 0x02, 0x7e, 0x66, 0x0a, 0x29, 0xd7, 0x75,
+	0xff, 0x86, 0xe6, 0xac, 0xd2, 0x38, 0xf4, 0x6b, 0x9a, 0xad, 0x01, 0xff, 0x76, 0x60, 0x2f, 0x14,
+	0x49, 0xaa, 0xb4, 0xc8, 0xfe, 0xb5, 0xcd, 0x42, 0x7b, 0x42, 0x53, 0xd6, 0x29, 0xb5, 0x8b, 0x10,
+	0x0f, 0xc0, 0xbb, 0x9e, 0x45, 0xe9, 0x87, 0x62, 0xdd, 0xa0, 0x53, 0x3c, 0x56, 0x08, 0x11, 0xba,
+	0x8f, 0xd1, 0x4c, 0x30, 0xd7, 0x50, 0x4d, 0xcc, 0x4f, 0x61, 0xb0, 0x1c, 0xc3, 0x36, 0xed, 0xc5,
+	0x8f, 0x03, 0xfb, 0xe3, 0xb5, 0x53, 0xdc, 0x66, 0x42, 0x14, 0x35, 0x78, 0x03, 0xae, 0xf1, 0x12,
+	0x0f, 0x47, 0xad, 0x0b, 0xae, 0x1e, 0xca, 0x3f, 0xb2, 0x64, 0xcb, 0x8e, 0x7c, 0x03, 0xef, 0xc0,
+	0x2b, 0x3d, 0xc3, 0xbf, 0xa8, 0x4b, 0xcb, 0xfd, 0x63, 0x5b, 0xba, 0x91, 0x7a, 0x82, 0x5e, 0xbd,
+	0x12, 0x9e, 0xb4, 0xd9, 0x2d, 0xcf, 0xfd, 0xc0, 0x4e, 0xa8, 0x05, 0xa7, 0x9e, 0xf9, 0x8c, 0x97,
+	0xbf, 0x01, 0x00, 0x00, 0xff, 0xff, 0x73, 0x99, 0x34, 0x98, 0xa4, 0x02, 0x00, 0x00,
 }

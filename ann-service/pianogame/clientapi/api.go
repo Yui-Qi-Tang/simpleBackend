@@ -58,4 +58,54 @@ func Login(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"msg": r.Msg,
 	})
-}
+} // end of Login()
+
+// Signup user register account
+func Signup(c *gin.Context) {
+	// Data check
+	var registerData struct {
+		Account  string `json:"account" binding:"required"`
+		Password string `json:"password" binding:"required"`
+		// profile
+		Dob    string   `json:"birthday"`
+		Emails []string `json:"emails"`
+		Name   string   `json:"name"`
+	}
+
+	if err := c.ShouldBindJSON(&registerData); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// send data to backend server via gRPC
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	conn, err := grpc.Dial(pianogame.GrpcConfig.Server, grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+
+	grpcClient := authenticationPb.NewAuthenticationGreeterClient(conn)
+
+	r, err := grpcClient.Register(ctx, &authenticationPb.RegisterRequest{
+		Account:  registerData.Account,
+		Password: registerData.Password,
+		Dob:      registerData.Dob,
+		Emails:   registerData.Emails,
+		Name:     registerData.Name,
+	})
+	if err != nil {
+		// log.Printf("could not greet: %v", err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{
+		"msg": r.Msg,
+	})
+
+} // end of Signup
