@@ -1,7 +1,6 @@
 package pianogame
 
 import (
-	"context"
 	"database/sql"
 	"errors"
 	"fmt"
@@ -12,7 +11,6 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/mongodb/mongo-go-driver/bson"
 	"golang.org/x/crypto/bcrypt"
 
 	gameMsg "simpleBackend/ann-service/pianogame/msg"
@@ -30,40 +28,9 @@ type msg struct {
 
 var clients = make(map[*datastructure.WebSocketUser]bool) // bad idea to stroe all user in websocket service
 
-// UserLogin api for user login request
-func UserLogin(c *gin.Context) {
-	var json Login
-	// json decode
-	if err := c.ShouldBindJSON(&json); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	// get db collection
-	collection := MongoGreeter.GaDBCollection("testing", "user")
-	// prepare filter to query
-	filter := bson.M{
-		"name":     json.User,
-		"password": json.Password,
-	}
-	r := Login{}
-	// query
-	err := collection.FindOne(context.Background(), filter).Decode(&r)
-	// log.Println(r)
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"status": "user not found"})
-		return
-	}
-	if token, jwtErr := GenerateToken(json.User, json.Password); err != nil {
-		log.Println("JWT error: ", jwtErr)
-		c.JSON(http.StatusBadRequest, gin.H{"status": "Error for auth, please retry"})
-		return
-	} else {
-		c.JSON(http.StatusOK, gin.H{
-			"status": "you are logged in",
-			"token":  token,
-		})
-		return
-	}
+// Available for test
+func Available(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "yes")
 }
 
 // MysqlCheckTable api for checking mysql table exist or not
@@ -80,60 +47,6 @@ func MysqlCheckTable(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusOK, gin.H{"status": " ok!"})
 	}
-}
-
-// AddUser api for adding user into Mysql User table
-func AddUser(c *gin.Context) {
-	var userData struct {
-		Account  string `json:"account" binding:"required"`
-		Password string `json:"password" binding:"required"`
-		// profile
-		Dob    string   `json:"birthday"`
-		Emails []string `json:"emails"`
-		Name   string   `json:"name"`
-	}
-	if err := c.ShouldBindJSON(&userData); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	var accountToDB sql.NullString
-	var pwdToDB sql.NullString
-	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(userData.Password), 8)
-	errorCheck(accountToDB.Scan(userData.Account), "account for signup is Failed")
-	errorCheck(pwdToDB.Scan(string(hashedPassword)), "password for signup is Failed")
-
-	// create new user
-	var user User
-	newUser := MysqlDB.FirstOrCreate(
-		&user,
-		User{
-			Account:  accountToDB,
-			Password: pwdToDB,
-		},
-	)
-	// check if acount exists
-	if newUser.RowsAffected == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Account has be registed"})
-		return
-	}
-	// bind profile to user
-	user.Profile = UserProfile{
-		Birthday: userData.Dob,
-		Name:     userData.Name,
-		Emails: func(emailData []string) []Email {
-			var results []Email
-			for _, v := range emailData {
-				var email Email
-				email.Email = v
-				results = append(results, email)
-			}
-			return results
-		}(userData.Emails),
-	}
-	MysqlDB.Save(&user)
-
-	c.JSON(http.StatusCreated, gin.H{"msg": "success"})
 }
 
 // UserValidation verify username/password, if valid, response JWT, otherwise respone failed

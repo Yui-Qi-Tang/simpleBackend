@@ -66,7 +66,6 @@ func main() {
 	*/
 	pianogame.ServiceInstances = append(
 		pianogame.StartServers(router, pianogame.WebConfig.Settings.Network, pianogame.WebConfig.Settings.Meta),
-		//pianogame.StartServers(pianogame.UserServiceRouter(), pianogame.UserAPIConfig.User.Network, pianogame.UserAPIConfig.User.Meta)...,
 	)
 	/* gRPC server */
 	go pbserver.StartGrpcService()

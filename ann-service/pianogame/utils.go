@@ -221,6 +221,7 @@ func StartServers(handler *gin.Engine, config []host, meta serviceMeta) []*http.
 
 	servers := make([]*http.Server, len(config))
 	log.Println(meta.Name)
+
 	for i, v := range config {
 		servers[i] = &http.Server{
 			Addr:    BindIPPort(v.Name, v.Port),
@@ -229,6 +230,7 @@ func StartServers(handler *gin.Engine, config []host, meta serviceMeta) []*http.
 		log.Println("Start server", servers[i].Addr)
 		go runserverTLS(servers[i], Ssl.Path.Cert, Ssl.Path.Key) // TODO: Ssl as function parameter?
 	}
+
 	return servers
 }
 
