@@ -1,4 +1,3 @@
-simpleBackend
 .go-version
 *.log
 .vscode/

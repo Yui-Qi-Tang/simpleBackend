@@ -31,3 +31,5 @@ require (
 	google.golang.org/grpc v1.18.0
 	gopkg.in/yaml.v2 v2.2.2
 )
+
+go 1.13
