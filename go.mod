@@ -1,35 +1,25 @@
 module simpleBackend
 
+go 1.16
+
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/gin-contrib/cors v0.0.0-20190101123304-5e7acb10687f
-	github.com/gin-contrib/location v0.0.0-20181230133238-79c470e7218f
-	github.com/gin-gonic/autotls v0.0.0-20180426091246-be87bd5ef97b
-	github.com/gin-gonic/gin v1.3.0
-	github.com/go-sql-driver/mysql v1.4.1
-	github.com/go-stack/stack v1.8.0 // indirect
-	github.com/golang/mock v1.2.0
-	github.com/golang/protobuf v1.2.0
-	github.com/golang/snappy v0.0.0-20180518054509-2e65f85255db // indirect
-	github.com/google/go-cmp v0.2.0 // indirect
-	github.com/google/pprof v0.0.0-20190109223431-e84dfd68c163 // indirect
-	github.com/google/uuid v1.1.0
-	github.com/gorilla/websocket v1.4.0
-	github.com/ianlancetaylor/demangle v0.0.0-20181102032728-5e5cf60278f6 // indirect
-	github.com/jinzhu/gorm v1.9.2
-	github.com/jinzhu/inflection v0.0.0-20180308033659-04140366298a // indirect
-	github.com/lucas-clemente/quic-go v0.11.1
-	github.com/mitchellh/mapstructure v1.1.2
-	github.com/mongodb/mongo-go-driver v0.1.0
-	github.com/sirupsen/logrus v1.2.0
-	github.com/tidwall/pretty v0.0.0-20180105212114-65a9db5fad51 // indirect
-	github.com/xdg/scram v0.0.0-20180814205039-7eeb5667e42c // indirect
-	github.com/xdg/stringprep v1.0.0 // indirect
-	golang.org/x/arch v0.0.0-20181203225421-5a4828bb7045 // indirect
-	golang.org/x/crypto v0.0.0-20190228161510-8dd112bcdc25
-	golang.org/x/net v0.0.0-20181220203305-927f97764cc3
-	google.golang.org/grpc v1.18.0
-	gopkg.in/yaml.v2 v2.2.2
+	github.com/gin-contrib/cors v1.3.1
+	github.com/gin-contrib/location v0.0.2
+	github.com/gin-gonic/gin v1.6.3
+	github.com/go-sql-driver/mysql v1.6.0
+	github.com/golang/mock v1.5.0
+	github.com/golang/protobuf v1.5.2
+	github.com/google/uuid v1.2.0
+	github.com/gorilla/websocket v1.4.2
+	github.com/jinzhu/gorm v1.9.16
+	github.com/mitchellh/mapstructure v1.4.1
+	github.com/pkg/errors v0.9.1
+	github.com/spf13/cobra v0.0.3
+	go.mongodb.org/mongo-driver v1.5.1
+	go.uber.org/zap v1.16.0
+	golang.org/x/crypto v0.0.0-20210322153248-0c34fe9e7dc2
+	golang.org/x/net v0.0.0-20210405180319-a5a99cb37ef4
+	google.golang.org/grpc v1.37.0
+	gopkg.in/yaml.v2 v2.4.0
 )
-
-go 1.13

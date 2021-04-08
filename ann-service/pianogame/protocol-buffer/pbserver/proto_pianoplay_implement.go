@@ -8,7 +8,7 @@ import (
 
 	pianoplayPb "simpleBackend/ann-service/pianogame/protocol-buffer/pianoplay"
 
-	"github.com/mongodb/mongo-go-driver/bson"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 type pianoplayService struct{}

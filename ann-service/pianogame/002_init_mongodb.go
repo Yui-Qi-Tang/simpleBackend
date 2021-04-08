@@ -7,7 +7,7 @@ import (
 	"log"
 	"simpleBackend/ann-service/pianogame/datastructure"
 
-	"github.com/mongodb/mongo-go-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 // MongoGreeter client for other package

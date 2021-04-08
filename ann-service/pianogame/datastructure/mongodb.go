@@ -1,7 +1,7 @@
 package datastructure
 
 import (
-	"github.com/mongodb/mongo-go-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 // MongoDB a struct for mongodb client manager
