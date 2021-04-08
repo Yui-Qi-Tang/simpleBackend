@@ -6,20 +6,36 @@ import (
 	"simpleBackend/handlers/http/middleware/recovery"
 	"simpleBackend/handlers/http/middleware/requestid"
 
+	"github.com/pkg/errors"
+
 	"github.com/gin-contrib/location"
 	"github.com/gin-gonic/gin"
 )
 
-// import "github.com/pkg/errors"
-
 // Option is option for handler
 type Option func(*Handler) error
 
+var (
+	ErrEmptyNasaAPIKey error = errors.New("Nasn API key is empty")
+)
+
+// WithNasaAPIKey sets nasa api key
+func WithNasaAPIKey(key string) Option {
+	return func(h *Handler) error {
+
+		if len(key) == 0 {
+			return ErrEmptyNasaAPIKey
+		}
+		h.NasaAPIKey = key
+		return nil
+	}
+}
+
 // Handler handles the http service
 type Handler struct {
-	Mode string
+	Mode       string
+	NasaAPIKey string
 	// TODO db
-	// nasn api key
 }
 
 // New returns http handler
@@ -67,6 +83,7 @@ func (h *Handler) HTTPHandler() (*gin.Engine, error) {
 	router.GET("/readiness", h.readiness)
 
 	// apps
+	router.GET("/nasa/apod", h.Apod)
 
 	return router, nil
 }

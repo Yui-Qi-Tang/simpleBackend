@@ -14,6 +14,8 @@ import (
 func httpservice() *cobra.Command {
 
 	var configPath string
+
+	// root of srv
 	srv := &cobra.Command{
 		Use:   "http",
 		Short: "http service",
@@ -22,22 +24,21 @@ func httpservice() *cobra.Command {
 		},
 	}
 
+	// run
 	run := &cobra.Command{
 		Use:   "run",
 		Short: "run http service",
 		Run: func(c *cobra.Command, args []string) {
-			log.Logger.Info("http server is runing...")
 
+			// config
 			conf, err := load.LoadFromFile(configPath)
-
 			if err != nil {
 				log.Logger.Error("failed to load config from file", zap.Error(err))
 				return
 			}
 
-			log.Logger.Info("config", zap.Any("config", conf))
-
-			h, err := httphandler.New("test")
+			// http handler
+			h, err := httphandler.New(conf.HTTPSrv.Mode, httphandler.WithNasaAPIKey(conf.ThirdParty.Nasa.Key))
 			if err != nil {
 				log.Logger.Error("failed to create http handler", zap.Error(err))
 				return
@@ -49,12 +50,13 @@ func httpservice() *cobra.Command {
 				return
 			}
 
-			server, err := httpserver.New("127.0.0.1:3000", hp)
+			// server
+			server, err := httpserver.New(conf.HTTPSrv.Addr, hp)
 			if err != nil {
 				log.Logger.Error("failed to create http server", zap.Error(err))
 				return
 			}
-
+			log.Logger.Info("server is staring...", zap.String("at", conf.HTTPSrv.Addr), zap.String("mode", conf.HTTPSrv.Mode))
 			if err := server.Run(); err != nil {
 				log.Logger.Error("failed to run http server", zap.Error(err))
 				return
