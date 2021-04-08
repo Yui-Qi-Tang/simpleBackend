@@ -1,0 +1,14 @@
+httpserver:
+  addr: "localhost:3000"
+  mode: "test"
+  # TODO tls
+
+third-party-api:
+  nasa:
+    api_key: "key-from-Nasa"
+
+databases:
+  main:
+    type: "postgresql"
+    dsl: "host=localhost user=user password=pwd" # ref the dsl
+  

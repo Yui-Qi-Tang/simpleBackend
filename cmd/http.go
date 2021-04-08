@@ -5,6 +5,8 @@ import (
 	"simpleBackend/log"
 	httpserver "simpleBackend/servers/http"
 
+	"simpleBackend/config/load"
+
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 )
@@ -25,6 +27,16 @@ func httpservice() *cobra.Command {
 		Short: "run http service",
 		Run: func(c *cobra.Command, args []string) {
 			log.Logger.Info("http server is runing...")
+
+			conf, err := load.LoadFromFile(configPath)
+
+			if err != nil {
+				log.Logger.Error("failed to load config from file", zap.Error(err))
+				return
+			}
+
+			log.Logger.Info("config", zap.Any("config", conf))
+
 			h, err := httphandler.New("test")
 			if err != nil {
 				log.Logger.Error("failed to create http handler", zap.Error(err))
@@ -51,7 +63,7 @@ func httpservice() *cobra.Command {
 		},
 	}
 
-	run.Flags().StringVarP(&configPath, "config", "c", "config.yaml", "path of config file with yaml format")
+	run.Flags().StringVarP(&configPath, "config", "c", "config/example.yaml", "path of config file with yaml format")
 
 	srv.AddCommand(
 		run,

@@ -19,6 +19,7 @@ type Option func(*Handler) error
 type Handler struct {
 	Mode string
 	// TODO db
+	// nasn api key
 }
 
 // New returns http handler
