@@ -22,6 +22,8 @@ Just a toy project.
 
    - try to send request to RADIUS server
 
+ - QUIC protocol
+
  - Github CI\CD
 
  - Documentation
