@@ -1,7 +1,14 @@
 # simpleBackend
 
-Requirement: go1.11
+Just a toy project.
 
-nginx load balancer --+--  chatroom
-                      |
-                      +--  api_test
+
+# TODO
+
+## Features
+
+ - Nasa api
+
+ - Piano game
+
+ - Github CI\CD
