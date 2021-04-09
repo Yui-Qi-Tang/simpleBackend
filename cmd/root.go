@@ -18,6 +18,7 @@ func Execute() error {
 
 	command.AddCommand(
 		httpservice(),
+		databaseOperations(),
 	) // add cmd here
 
 	return command.Execute()

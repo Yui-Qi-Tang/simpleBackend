@@ -1,4 +1,4 @@
-package nasa
+package migrations
 
 import (
 	"simpleBackend/handlers/maindb/models/nasa"
