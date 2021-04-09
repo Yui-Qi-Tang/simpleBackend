@@ -7,7 +7,7 @@ require (
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-contrib/location v0.0.2
 	github.com/gin-gonic/gin v1.6.3
-	github.com/go-gormigrate/gormigrate/v2 v2.0.0 // indirect
+	github.com/go-gormigrate/gormigrate/v2 v2.0.0
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/golang/protobuf v1.5.2
 	github.com/google/uuid v1.2.0
