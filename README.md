@@ -27,3 +27,7 @@ Just a toy project.
  - Github CI\CD
 
  - Documentation
+
+# Remark
+
+  - [postgresql uuid pk with gorm v2 example](https://gist.github.com/udondan/97b3c9178848012e50b61aec45d429f3)
