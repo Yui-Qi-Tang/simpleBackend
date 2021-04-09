@@ -5,18 +5,22 @@ import (
 	"simpleBackend/handlers/http/middleware/cors"
 	"simpleBackend/handlers/http/middleware/recovery"
 	"simpleBackend/handlers/http/middleware/requestid"
+	"simpleBackend/handlers/maindb"
+	"time"
 
 	"github.com/pkg/errors"
 
 	"github.com/gin-contrib/location"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 // Option is option for handler
 type Option func(*Handler) error
 
 var (
-	ErrEmptyNasaAPIKey error = errors.New("Nasn API key is empty")
+	ErrEmptyNasaAPIKey    error = errors.New("Nasn API key is empty")
+	ErrMainDBDoesNotExist error = errors.New("main database does not exist")
 )
 
 // WithNasaAPIKey sets nasa api key
@@ -31,11 +35,26 @@ func WithNasaAPIKey(key string) Option {
 	}
 }
 
+// WithMainDatabase set default database config
+func WithMainDatabase(dbType, dsn string, maxOpenConns, maxIdleConns int, connMaxLife time.Duration) Option {
+	return func(h *Handler) error {
+		db, err := maindb.New(dbType, dsn, maxOpenConns, maxIdleConns, connMaxLife)
+		if err != nil {
+			return errors.Wrap(err, "failed to config main database")
+		}
+
+		h.MainDB = db
+
+		return nil
+	}
+}
+
 // Handler handles the http service
 type Handler struct {
 	Mode       string
 	NasaAPIKey string
-	// TODO db
+
+	MainDB *gorm.DB
 }
 
 // New returns http handler
@@ -46,6 +65,10 @@ func New(mode string, opts ...Option) (*Handler, error) {
 		if err := opt(h); err != nil {
 			return nil, err
 		}
+	}
+
+	if h.MainDB == nil {
+		return nil, ErrMainDBDoesNotExist
 	}
 
 	return h, nil

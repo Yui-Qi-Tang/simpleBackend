@@ -9,6 +9,9 @@ third-party-api:
 
 databases:
   main:
-    type: "postgresql"
-    dsl: "host=localhost user=user password=pwd" # ref the dsl
+    type: "postgresql" # or "mysql"
+    dsn: "host=localhost user=user password=pwd" # ref the dsn
+    max_open_conns: 100
+    max_idle_conns: 10
+    conn_max_life_time_second: 60 # 60 seconds
   

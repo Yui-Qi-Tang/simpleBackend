@@ -1,5 +1,9 @@
 package load
 
+import (
+	"time"
+)
+
 // Config is the configuration for system
 type Config struct {
 	HTTPSrv    HTTPServer    `yaml:"httpserver"`
@@ -31,5 +35,9 @@ type Database struct {
 // DatabaseMain saves the main database information
 type DatabaseMain struct {
 	Type string `yaml:"type"`
-	DSL  string `yaml:"dsl"`
+	DSN  string `yaml:"dsn"`
+
+	MaxOpenConns int           `yaml:"max_open_conns"`
+	MaxIdleConns int           `yaml:"max_idle_conns"`
+	MaxLifeTime  time.Duration `yaml:"conn_max_life_time_second"`
 }
