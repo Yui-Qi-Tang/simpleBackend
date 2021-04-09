@@ -111,6 +111,18 @@ func (h *Handler) HTTPHandler() (*gin.Engine, error) {
 	return router, nil
 }
 
+// Destroy destroy the resources is used by this object.
+func (h *Handler) Destroy() error {
+	// close database connection
+	sqlDB, err := h.MainDB.DB()
+	if err != nil {
+		return err
+	}
+	defer sqlDB.Close()
+
+	return nil
+}
+
 func (h *Handler) health(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"msg": "ok"})
 }

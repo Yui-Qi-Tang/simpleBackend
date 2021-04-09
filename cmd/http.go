@@ -46,6 +46,7 @@ func httpservice() *cobra.Command {
 				log.Logger.Error("failed to create http handler", zap.Error(err))
 				return
 			}
+			defer h.Destroy()
 
 			hp, err := h.HTTPHandler()
 			if err != nil {
@@ -64,6 +65,7 @@ func httpservice() *cobra.Command {
 				log.Logger.Error("failed to run http server", zap.Error(err))
 				return
 			}
+
 			log.Logger.Info("http server is existing...")
 		},
 	}
