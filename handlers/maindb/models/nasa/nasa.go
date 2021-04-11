@@ -21,9 +21,10 @@ mockup data from nasa api
 type Apod struct {
 	gorm.Model
 
-	Title       string `json:"title"`
-	MediaType   string `gorm:"index" json:"media_type"`
-	ServiceVer  string `json:"service_version"`
+	Title      string `json:"title"`
+	MediaType  string `gorm:"index" json:"media_type"`
+	ServiceVer string `json:"service_version"`
+	// CopyRight is an optional return parameter copyright is returned if the image is not public domain.
 	CopyRight   string `json:"copyright"`
 	Date        string `gorm:"index" json:"date"`
 	Explanation string `json:"explanation"`
@@ -31,8 +32,10 @@ type Apod struct {
 	ImgURL      string `json:"url"`
 }
 
-// Map returns data bytes as map
-func (a Apod) Map() map[string]string {
+// Response returns data bytes as map for api; it's a convenience approach to get result...
+// the base content of reponse which contains 'copyright', 'date', 'explanation' and 'url'.
+// The 'hdurl' field does exist in response if the MediaType is 'images'.
+func (a Apod) Reponse() map[string]string {
 	result := map[string]string{
 		"copyright":   a.CopyRight,
 		"date":        a.Date,
