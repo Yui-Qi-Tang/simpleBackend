@@ -31,6 +31,6 @@ func (h *Handler) Apod(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": buf.String()})
+	c.JSON(http.StatusOK, buf.String())
 
 }

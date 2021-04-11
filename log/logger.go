@@ -14,5 +14,5 @@ func init() {
 	}
 	Logger = l
 
-	Logger.Info("success to set logger")
+	// Logger.Info("success to set logger")
 }
