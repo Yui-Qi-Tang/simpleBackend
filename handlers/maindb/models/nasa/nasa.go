@@ -21,12 +21,28 @@ mockup data from nasa api
 type Apod struct {
 	gorm.Model
 
-	Title       string
-	MediaType   string
-	ServiceVer  string
-	CopyRight   string
-	Date        string
-	Explanation string
-	ImgHDURL    string
-	ImgURL      string
+	Title       string `json:"title"`
+	MediaType   string `gorm:"index" json:"media_type"`
+	ServiceVer  string `json:"service_version"`
+	CopyRight   string `json:"copyright"`
+	Date        string `gorm:"index" json:"date"`
+	Explanation string `json:"explanation"`
+	ImgHDURL    string `json:"hdurl"`
+	ImgURL      string `json:"url"`
+}
+
+// Map returns data bytes as map
+func (a Apod) Map() map[string]string {
+	result := map[string]string{
+		"copyright":   a.CopyRight,
+		"date":        a.Date,
+		"explanation": a.Explanation,
+		"url":         a.ImgURL,
+	}
+
+	if a.MediaType == "image" {
+		result["hdurl"] = a.ImgHDURL
+	}
+
+	return result
 }

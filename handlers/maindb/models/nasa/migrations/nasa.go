@@ -20,5 +20,16 @@ func Migrations() []*gormigrate.Migration {
 				return tx.Migrator().DropTable(&nasa.Apod{})
 			},
 		},
+
+		{
+			ID: "add_index_media_type_nasa_apod_1618114652",
+			Migrate: func(tx *gorm.DB) error {
+				tx.AutoMigrate()
+				return tx.AutoMigrate(&nasa.Apod{})
+			},
+			Rollback: func(tx *gorm.DB) error {
+				return tx.Migrator().DropTable(&nasa.Apod{})
+			},
+		},
 	}
 }
