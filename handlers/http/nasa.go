@@ -24,7 +24,7 @@ const (
 )
 
 // the format of date for Apod: `YYYY-MM-DD`
-var validDate *regexp.Regexp = regexp.MustCompile(`^[0-9]{4}\-[0-1]{1}[0-9]{1}\-[0-3]{1}[0-9]{1}`)
+var validDate *regexp.Regexp = regexp.MustCompile(`^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$`)
 
 // api doc: https://api.nasa.gov/index.html#browseAPI
 
