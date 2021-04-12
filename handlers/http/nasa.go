@@ -10,9 +10,11 @@ import (
 	"time"
 
 	"simpleBackend/handlers/maindb/models/nasa"
+	"simpleBackend/log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -106,10 +108,19 @@ func (h *Handler) Apod(c *gin.Context) {
 	}
 	defer resp.Body.Close()
 
-	// check response
-	if resp.StatusCode != http.StatusOK {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "status code is not 200 from Nasa"})
+	// check status code
+	switch resp.StatusCode {
+	case http.StatusOK: // This is blank
+	case http.StatusNotFound:
+		c.JSON(http.StatusNotFound, gin.H{"error": "data was not found"})
 		return
+	default:
+		buf := &bytes.Buffer{}
+		buf.ReadFrom(resp.Body)
+		log.Logger.Info("error response", zap.String("content", buf.String()))
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "unknown error:" + buf.String()})
+		return
+
 	}
 
 	if err := unmarshalJSONFromIOReader(resp.Body, &apod); err != nil {

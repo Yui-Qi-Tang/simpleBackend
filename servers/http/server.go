@@ -69,6 +69,11 @@ func (s *Server) Run() error {
 	srv := &http.Server{
 		Addr:    s.HTTPAddr,
 		Handler: s.Handler,
+		//IdleTimeout:       30 * time.Second,
+		// ReadTimeout:       10 * time.Second,
+
+		//ReadHeaderTimeout: 250 * time.Millisecond,
+		//WriteTimeout:      500 * time.Millisecond,
 	}
 
 	quit := make(chan os.Signal, 1)
