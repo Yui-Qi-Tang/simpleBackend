@@ -67,6 +67,7 @@ func httpservice() *cobra.Command {
 			}
 
 			log.Logger.Info("http server is existing...")
+			log.Logger.Sync()
 		},
 	}
 

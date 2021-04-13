@@ -11,6 +11,8 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/gin-contrib/location"
+	// https://github.com/gin-contrib/pprof
+	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -90,6 +92,10 @@ func newRouter(mode string) *gin.Engine {
 // HTTPHandler returns http handler
 func (h *Handler) HTTPHandler() (*gin.Engine, error) {
 	router := newRouter(h.Mode)
+
+	if h.Mode == "debug" {
+		pprof.Register(router)
+	}
 
 	router.HandleMethodNotAllowed = true
 
