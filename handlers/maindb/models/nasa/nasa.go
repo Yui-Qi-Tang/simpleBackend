@@ -35,8 +35,8 @@ type Apod struct {
 // Response returns data bytes as map for api; it's a convenience approach to get result...
 // the base content of reponse which contains 'copyright', 'date', 'explanation' and 'url'.
 // The 'hdurl' field does exist in response if the MediaType is 'images'.
-func (a Apod) Reponse() map[string]string {
-	result := map[string]string{
+func (a Apod) Reponse() map[string]interface{} {
+	result := map[string]interface{}{
 		"copyright":   a.CopyRight,
 		"date":        a.Date,
 		"explanation": a.Explanation,

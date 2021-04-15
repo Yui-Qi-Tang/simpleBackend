@@ -19,10 +19,11 @@ func setUlimit() error {
 
 func main() {
 
-	/* just for test!!
+	/*  just test
 	if err := setUlimit(); err != nil {
 		panic(err)
-	}*/
+	}
+	*/
 
 	if err := cmd.Execute(); err != nil {
 		panic(err)

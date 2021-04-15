@@ -29,7 +29,8 @@ type ThirdPartyAPINasa struct {
 
 // Database saves the connection info of different databases
 type Database struct {
-	Main DatabaseMain `yaml:"main"`
+	Main  DatabaseMain  `yaml:"main"`
+	Redis DataBaseRedis `yaml:"redis"`
 }
 
 // DatabaseMain saves the main database information
@@ -40,4 +41,10 @@ type DatabaseMain struct {
 	MaxOpenConns int           `yaml:"max_open_conns"`
 	MaxIdleConns int           `yaml:"max_idle_conns"`
 	MaxLifeTime  time.Duration `yaml:"conn_max_life_time_second"`
+}
+
+// DatabaseRedis save the configurations for Redis server
+type DataBaseRedis struct {
+	Password string `yaml:"password"`
+	Addr     string `yaml:"addr"`
 }

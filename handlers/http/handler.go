@@ -1,12 +1,15 @@
 package httphandler
 
 import (
+	"context"
 	"net/http"
 	"simpleBackend/handlers/http/middleware/cors"
 	"simpleBackend/handlers/http/middleware/recovery"
 	"simpleBackend/handlers/http/middleware/requestid"
 	"simpleBackend/handlers/maindb"
 	"time"
+
+	"github.com/go-redis/redis/v8"
 
 	"github.com/pkg/errors"
 
@@ -21,8 +24,9 @@ import (
 type Option func(*Handler) error
 
 var (
-	ErrEmptyNasaAPIKey    error = errors.New("Nasn API key is empty")
-	ErrMainDBDoesNotExist error = errors.New("main database does not exist")
+	ErrEmptyNasaAPIKey      error = errors.New("Nasn API key is empty")
+	ErrMainDBDoesNotExist   error = errors.New("main database does not exist")
+	ErrEmptyRedisServerAddr error = errors.New("address for redis cache server is empty")
 )
 
 // WithNasaAPIKey sets nasa api key
@@ -33,6 +37,27 @@ func WithNasaAPIKey(key string) Option {
 			return ErrEmptyNasaAPIKey
 		}
 		h.NasaAPIKey = key
+		return nil
+	}
+}
+
+// WithRedisCache sets nasa api key
+func WithRedisCache(addr, password string) Option {
+	return func(h *Handler) error {
+
+		if len(addr) == 0 {
+			return ErrEmptyRedisServerAddr
+		}
+
+		h.RedisCache = redis.NewClient(&redis.Options{Addr: addr, Password: password})
+
+		timeout, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+		defer cancel()
+
+		if _, err := h.RedisCache.Ping(timeout).Result(); err != nil {
+			return errors.Wrap(err, "failed to ping the redis server")
+		}
+
 		return nil
 	}
 }
@@ -57,6 +82,8 @@ type Handler struct {
 	NasaAPIKey string
 
 	MainDB *gorm.DB
+
+	RedisCache *redis.Client
 }
 
 // New returns http handler
@@ -125,6 +152,8 @@ func (h *Handler) Destroy() error {
 		return err
 	}
 	defer sqlDB.Close()
+
+	defer h.RedisCache.Close()
 
 	return nil
 }

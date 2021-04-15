@@ -2,6 +2,7 @@ package httphandler
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"io"
 	"net/http"
@@ -17,6 +18,9 @@ import (
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
+
+// just a test, it will be lead race condition
+//var dangerCache map[string]map[string]string = make(map[string]map[string]string)
 
 const (
 	nasaAPIHost string = "api.nasa.gov"
@@ -76,7 +80,22 @@ func (h *Handler) Apod(c *gin.Context) {
 		return
 	}
 
-	// check if data in database first
+	// check if data in cache first
+	h.RedisCache.Expire(context.TODO(), date, 1*time.Hour).Result() // set expiration for key
+
+	hgetTimeout, hgetCancel := context.WithTimeout(context.Background(), 1*time.Second)
+	defer hgetCancel()
+	hGetallRes, err := h.RedisCache.HGetAll(hgetTimeout, date).Result()
+	if err != nil && len(hGetallRes) > 0 {
+		c.JSON(http.StatusOK, hGetallRes)
+		return
+	}
+	if err != nil {
+		// just log
+		log.Logger.Info("failed to call 'HGetAll' of Redis", zap.Error(err))
+	}
+
+	// check if data in database second
 	apod := &nasa.Apod{}
 	if res := h.MainDB.Take(&apod, nasa.Apod{Date: date}); res.Error != nil {
 		if !errors.Is(res.Error, gorm.ErrRecordNotFound) {
@@ -84,7 +103,16 @@ func (h *Handler) Apod(c *gin.Context) {
 			return
 		}
 	} else {
-		c.JSON(http.StatusOK, apod.Reponse())
+		response := apod.Reponse()
+		c.JSON(http.StatusOK, response)
+
+		// cache response
+		hsetTimeouit, hsetCancel := context.WithTimeout(context.Background(), 1*time.Second)
+		defer hsetCancel()
+		if _, err := h.RedisCache.HSet(hsetTimeouit, date, response).Result(); err != nil {
+			// just log
+			log.Logger.Info("failed to call 'HSET' of Redis server", zap.Error(err))
+		}
 		return
 	}
 
@@ -129,4 +157,13 @@ func (h *Handler) Apod(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, apod.Reponse())
 	h.MainDB.Create(&apod) // save data
+
+	// cache response
+	hsetTimeouit, hsetCancel := context.WithTimeout(context.Background(), 1*time.Second)
+	defer hsetCancel()
+	if _, err := h.RedisCache.HSet(hsetTimeouit, date, apod.Reponse()).Result(); err != nil {
+		// just log
+		log.Logger.Info("failed to call 'HSET' of Redis server", zap.Error(err))
+	}
+
 }

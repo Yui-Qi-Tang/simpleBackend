@@ -41,6 +41,7 @@ func httpservice() *cobra.Command {
 			h, err := httphandler.New(conf.HTTPSrv.Mode,
 				httphandler.WithNasaAPIKey(conf.ThirdParty.Nasa.Key),
 				httphandler.WithMainDatabase(conf.DB.Main.Type, conf.DB.Main.DSN, conf.DB.Main.MaxOpenConns, conf.DB.Main.MaxIdleConns, conf.DB.Main.MaxLifeTime),
+				httphandler.WithRedisCache(conf.DB.Redis.Addr, conf.DB.Redis.Password),
 			)
 			if err != nil {
 				log.Logger.Error("failed to create http handler", zap.Error(err))
